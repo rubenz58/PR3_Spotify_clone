@@ -1,0 +1,116 @@
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+} from "react";
+
+// Create the context
+const AuthContext = createContext();
+
+// Create hook to easily use context
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+    return context;
+};
+
+// Create the provider (Component that holds the data)
+export const AuthProvider = ({ children }) => {
+
+    // State for authentication
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Get environment var for API calls
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
+    // CHECK FOR EXISTING LOGIN ON APP START
+    useEffect(() => { // useEffect itself can't be async
+        const checkExistingAuth = async () => {
+            const stored_token = localStorage.getItem('token');
+
+            if (stored_token) {
+                try {
+                    // Verify token is still valid by calling /me endpoint
+                    const response = await fetch(`${API_BASE}/auth/me`, {
+                        headers: {
+                            'Authorization': `Bearer ${stored_token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        setUser(data.user);
+                        setToken(data.token);
+                    } else {
+                        // Token is invalid, remove it
+                        localStorage.removeItem('token');
+                    }
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    localStorage.removeItem('token');
+                }
+            }
+
+            setLoading(false);
+        };
+
+        checkExistingAuth();
+
+    }, []); // Empty dependency array. Run once on app start
+
+    // LOGIN FUNCTION
+    const login = async (credentials) => {
+        setLoading(true);
+
+        try {
+            // 'await' pauses the function at this line
+            // Browser and other parts of website (user clicking etc)
+            // can keep going.
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Login successful
+                setUser(data.user);
+                setToken(data.token);
+                localStorage.setItem('token', token.data);
+                return { success: true, data };
+            } else {
+                // Login failed
+                return { success: false, data.error };
+            }
+        } catch (error) {
+            // Network error
+            return { success: false, error: "Network error occurred" };
+        } finally {
+            setLoading(false); // Hide loading state
+        }
+    }
+
+    // THIS IS WHAT COMPONENTS CAN ACCESS
+    const value = {
+        user, // Current user object
+        token, // JWT string token
+        loading, // Boolean for loading states - spinners while loading
+        login,
+    };
+
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

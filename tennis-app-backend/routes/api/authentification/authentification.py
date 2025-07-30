@@ -9,6 +9,8 @@ from .utils import (
     generate_jwt_token,
     verify_password
 )
+from .middleware import jwt_required
+from flask import g
 
 # /api/auth/
 auth_bp = Blueprint('auth', __name__)
@@ -120,6 +122,23 @@ def logout():
     return jsonify({
         "message": "User logged out"
     }), 200
+
+@auth_bp.route("/me", methods=["GET"])
+@jwt_required
+def get_current_user():
+    user_id = g.current_user_id # Available from middleware
+
+    # Query db
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"error": "User not present in db"}), 404
+    
+    return jsonify({
+        "user": user.to_dict()
+    }), 200
+
+
 
 
 ############################ TESTING ############################

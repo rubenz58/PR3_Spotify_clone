@@ -1,12 +1,20 @@
 from flask import Flask
+from flask_cors import CORS
+from config import Config
 from routes.api.authentification.authentification import auth_bp
 from routes.api.authentification.models import db
-from config import Config
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    # Initialize CORS
+    CORS(app,
+         origins=['http://localhost:3000'], # React App Url
+         allow_headers=['Content-type', 'Authorization'], # Allow JWT headers
+         methods=['GET', 'POST', 'PUT', 'DELETE'], # Allowed HTTP methods
+         supports_credentials=True) # Allow cookies later if needed
 
     # Initializes database with app
     db.init_app(app)

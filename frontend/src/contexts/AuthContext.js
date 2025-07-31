@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
                     if (response.ok) {
                         const data = await response.json();
                         setUser(data.user);
-                        setToken(data.token);
+                        setToken(stored_token);
                     } else {
                         // Token is invalid, remove it
                         localStorage.removeItem('token');
@@ -83,14 +83,14 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             if (response.ok) {
-                // Login successful
+                // Login successful - User State updated.
                 setUser(data.user);
                 setToken(data.token);
-                localStorage.setItem('token', token.data);
+                localStorage.setItem('token', data.token);
                 return { success: true, data };
             } else {
                 // Login failed
-                return { success: false, data.error };
+                return { success: false, error: data.error };
             }
         } catch (error) {
             // Network error
@@ -100,13 +100,57 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const signup = async (userData) => {
+        setLoading(true);
+
+        try {
+            // 'await' pauses the function at this line
+            // Browser and other parts of website (user clicking etc)
+            // can keep going.
+            const response = await fetch(`${API_BASE}/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Login successful - User State updated.
+                setUser(data.user);
+                setToken(data.token);
+                localStorage.setItem('token', data.token);
+                return { success: true, data };
+            } else {
+                // Login failed
+                return { success: false, error: data.error };
+            }
+        } catch (error) {
+            // Network error
+            return { success: false, error: "Network error occurred" };
+        } finally {
+            setLoading(false); // Hide loading state
+        }
+    }
+
+    const logout = async () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('token');
+    }
+
     // THIS IS WHAT COMPONENTS CAN ACCESS
     const value = {
         user, // Current user object
         token, // JWT string token
         loading, // Boolean for loading states - spinners while loading
-        login,
+        login, // func.
+        signup, // func.
+        logout,
     };
+
 
     return (
         <AuthContext.Provider value={value}>

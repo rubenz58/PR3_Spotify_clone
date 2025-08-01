@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [userIsLoaded, setUserIsLoaded] = useState(false);
 
     // Get environment var for API calls
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -48,7 +47,6 @@ export const AuthProvider = ({ children }) => {
                     if (response.ok) {
                         const data = await response.json();
                         setUser(data.user);
-                        setUserIsLoaded(True);
                         setToken(stored_token);
                     } else {
                         // Token is invalid, remove it
@@ -89,7 +87,6 @@ export const AuthProvider = ({ children }) => {
                 // Login successful - User State updated.
                 setUser(data.user);
                 setToken(data.token);
-                setUserIsLoaded(True);
                 localStorage.setItem('token', data.token);
                 return { success: true, data };
             } else {
@@ -125,7 +122,6 @@ export const AuthProvider = ({ children }) => {
                 // Login successful - User State updated.
                 setUser(data.user);
                 setToken(data.token);
-                setUserIsLoaded(True);
                 localStorage.setItem('token', data.token);
                 return { success: true, data };
             } else {
@@ -143,14 +139,11 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         setUser(null);
         setToken(null);
-        setUserIsLoaded(False);
-
         localStorage.removeItem('token');
     }
 
     // THIS IS WHAT COMPONENTS CAN ACCESS
     const value = {
-        userIsLoaded, // Boolean to track if user is loaded
         user, // Current user object
         token, // JWT string token
         loading, // Boolean for loading states - spinners while loading

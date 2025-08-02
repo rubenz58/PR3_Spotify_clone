@@ -1,27 +1,23 @@
 import { useAuth } from "../contexts/AuthContext";
-
-export const Dashboard = () => {
-    const { user, logout } = useAuth();
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1>My Auth App</h1>
-          <div className="user-info">
-            <span>Welcome, {user.name}!</span>
-            <button onClick={logout} className="logout-button">
-              Logout
-            </button>
-          </div>
-        </header>
-        <main>
-          <h2>Dashboard</h2>
-          <p>You are logged in.</p>
-        </main>
-      </div>
-    );
-}
+import { Link } from "react-router-dom";
 
 export const LoadingSpinner = () => {
     return <div>Loading...</div>;
 }
+
+// components/NotFound/NotFound.js
+export const NotFound = () => {
+  const { user } = useAuth();
+  
+  return (
+    <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <h1>404 - Page Not Found</h1>
+      <p>The page you're looking for doesn't exist.</p>
+      {user ? (
+        <Link to="/dashboard">Go to Dashboard</Link>
+      ) : (
+        <Link to="/login">Go to Login</Link>
+      )}
+    </div>
+  );
+};

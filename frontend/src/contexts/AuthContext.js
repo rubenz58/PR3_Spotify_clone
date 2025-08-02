@@ -28,9 +28,12 @@ export const AuthProvider = ({ children }) => {
     // Get environment var for API calls
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-    // CHECK FOR EXISTING LOGIN ON APP START
+    // CHECK FOR EXISTING LOGIN ON APP START --> ON EACH PAGE RELOAD
     useEffect(() => { // useEffect itself can't be async
         const checkExistingAuth = async () => {
+
+            if (user) return;  // ← Skip if user already exists
+
             const stored_token = localStorage.getItem('token');
 
             if (stored_token) {

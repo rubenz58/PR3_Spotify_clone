@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 // XXXXXX >>>>>> –––––– Add styling file –––––– <<<<<< XXXXXX // 
@@ -6,10 +5,17 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
 
-    const { userIsLoaded } = useAuth();
+    const { user, logout } = useAuth();
 
     return (
-        <h1>Navbar</h1>
+        <>
+            <h1>Navbar</h1>
+            { user && 
+                <button onClick={logout} className="logout-button">
+              Logout
+            </button>
+            }
+        </>
     );
 }
 

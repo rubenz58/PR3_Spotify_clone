@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginForm from "./LoginForm/LoginForm";
 import SignUpForm from "./SignUpForm/SignUpForm";
-import { Dashboard, LoadingSpinner } from "../IntroComponents";
+import { LoadingSpinner, NotFound } from "../IntroComponents";
+import { Dashboard } from "../Dashboard";
 import { PublicRoute, ProtectedRoute } from "../RouteProtection";
 
 // XXXXXX >>>>>> –––––– Add styling file –––––– <<<<<< XXXXXX // 
@@ -38,6 +39,8 @@ const MainContent = () => {
 
             {/* Default redirects */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
     

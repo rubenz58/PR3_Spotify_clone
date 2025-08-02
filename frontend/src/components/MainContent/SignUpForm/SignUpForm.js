@@ -99,7 +99,7 @@ const SignUpForm = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="submit-button"
+                    className="signup-submit-button"
                 >
                     {loading ? "Signing in..." : "Sign up"}
                 </button>

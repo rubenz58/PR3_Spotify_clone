@@ -17,31 +17,33 @@ const MainContent = () => {
 
     if (loading) return <LoadingSpinner/>;
     return (
-        <Routes>
-            {/* Public Routes - redirect to dashboard if logged in */}
-            <Route path='/login' element={
-                <PublicRoute>
-                    <LoginForm />
-                </PublicRoute>
-            }/>
-            <Route path='/signup' element={
-                <PublicRoute>
-                    <SignUpForm />
-                </PublicRoute>
-            }/>
+        <div className="main-content-container">
+            <Routes>
+                {/* Public Routes - redirect to dashboard if logged in */}
+                <Route path='/login' element={
+                    <PublicRoute>
+                        <LoginForm />
+                    </PublicRoute>
+                }/>
+                <Route path='/signup' element={
+                    <PublicRoute>
+                        <SignUpForm />
+                    </PublicRoute>
+                }/>
 
-            {/* Protected Routes - redirect to login if not logged in */}
-            <Route path='/dashboard' element={
-                <ProtectedRoute>
-                    <Dashboard />
-                </ProtectedRoute>
-            }/>
+                {/* Protected Routes - redirect to login if not logged in */}
+                <Route path='/dashboard' element={
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                }/>
 
-            {/* Default redirects */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                {/* Default redirects */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-            <Route path="*" element={<NotFound />} />
-        </Routes>
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </div>
     );
     
 }

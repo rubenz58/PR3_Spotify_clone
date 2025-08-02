@@ -66,9 +66,9 @@
   cursor: not-allowed;
 } */
 
-/* SignUpForm.css - Fixed with Signup Prefixes */
+/* SignUpForm.css - Signup Form Styles */
 
-/* Main form container */
+/* Main form container - similar to login but with green accent */
 .signup-container {
   background: white;
   border-radius: 12px;
@@ -129,7 +129,7 @@
   letter-spacing: 0.025em;
 }
 
-/* Form inputs - BASE styles (shared with login) */
+/* Form inputs */
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -147,14 +147,14 @@
   color: #9ca3af;
 }
 
-.form-input:hover:not(:focus) {
-  border-color: #9ca3af;
-}
-
-/* SIGNUP-specific input focus (GREEN) */
-.signup-form-input:focus {
+/* Green focus state for signup form */
+.form-input:focus {
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-input:hover:not(:focus) {
+  border-color: #9ca3af;
 }
 
 /* Invalid input state */
@@ -167,8 +167,8 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-/* SIGNUP Submit button (GREEN gradient) */
-.signup-submit-button {
+/* Submit button with green gradient for signup */
+.submit-button {
   width: 100%;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
@@ -183,23 +183,23 @@
   letter-spacing: 0.025em;
 }
 
-.signup-submit-button:hover:not(:disabled) {
+.submit-button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
-.signup-submit-button:active:not(:disabled) {
+.submit-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.signup-submit-button:disabled {
+.submit-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.signup-submit-button:focus {
+.submit-button:focus {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
 }
 
@@ -212,32 +212,31 @@
   line-height: 1.5;
 }
 
-/* SIGNUP footer link (GREEN) */
-.signup-form-footer-link {
+.form-footer-link {
   color: #10b981;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.signup-form-footer-link:hover {
+.form-footer-link:hover {
   color: #059669;
   text-decoration: underline;
 }
 
-.signup-form-footer-link:focus {
+.form-footer-link:focus {
   outline: 2px solid #10b981;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 /* Loading state for submit button */
-.signup-submit-button-loading {
+.submit-button-loading {
   position: relative;
   color: transparent;
 }
 
-.signup-submit-button-loading::after {
+.submit-button-loading::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -367,7 +366,7 @@
     padding: 0.6875rem 0.875rem;
   }
 
-  .signup-submit-button {
+  .submit-button {
     padding: 0.8125rem 1rem;
   }
 }

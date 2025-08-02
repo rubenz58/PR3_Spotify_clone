@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
+import { Link } from "react-router-dom";
+
 import './LoginForm.css';
 
 
@@ -80,10 +82,17 @@ const LoginForm = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="submit-button"
+                    className="login-submit-button"
                 >
                     {loading ? "Logging in..." : "Login"}
                 </button>
+
+                <div className="form-footer">
+                    Don't have an account?{' '}
+                    <Link to="/signup" className="form-footer-link">
+                        Sign up here
+                    </Link>
+                </div>
             </form>
         </div>
     );

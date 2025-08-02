@@ -1,13 +1,11 @@
-/* signup-container {
+/* .login-container {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.signup-title {
+.login-title {
   margin-bottom: 20px;
-  text-align: center;
-  color: #333;
 }
 
 .error-message {
@@ -27,7 +25,6 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #555;
 }
 
 .form-input {
@@ -41,14 +38,14 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 .submit-button {
   width: 100%;
   padding: 10px;
-  background-color: #28a745;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -58,7 +55,7 @@
 }
 
 .submit-button:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #0056b3;
 }
 
 .submit-button:disabled {
@@ -66,10 +63,13 @@
   cursor: not-allowed;
 } */
 
-/* SignUpForm.css - Fixed with Signup Prefixes */
 
-/* Main form container */
-.signup-container {
+
+/* LoginForm.css - Form Card and Input Styles */
+
+/* Main form container - extends the base form card */
+.login-container {
+  /* Inherits from .form-card-base in App.css */
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -81,7 +81,7 @@
 }
 
 /* Form title */
-.signup-title {
+.login-title {
   text-align: center;
   margin-bottom: 2rem;
   color: #1a1a1a;
@@ -90,7 +90,7 @@
   letter-spacing: -0.025em;
 }
 
-/* Error message styling - same as login */
+/* Error message styling */
 .error-message {
   background: #fee;
   border: 1px solid #fcc;
@@ -129,7 +129,7 @@
   letter-spacing: 0.025em;
 }
 
-/* Form inputs - BASE styles (shared with login) */
+/* Form inputs */
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -147,17 +147,16 @@
   color: #9ca3af;
 }
 
+.form-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 .form-input:hover:not(:focus) {
   border-color: #9ca3af;
 }
 
-/* SIGNUP-specific input focus (GREEN) */
-.signup-form-input:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-/* Invalid input state */
+/* Invalid input state (for future form validation) */
 .form-input.invalid {
   border-color: #ef4444;
 }
@@ -167,10 +166,10 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-/* SIGNUP Submit button (GREEN gradient) */
-.signup-submit-button {
+/* Submit button */
+.submit-button {
   width: 100%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 0.875rem 1rem;
   border: none;
@@ -183,24 +182,24 @@
   letter-spacing: 0.025em;
 }
 
-.signup-submit-button:hover:not(:disabled) {
+.submit-button:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.signup-submit-button:active:not(:disabled) {
+.submit-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.signup-submit-button:disabled {
+.submit-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.signup-submit-button:focus {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+.submit-button:focus {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
 }
 
 /* Form footer with navigation links */
@@ -212,32 +211,31 @@
   line-height: 1.5;
 }
 
-/* SIGNUP footer link (GREEN) */
-.signup-form-footer-link {
-  color: #10b981;
+.form-footer-link {
+  color: #667eea;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.signup-form-footer-link:hover {
-  color: #059669;
+.form-footer-link:hover {
+  color: #764ba2;
   text-decoration: underline;
 }
 
-.signup-form-footer-link:focus {
-  outline: 2px solid #10b981;
+.form-footer-link:focus {
+  outline: 2px solid #667eea;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 /* Loading state for submit button */
-.signup-submit-button-loading {
+.submit-button-loading {
   position: relative;
   color: transparent;
 }
 
-.signup-submit-button-loading::after {
+.submit-button-loading::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -251,51 +249,7 @@
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Password strength indicator (for future enhancement) */
-.password-strength {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-}
-
-.password-strength-weak {
-  color: #ef4444;
-}
-
-.password-strength-medium {
-  color: #f59e0b;
-}
-
-.password-strength-strong {
-  color: #10b981;
-}
-
-/* Form requirements text */
-.form-requirements {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: #6b7280;
-  line-height: 1.4;
-}
-
-/* Success message for completed signup */
-.success-message {
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-  padding: 0.875rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-  animation: slideIn 0.3s ease-out;
-}
-
-/* Form divider for future social login */
+/* Additional elements for future features */
 .form-divider {
   text-align: center;
   margin: 1.5rem 0;
@@ -322,44 +276,26 @@
   z-index: 2;
 }
 
-/* Terms and conditions text */
-.terms-text {
-  font-size: 0.8rem;
-  color: #6b7280;
-  text-align: center;
-  margin-top: 1rem;
-  line-height: 1.4;
-}
-
-.terms-text a {
-  color: #10b981;
-  text-decoration: none;
-}
-
-.terms-text a:hover {
-  text-decoration: underline;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .signup-container {
+  .login-container {
     padding: 2rem;
     margin: 1rem;
   }
 
-  .signup-title {
+  .login-title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .signup-container {
+  .login-container {
     padding: 1.5rem;
     border-radius: 8px;
   }
 
-  .signup-title {
+  .login-title {
     font-size: 1.375rem;
   }
 
@@ -367,7 +303,7 @@
     padding: 0.6875rem 0.875rem;
   }
 
-  .signup-submit-button {
+  .submit-button {
     padding: 0.8125rem 1rem;
   }
 }

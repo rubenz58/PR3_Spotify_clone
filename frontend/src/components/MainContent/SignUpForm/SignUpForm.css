@@ -371,3 +371,22 @@
     padding: 0.8125rem 1rem;
   }
 }
+
+/* SIGNUP footer link (GREEN) */
+.signup-form-footer-link {
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.signup-form-footer-link:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+.signup-form-footer-link:focus {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

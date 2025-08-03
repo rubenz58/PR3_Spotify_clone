@@ -60,7 +60,7 @@ const LoginForm = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="form-input"
+                        className="form-input login-form-input"
                     />
                 </div>
 
@@ -89,7 +89,7 @@ const LoginForm = () => {
 
                 <div className="form-footer">
                     Don't have an account?{' '}
-                    <Link to="/signup" className="form-footer-link">
+                    <Link to="/signup" className="login-form-footer-link">
                         Sign up here
                     </Link>
                 </div>

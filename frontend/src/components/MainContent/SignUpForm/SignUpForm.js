@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { useAuth } from "../../../contexts/AuthContext";
 
 
@@ -103,6 +105,13 @@ const SignUpForm = () => {
                 >
                     {loading ? "Signing in..." : "Sign up"}
                 </button>
+
+                <div className="form-footer">
+                    Already have an account?{' '}
+                    <Link to="/login" className="signup-form-footer-link">
+                        Login here
+                    </Link>
+                </div>
             </form>
         </div>
     );

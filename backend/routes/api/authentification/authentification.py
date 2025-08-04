@@ -12,6 +12,10 @@ from .utils import (
 from .middleware import jwt_required
 from flask import g
 
+############################ TESTING ############################
+import time
+
+
 # /api/auth/
 auth_bp = Blueprint('auth', __name__)
 
@@ -19,6 +23,8 @@ auth_bp = Blueprint('auth', __name__)
 ############################ MAIN ROUTES ############################
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
+    time.sleep(3)
+
     data = request.get_json()
 
     if not data:
@@ -79,6 +85,9 @@ def signup():
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
+    # Add a timer for testing.
+    time.sleep(3)
+
     data = request.get_json()
 
     if not data:
@@ -115,7 +124,6 @@ def login():
             return jsonify({"message": "Invalid credentials"}), 401
     except Exception as e:
         return jsonify({"error": "Invalid credentials"}), 401
-
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():

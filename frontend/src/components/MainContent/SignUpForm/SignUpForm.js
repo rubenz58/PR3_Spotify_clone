@@ -1,3 +1,4 @@
+// SignUpForm.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,7 +16,7 @@ const SignUpForm = () => {
         name: '',
     });
     const [error, setError] = useState('');
-    const { signup, loading } = useAuth();
+    const { signup, loading, signupWithGoogle } = useAuth();
 
     // As a user types, values displayed will change
     const handleChange = (e) => {
@@ -41,8 +42,20 @@ const SignUpForm = () => {
         }
     };
 
+    // GOOGLE SIGNUP
+    const handleGoogleSignup = async() => {
+        setError('');
+
+        const result = await signupWithGoogle();
+
+        if (!result.success) {
+            setError(result.error);
+        }
+        // If successful, AuthContext updates user state automatically
+    }
+
     return (
-        <div className="signup-container">
+        <div className={`signup-container ${loading ? 'signup-container-loading' : ''}`}>
             <h2 className="signup-title">Sign Up</h2>
 
             {error && (
@@ -50,6 +63,19 @@ const SignUpForm = () => {
                         {error}
                 </div>
             )}
+            <button
+                type="button"
+                onClick={handleGoogleSignup}
+                disabled={loading}
+                className={`google-login-btn ${loading ? 'google-login-btn-loading' : ""}`}
+            >
+                {!loading && <div className="google-icon"></div>}
+                {loading ? "" : "Signup with Google"}
+            </button>
+            <div className="form-divider">
+                <span>or</span>
+            </div>
+
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="email" className="form-label">

@@ -1,72 +1,4 @@
-/* signup-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.signup-title {
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
-}
-
-.error-message {
-  color: red;
-  background-color: #ffebee;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid red;
-  border-radius: 4px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
-
-.form-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
-}
-
-.submit-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s;
-}
-
-.submit-button:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-.submit-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-} */
-
-/* SignUpForm.css - Fixed with Signup Prefixes */
+/* SignUpForm.css */
 
 /* Main form container */
 .signup-container {
@@ -389,4 +321,49 @@
   outline: 2px solid #10b981;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Loading overlay effect for signup form - ADD THESE */
+.signup-container-loading {
+  position: relative;
+  pointer-events: none; /* Disable all interactions */
+  user-select: none;    /* Disable text selection */
+}
+
+.signup-container-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+  backdrop-filter: blur(2px);            /* Glossy blur effect */
+  border-radius: 12px;                   /* Match container radius */
+  z-index: 20;                          /* Above form content */
+  animation: fadeIn 0.3s ease-out;
+}
+
+.signup-container-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid rgba(16, 185, 129, 0.3); /* Green theme */
+  border-top: 3px solid #10b981;             /* Green spinner */
+  border-radius: 50%;
+  z-index: 21;                               /* Above overlay */
+  animation: spin 1s linear infinite, fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

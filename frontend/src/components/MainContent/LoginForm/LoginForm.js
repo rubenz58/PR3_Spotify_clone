@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../../../contexts/AuthContext";
 import './LoginForm.css';
 
 
@@ -12,7 +12,11 @@ const LoginForm = () => {
         password: ''
     });
     const [error, setError] = useState('');
-    const { login, loading } = useAuth();
+
+    // If any value in a used CONTEXT CHANGES, it triggers a rerender 
+    // of that component. That's why loading gets re-rendered while
+    // waiting for something like login()
+    const { login, loginWithGoogle, loading } = useAuth();
 
     // As a user types, values displayed will change
     const handleChange = (e) => {
@@ -25,6 +29,7 @@ const LoginForm = () => {
         if (error) setError('');
     };
 
+    // REGULAR LOGIN
     const handleSubmit = async (e) => {
         // Prevents the form from being submitted as an HTML form
         // Logic is handled here in JS
@@ -38,8 +43,20 @@ const LoginForm = () => {
         }
     };
 
+    // GOOGLE LOGIN
+    const handleGoogleLogin = async() => {
+        setError('');
+
+        const result = await loginWithGoogle();
+
+        if (!result.success) {
+            setError(result.error);
+        }
+        // If successful, AuthContext updates user state automatically
+    }
+
     return (
-        <div className="login-container">
+        <div className={`login-container ${loading ? 'login-container-loading' : ''}`}>
             <h2 className="login-title">Login</h2>
 
             {error && (
@@ -47,6 +64,21 @@ const LoginForm = () => {
                         {error}
                 </div>
             )}
+
+            {/* Google Login button */}
+            <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                className="google-login-btn"
+            >
+                {!loading && <div className="google-icon"></div>}
+                {loading ? "" : "Continue with Google"}
+            </button>
+            <div className="form-divider">
+                <span>or</span>
+            </div>
+
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="email" className="form-label">

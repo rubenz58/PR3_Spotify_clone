@@ -13,9 +13,6 @@ import { PublicRoute, ProtectedRoute } from "../RouteProtection";
 
 const MainContent = () => {
 
-    const { loading } = useAuth();
-
-    if (loading) return <LoadingSpinner/>;
     return (
         <div className="main-content-container">
             <Routes>

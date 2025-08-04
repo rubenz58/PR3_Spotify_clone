@@ -68,6 +68,14 @@ export const AuthProvider = ({ children }) => {
 
     }, []); // Empty dependency array. Run once on app start
 
+    const loginWithGoogle = async => {
+        console.log("google login attempt");
+    }
+
+    const signupWithGoogle = async => {
+        console.log("google signup attempt");
+    }
+
     // LOGIN FUNCTION
     const login = async (credentials) => {
         setLoading(true);
@@ -153,6 +161,8 @@ export const AuthProvider = ({ children }) => {
         login, // func.
         signup, // func.
         logout, // func.
+        loginWithGoogle,
+        signupWithGoogle,
     };
 
 

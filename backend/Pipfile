@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 bcrypt = "*"
 pyjwt = "*"
 python-dotenv = "*"
+flask-migrate = "*"
 
 [dev-packages]
 python-dotenv = "*"

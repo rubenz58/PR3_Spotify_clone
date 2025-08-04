@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 from config import Config
+from flask_migrate import Migrate
+
 from routes.api.authentification.authentification import auth_bp
 from routes.api.authentification.models import db
 
@@ -18,6 +20,9 @@ def create_app():
 
     # Initializes database with app
     db.init_app(app)
+
+    # Migrations initialized
+    migrate = Migrate(app, db)
 
     # BLUEPRINTS
     app.register_blueprint(auth_bp, url_prefix='/api/auth')

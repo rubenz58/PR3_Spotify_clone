@@ -31,3 +31,6 @@ instance/
 
 # Logs
 *.log
+
+# Google
+client_secret_805353720289-38d9a1s7mvvjmtrse0khdki1seioq230.apps.googleusercontent.com.json

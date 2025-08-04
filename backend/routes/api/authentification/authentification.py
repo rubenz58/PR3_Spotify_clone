@@ -1,3 +1,4 @@
+import os
 from flask import (
     Blueprint,
     request,
@@ -12,11 +13,25 @@ from .utils import (
 from .middleware import jwt_required
 from flask import g
 
+from google_auth_oauthlib.flow import Flow
+from google.auth.transport import requests as google_requests
+import requests
+
+ 
+
 ############################ TESTING ############################
 import time
 
+############################ ROUTES ############################
+# /api/auth:
+# /signup
+# /login
+# /logout
+# /me
+# /google/login
 
-# /api/auth/
+
+############################ IMPLEMENTATION ############################
 auth_bp = Blueprint('auth', __name__)
 
 
@@ -146,6 +161,101 @@ def get_current_user():
         "user": user.to_dict()
     }), 200
 
+
+############################ GOOGLE AUTH ROUTES ############################
+@auth_bp.route("/google/callback", methods=["POST"])
+def google_callback():
+
+    # Take the code from the front.
+    data = request.get_json()
+
+    if not data or 'code' not in data:
+        return jsonify({"error": "Authorization code is required"}), 400
+    
+    authorization_code = data.get('code')
+
+    # code from Front exchanged for token
+    # Formulate Request.
+    # Make a token request to google with formulated Request.
+    # Uses flow object. Same as google login
+    try:
+        flow = Flow.from_client_config(
+            {
+                "web": {
+                    "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
+                    "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+                    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                    "token_uri": "https://oauth2.googleapis.com/token",
+                    "redirect_uris": ["http://localhost:3000/auth/callback"]
+                }
+            },
+            scopes=[
+                "openid", 
+                "https://www.googleapis.com/auth/userinfo.email",
+                "https://www.googleapis.com/auth/userinfo.profile"
+            ]
+        )
+        flow.redirect_uri = "http://localhost:3000/auth/callback"
+
+        # Exchange authorization code for access token
+        # This makes a POST request to Google and the result is stored on
+        # flow.credentials.[field] afterwards.
+        # All happens over the same HTTP connection. Synchronous.
+        flow.fetch_token(code=authorization_code)
+
+        # Now get user info.
+        # Use access token to get user info
+        user_info_response = requests.get(
+            'https://www.googleapis.com/oauth2/v2/userinfo',
+            headers={"Authorization": f"Bearer {flow.credentials.token}"}
+        )
+
+        if user_info_response.status_code != 200:
+            return jsonify({"error" : "Failed to get user info from Google"}), 400
+        
+        google_user_data = user_info_response.json()
+
+        return jsonify({
+            "message": "Got user info from Google!",
+            "google_user_data": google_user_data
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Token exchange failed: {str(e)}"}), 400
+
+@auth_bp.route("/google/login", methods=["GET"])
+def google_login():
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
+                "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "redirect_uris": ["http://localhost:3000/auth/callback"]
+                # Google will redirect to the frontend -> 3000
+            }
+        },
+        scopes=[
+            "openid", 
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile"
+        ]
+    )
+
+    # Set redirect URI
+    flow.redirect_uri = "http://localhost:3000/auth/callback"
+
+    # Generate authorization URL
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+
+    return jsonify({
+        "auth_url": authorization_url,
+        "state": state
+    })
 
 
 

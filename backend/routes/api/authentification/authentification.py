@@ -250,6 +250,8 @@ def google_callback():
         # Create JWT. Both cases. Login and SignUp
         token = generate_jwt_token(user.id)
 
+        time.sleep(3)
+
         return jsonify ({
             "message": "Google login successful",
             "token": token,

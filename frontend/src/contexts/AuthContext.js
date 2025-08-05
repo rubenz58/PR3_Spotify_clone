@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
     // Get environment var for API calls
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
-    const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    // const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
     // CHECK FOR EXISTING LOGIN ON APP START --> ON EACH PAGE RELOAD
     useEffect(() => { // useEffect itself can't be async
@@ -69,11 +69,28 @@ export const AuthProvider = ({ children }) => {
 
     }, []); // Empty dependency array. Run once on app start
 
-    const loginWithGoogle = async => {
+    // Fetches Google Auth Url from BKND.
+    const loginWithGoogle = async() => {
         console.log("google login attempt");
+
+        try {
+            // 'await' pauses the function at this line
+            // Browser and other parts of website (user clicking etc)
+            // can keep going.
+            const response = await fetch(`${API_BASE}/auth/google/login`);
+            const { auth_url } = await response.json();
+
+            // Redirect to data["auth_url"]
+            // console.log("Would redirect to:", auth_url);
+
+            window.location.href = auth_url;
+        } catch (error) {
+            // Network error
+            return { success: false, error: "Network error occurred" };
+        }
     }
 
-    const signupWithGoogle = async => {
+    const signupWithGoogle = async() => {
         console.log("google signup attempt");
     }
 
@@ -159,6 +176,9 @@ export const AuthProvider = ({ children }) => {
         user, // Current user object
         token, // JWT string token
         loading, // Boolean for loading states - spinners while loading
+        setUser,
+        setToken,
+        setLoading,
         login, // func.
         signup, // func.
         logout, // func.

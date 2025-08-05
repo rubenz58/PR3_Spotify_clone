@@ -16,7 +16,7 @@ const SignUpForm = () => {
         name: '',
     });
     const [error, setError] = useState('');
-    const { signup, loading, signupWithGoogle } = useAuth();
+    const { signup, loading, signupWithGoogle, loginWithGoogle } = useAuth();
 
     // As a user types, values displayed will change
     const handleChange = (e) => {
@@ -46,9 +46,9 @@ const SignUpForm = () => {
     const handleGoogleSignup = async() => {
         setError('');
 
-        const result = await signupWithGoogle();
+        const result = await loginWithGoogle();
 
-        if (!result.success) {
+        if (result && !result.success) {
             setError(result.error);
         }
         // If successful, AuthContext updates user state automatically

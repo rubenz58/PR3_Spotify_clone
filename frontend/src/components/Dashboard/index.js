@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import './Dashboard.css';
 
 export const Dashboard = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, loading } = useAuth();
 
     const handleUpdateProfile = () => {
     // Future functionality
@@ -16,7 +16,7 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${loading ? 'dashboard-container-loading' : ''}`}>
       {/* Header with title and logout */}
       <div className="dashboard-header">
         <h1 className="dashboard-title">Dashboard</h1>

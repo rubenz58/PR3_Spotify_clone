@@ -1,11 +1,12 @@
-import { useAuth } from "../../contexts/AuthContext";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { PublicRoute, ProtectedRoute } from "../RouteProtection";
 
 import LoginForm from "./LoginForm/LoginForm";
 import SignUpForm from "./SignUpForm/SignUpForm";
+import GoogleCallback from "./GoogleCallback";
 import { NotFound } from "../IntroComponents";
 import { Dashboard } from "../Dashboard";
-import { PublicRoute, ProtectedRoute } from "../RouteProtection";
+
 
 const MainContent = () => {
 
@@ -21,6 +22,12 @@ const MainContent = () => {
                 <Route path='/signup' element={
                     <PublicRoute>
                         <SignUpForm />
+                    </PublicRoute>
+                }/>
+
+                <Route path='/auth/callback' element={
+                    <PublicRoute>
+                        <GoogleCallback />
                     </PublicRoute>
                 }/>
 

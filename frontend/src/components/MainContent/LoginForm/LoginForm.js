@@ -47,9 +47,13 @@ const LoginForm = () => {
     const handleGoogleLogin = async() => {
         setError('');
 
+        console.log("handleGoogleLogin triggered");
+
+        // User is being redirect after loginWithGoogle, so they never return.
+        // result.success never given a value.
         const result = await loginWithGoogle();
 
-        if (!result.success) {
+        if (result && !result.success) {
             setError(result.error);
         }
         // If successful, AuthContext updates user state automatically

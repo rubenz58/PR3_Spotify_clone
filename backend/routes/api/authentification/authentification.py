@@ -203,7 +203,7 @@ def google_callback():
         # All happens over the same HTTP connection. Synchronous.
         flow.fetch_token(code=authorization_code)
 
-        # Now get user info.
+        # Now get user info, using the token we got from the code/token exchange
         # Use access token to get user info
         user_info_response = requests.get(
             'https://www.googleapis.com/oauth2/v2/userinfo',
@@ -215,10 +215,46 @@ def google_callback():
         
         google_user_data = user_info_response.json()
 
-        return jsonify({
-            "message": "Got user info from Google!",
-            "google_user_data": google_user_data
-        })
+        # LOGGIN/SIGNIN IN USER.
+        # It's one single callback for both.
+        google_id = google_user_data['id']
+        email = google_user_data['email']
+        name = google_user_data['name']
+
+        existing_user = User.query.filter_by(google_id=google_id).first()
+
+        if existing_user:
+            user = existing_user
+        else:
+            # Check if email already exists in DB
+            # In this case it would someone signing in with Google, but they 
+            # already signed up directly through the website. Would create
+            # duplicates in the db.
+            email_user = User.query.filter_by(email=email).first()
+            if email_user:
+                return jsonify({
+                    "error" : "Email already registered with regular accoutn"
+                }), 400
+            else:
+                # Create new User in db.
+                user = User(
+                    email=email,
+                    name=name,
+                    password_hash=None,
+                    google_id=google_id,
+                    auth_method="google"
+                )
+                db.session.add(user)
+                db.session.commit()
+
+        # Create JWT. Both cases. Login and SignUp
+        token = generate_jwt_token(user.id)
+
+        return jsonify ({
+            "message": "Google login successful",
+            "token": token,
+            "user": user.to_dict()
+        }), 200
 
     except Exception as e:
         return jsonify({"error": f"Token exchange failed: {str(e)}"}), 400

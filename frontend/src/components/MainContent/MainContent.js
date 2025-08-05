@@ -3,13 +3,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginForm from "./LoginForm/LoginForm";
 import SignUpForm from "./SignUpForm/SignUpForm";
-import { LoadingSpinner, NotFound } from "../IntroComponents";
+import { NotFound } from "../IntroComponents";
 import { Dashboard } from "../Dashboard";
 import { PublicRoute, ProtectedRoute } from "../RouteProtection";
-
-// XXXXXX >>>>>> –––––– Add styling file –––––– <<<<<< XXXXXX // 
-// Don't need one since the styling doesn't actually happen here //
-
 
 const MainContent = () => {
 

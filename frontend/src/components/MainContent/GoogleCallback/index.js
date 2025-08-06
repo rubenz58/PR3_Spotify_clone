@@ -8,11 +8,9 @@ import { Dashboard } from "../../Dashboard";
 const GoogleCallback = () => {
 
     const [error, setError] = useState(null);
-    const { setUser, setToken, setLoading } = useAuth();
+    const { setUser, setToken, setOAuthLoading } = useAuth();
     const navigate = useNavigate();
     const hasProcessed = useRef(false); // Value persists across renders
-
-    // Show loading spinner
 
     useEffect(() => {
         const handleGoogleCallback = async() => {
@@ -20,7 +18,7 @@ const GoogleCallback = () => {
             if (hasProcessed.current) return; // Prevent duplicate call of useEffect
             hasProcessed.current = true;
 
-            setLoading(true);
+            setOAuthLoading(true);
 
             try {
                 // Get the parameters. Code is parsed correctly by URLSearchParams
@@ -29,7 +27,8 @@ const GoogleCallback = () => {
 
                 if (!code) {
                     setError("No authorization code received from Google");
-                    setLoading(false);
+                    console.log("No code, setting to false");
+                    setOAuthLoading(false);
                     return;
                 }
 
@@ -58,18 +57,16 @@ const GoogleCallback = () => {
 
                     // Redirect to dashboard.
                     // Replace skips the previous callback URL
-                    navigate('/dashboard', {replace : true});
+                    navigate('/dashboard', { replace : true });
                 } else {
                     setError(data.error || 'Google login failed');
-                    setLoading(false);
-
+                    setOAuthLoading(false);
                 }
             } catch (error) {
                 // Backend error
-                console.log("Google callback error: ", error);
                 setError("Network error during Google login");
             } finally {
-                setLoading(false);
+                setOAuthLoading(false);
             }
         }
         handleGoogleCallback();

@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [oAuthLoading, setOAuthLoading] = useState(false);
 
     // Get environment var for API calls
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -33,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => { // useEffect itself can't be async
         const checkExistingAuth = async () => {
 
-            if (user) return;  // ← Skip if user already exists
+            if (user) return;  // Skip if user already exists
 
             const stored_token = localStorage.getItem('token');
 
@@ -184,6 +185,8 @@ export const AuthProvider = ({ children }) => {
         logout, // func.
         loginWithGoogle,
         signupWithGoogle,
+        oAuthLoading,
+        setOAuthLoading,
     };
 
 

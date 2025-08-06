@@ -2,22 +2,12 @@ import { useAuth } from "../../contexts/AuthContext";
 
 import './Navbar.css';
 
-// XXXXXX >>>>>> –––––– Add styling file –––––– <<<<<< XXXXXX // 
-
 
 const Navbar = () => {
 
     const { user, logout } = useAuth();
 
     return (
-        // <>
-        //     <h1>Navbar</h1>
-        //     { user && 
-        //         <button onClick={logout} className="logout-button">
-        //       Logout
-        //     </button>
-        //     }
-        // </>
         <nav className="navbar">
             <h1 className="navbar-title">MyAuthApp</h1>
             

@@ -1,4 +1,6 @@
 import os
+import re
+
 from flask import (
     Blueprint,
     request,
@@ -29,6 +31,7 @@ import time
 # /logout
 # /me
 # /google/login
+# /google/callback
 
 
 ############################ IMPLEMENTATION ############################
@@ -38,7 +41,6 @@ auth_bp = Blueprint('auth', __name__)
 ############################ MAIN ROUTES ############################
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
-    time.sleep(3)
 
     data = request.get_json()
 
@@ -52,18 +54,31 @@ def signup():
     if not email:
         return jsonify({"error": "Email is required"}), 400
     
+    if '@' not in email:
+        return jsonify({"error" : "Invalid email format"}), 400
+
+    if email.count("@") != 1:
+        return jsonify({"error" : "Invalid email format"}), 400
+
     if not password:
         return jsonify({"error": "Password is required"}), 400
     
     if not name:
         return jsonify({"error": "Name is required"}), 400
     
-    if '@' not in email:
-        return jsonify({"error": "Invalid email format"}), 400
-    
     if len(password) < 6:
         return jsonify({"error": "Password must be at least 6 characters"}), 400
     
+    if not any (c.isupper() for c in password):
+        return jsonify({
+            "error" : "Password must contain at least one uppercase letter"
+        }), 400
+    
+    if not re.search(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\?]', password):
+        return jsonify({
+            "error" : "Password must contain at least one symbol"
+        }), 400
+
     # VALIDATION PASSED
     # 1. Check if email already exists
     try:
@@ -101,7 +116,7 @@ def signup():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     # Add a timer for testing.
-    time.sleep(3)
+    # time.sleep(3)
 
     data = request.get_json()
 
@@ -250,7 +265,7 @@ def google_callback():
         # Create JWT. Both cases. Login and SignUp
         token = generate_jwt_token(user.id)
 
-        time.sleep(3)
+        # time.sleep(3)
 
         return jsonify ({
             "message": "Google login successful",

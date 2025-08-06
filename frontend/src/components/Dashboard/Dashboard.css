@@ -320,8 +320,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-  backdrop-filter: blur(2px);            /* Glossy blur effect */
+  background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+  backdrop-filter: blur(4px);            /* Glossy blur effect */
   border-radius: 12px;                   /* Match container radius */
   z-index: 20;                          /* Above dashboard content */
   animation: fadeIn 0.3s ease-out;

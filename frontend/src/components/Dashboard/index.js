@@ -3,7 +3,10 @@ import { useAuth } from "../../contexts/AuthContext";
 import './Dashboard.css';
 
 export const Dashboard = () => {
-    const { user, logout, loading } = useAuth();
+    const { user, logout, loading, oAuthLoading } = useAuth();
+    const isLoading = loading || oAuthLoading;
+
+    // console.log("Dashboard/loading: ", isLoading);
 
     const handleUpdateProfile = () => {
     // Future functionality
@@ -16,7 +19,7 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className={`dashboard-container ${loading ? 'dashboard-container-loading' : ''}`}>
+    <div className={`dashboard-container ${oAuthLoading ? 'dashboard-container-loading' : ''}`}>
       {/* Header with title and logout */}
       <div className="dashboard-header">
         <h1 className="dashboard-title">Dashboard</h1>
@@ -116,16 +119,4 @@ export const Dashboard = () => {
       </div>
     </div>
   );
-
-    // return (
-      
-    //   // <div className="App">
-    //   //   <header className="App-header">
-    //   //     <h1>My Auth App</h1>
-    //   //     <div className="user-info">
-    //   //       <span>Welcome, {user.name}!</span>
-    //   //     </div>
-    //   //   </header>
-    //   // </div>
-    // );
 }

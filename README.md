@@ -1,9 +1,20 @@
+Basic Authentication - v.1.0
+
 REACT FRONT / FLASK BACKEND
 
 LOGIN Application w/ GAuthorization option.
+React State handled using React Context.
+
+Backend: /api/auth
+# /signup
+# /login
+# /logout
+# /me
+# /google/login
+# /google/callback
+
 
 POSTGRES DB of users.
-
 
 To Add:
 - API Limiter

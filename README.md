@@ -1,7 +1,8 @@
 Spotify Clone - v.1.0
 
 Steps:
-// 1. Implement Authentication using Zustand. Change code.
+// > Implement Authentication using Zustand. Change code.
+> Implement One song streaming.
 
 
 Music. 

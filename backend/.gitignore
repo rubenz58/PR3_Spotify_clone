@@ -34,3 +34,6 @@ instance/
 
 # Google
 client_secret_*.json
+
+# Audio Files
+audio_files/

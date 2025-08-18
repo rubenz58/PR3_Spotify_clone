@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 
+from database import db
 
-# Initialize db
-db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = "users"
@@ -19,8 +18,6 @@ class User(db.Model):
     # Google Auth fields (id, authentification)
     google_id = db.Column(db.String(100), unique=True, nullable=True)
     auth_method = db.Column(db.String(20), nullable=False, default="email")
-
-    
 
     def __repr__(self):
         return f"<User {self.email}>"

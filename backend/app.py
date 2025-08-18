@@ -4,7 +4,7 @@ from config import Config
 from flask_migrate import Migrate
 
 from routes.api.authentification.authentification import auth_bp
-from routes.api.authentification.models import db
+from database import db
 
 
 def create_app():

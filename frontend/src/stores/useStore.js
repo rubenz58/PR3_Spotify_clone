@@ -50,7 +50,6 @@ const useStore = create((set, get) => ({
 
     // Fetches Google Auth Url from BKND
     loginWithGoogle: async () => {
-        const { API_BASE } = get()
         console.log("google login attempt")
 
         try {
@@ -68,7 +67,6 @@ const useStore = create((set, get) => ({
 
     // LOGIN FUNCTION
     login: async (credentials) => {
-        const { API_BASE } = get()
         set({ loading: true })
 
         try {
@@ -100,7 +98,6 @@ const useStore = create((set, get) => ({
     },
 
     signup: async (userData) => {
-        const { API_BASE } = get()
         set({ loading: true })
 
         try {

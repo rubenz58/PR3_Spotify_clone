@@ -6,7 +6,9 @@ from flask import (
     request,
     jsonify
 )
-from .models import User, db
+from models.user import User
+from database import db
+# from  import User, db
 from .utils import (
     hash_password,
     generate_jwt_token,

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import useStore from "../../../stores/useStore";
+import useStore from "../../../../stores/useStore";
 
 
 import './SignUpForm.css';

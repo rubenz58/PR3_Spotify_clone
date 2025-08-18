@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PublicRoute, ProtectedRoute } from "../RouteProtection";
 
-import LoginForm from "./LoginForm/LoginForm";
-import SignUpForm from "./SignUpForm/SignUpForm";
-import GoogleCallback from "./GoogleCallback";
+import LoginForm from "./Authentication/LoginForm/LoginForm";
+import SignUpForm from "./Authentication/SignUpForm/SignUpForm";
+import GoogleCallback from "./Authentication/GoogleCallback";
 import { NotFound } from "../IntroComponents";
 import { Dashboard } from "../Dashboard";
 

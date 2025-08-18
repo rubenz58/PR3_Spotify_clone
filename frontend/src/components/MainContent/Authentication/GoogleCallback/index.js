@@ -1,9 +1,9 @@
 // GoogleCallback
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../../stores/useStore";
+import useStore from "../../../../stores/useStore";
 
-import { Dashboard } from "../../Dashboard";
+import { Dashboard } from "../../../Dashboard";
 
 const GoogleCallback = () => {
 

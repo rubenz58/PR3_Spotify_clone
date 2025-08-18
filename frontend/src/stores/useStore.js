@@ -1,7 +1,10 @@
 import { create } from 'zustand'
 
 const useStore = create((set, get) => ({
-    // Auth State
+
+    getApiBase: () => process.env.REACT_APP_API_BASE_URL,
+
+    /////// AUTHENTICATION STATE ///////
     user: null,
     token: null,
     loading: true,
@@ -135,16 +138,45 @@ const useStore = create((set, get) => ({
         localStorage.removeItem('token')
     },
 
-    // Future: Music Player State (add these as you build features)
-    // currentSong: null,
-    // isPlaying: false,
-    // volume: 50,
-    // playlist: [],
-    // queue: [],
+
+    /////// MUSIC PLAYER STATE ///////
+
+    currentSong: null, // { id: 1, title: "Song Name", artist: "Artist", file_path: "..." }
+    isPlaying: false,
+    volume: 50,
+    songs: [],
+    playlist: [],
+    queue: [],
+    songLoading: false,
+
+    // Fetch all songs from backend
+    fetchSongs: async () => {
+    const { getApiBase } = get()
+    const API_BASE = getApiBase()
+    
+    try {
+        set({ songLoading: true })
+        const response = await fetch(`${API_BASE}/api/songs`)
+        const data = await response.json()
+        set({ songs: data.songs })
+    } catch (error) {
+        console.error('Failed to fetch songs:', error)
+    } finally {
+        set({ songLoading: false })
+    }
+    },
+
+    // Play a specific song
+    playSong: (song) => {
+        set({ currentSong: song, isPlaying: true })
+    },
+
+    // Toggle play/pause for current song
+    togglePlay: () => {
+        set((state) => ({ isPlaying: !state.isPlaying }))
+    },
 
     // // Future: Music Player Actions
-    // playSong: (song) => set({ currentSong: song, isPlaying: true }),
-    // togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
     // setVolume: (volume) => set({ volume }),
     // addToQueue: (song) => set((state) => ({ queue: [...state.queue, song] })),
 }))

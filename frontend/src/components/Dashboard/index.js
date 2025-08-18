@@ -1,4 +1,6 @@
 import useStore from "../../stores/useStore";
+import {SongList} from "../MainContent/SongList";
+import {AudioPlayer} from "../MainContent/AudioPlayer";
 
 import './Dashboard.css';
 
@@ -8,15 +10,6 @@ export const Dashboard = () => {
 
     // console.log("Dashboard/loading: ", isLoading);
 
-    const handleUpdateProfile = () => {
-    // Future functionality
-    alert('Update profile feature coming soon!');
-  };
-
-  const handleViewSettings = () => {
-    // Future functionality  
-    alert('Settings feature coming soon!');
-  };
 
   return (
     <div className={`dashboard-container ${oAuthLoading ? 'dashboard-container-loading' : ''}`}>
@@ -79,28 +72,6 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="dashboard-actions">
-        <button 
-          onClick={handleUpdateProfile}
-          className="dashboard-action-btn primary"
-        >
-          Update Profile
-        </button>
-        <button 
-          onClick={handleViewSettings}
-          className="dashboard-action-btn"
-        >
-          Settings
-        </button>
-        <button 
-          onClick={() => alert('Help center coming soon!')}
-          className="dashboard-action-btn"
-        >
-          Help Center
-        </button>
-      </div>
-
       {/* Recent activity */}
       <div className="dashboard-activity">
         <h3 className="dashboard-activity-title">Recent Activity</h3>
@@ -116,6 +87,11 @@ export const Dashboard = () => {
             {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Recently'}
           </span>
         </div>
+      </div>
+
+      <div>
+        <SongList/>
+        <AudioPlayer/>
       </div>
     </div>
   );

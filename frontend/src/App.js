@@ -1,5 +1,7 @@
 import './App.css';
-import { AuthProvider } from './contexts/AuthContext';
+// import { AuthProvider } from './contexts/AuthContext';
+import { useEffect } from 'react';
+import useStore from './stores/useStore';
 import { BrowserRouter as Router } from "react-router-dom";
 
 /// COMPONENT IMPORT ///
@@ -17,12 +19,17 @@ const AppContent = () => {
 }
 
 function App() {
+
+  useEffect(() => {
+    useStore.getState().checkExistingAuth()
+  }, []) 
+
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <Router>
         <AppContent/>
       </Router>
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
 

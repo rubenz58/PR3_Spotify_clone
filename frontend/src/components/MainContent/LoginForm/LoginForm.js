@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../../../contexts/AuthContext";
+import useStore from "../../../stores/useStore";
 import './LoginForm.css';
 
 
@@ -16,7 +16,7 @@ const LoginForm = () => {
     // If any value in a used CONTEXT CHANGES, it triggers a rerender 
     // of that component. That's why loading gets re-rendered while
     // waiting for something like login()
-    const { login, loginWithGoogle, loading } = useAuth();
+    const { login, loginWithGoogle, loading } = useStore();
 
     // As a user types, values displayed will change
     const handleChange = (e) => {

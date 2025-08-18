@@ -1,9 +1,9 @@
-import { useAuth } from "../../contexts/AuthContext";
+import useStore from "../../stores/useStore";
 
 import './Dashboard.css';
 
 export const Dashboard = () => {
-    const { user, logout, loading, oAuthLoading } = useAuth();
+    const { user, logout, loading, oAuthLoading } = useStore();
     const isLoading = loading || oAuthLoading;
 
     // console.log("Dashboard/loading: ", isLoading);

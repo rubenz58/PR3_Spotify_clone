@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../../../contexts/AuthContext";
+import useStore from "../../../stores/useStore";
 
 
 import './SignUpForm.css';
@@ -16,7 +16,7 @@ const SignUpForm = () => {
         name: '',
     });
     const [error, setError] = useState('');
-    const { signup, loading, signupWithGoogle, loginWithGoogle } = useAuth();
+    const { signup, loading, signupWithGoogle, loginWithGoogle } = useStore();
 
     // As a user types, values displayed will change
     const handleChange = (e) => {

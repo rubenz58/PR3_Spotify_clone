@@ -1,11 +1,11 @@
-import { useAuth } from "../../contexts/AuthContext";
+import useStore from "../../stores/useStore";
 
 import './Navbar.css';
 
 
 const Navbar = () => {
 
-    const { user, logout } = useAuth();
+    const { user, logout } = useStore();
 
     return (
         <nav className="navbar">

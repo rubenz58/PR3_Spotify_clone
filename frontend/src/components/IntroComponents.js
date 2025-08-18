@@ -1,4 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
+import useStore from "../stores/useStore";
 import { Link } from "react-router-dom";
 
 export const LoadingSpinner = () => {
@@ -7,7 +8,8 @@ export const LoadingSpinner = () => {
 
 // components/NotFound/NotFound.js
 export const NotFound = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const { user } = useStore();
   
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>

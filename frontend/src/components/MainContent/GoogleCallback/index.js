@@ -1,14 +1,14 @@
 // GoogleCallback
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext";
+import useStore from "../../../stores/useStore";
 
 import { Dashboard } from "../../Dashboard";
 
 const GoogleCallback = () => {
 
     const [error, setError] = useState(null);
-    const { setUser, setToken, setOAuthLoading } = useAuth();
+    const { setUser, setToken, setOAuthLoading } = useStore();
     const navigate = useNavigate();
     const hasProcessed = useRef(false); // Value persists across renders
 

@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 
 from routes.api.authentification.authentification import auth_bp
 from routes.api.songs.songs import songs_bp
+from routes.stream.streaming import streaming_bp
 from database import db
 
 # Creates the tables in the DB automatically if imported
@@ -32,6 +33,7 @@ def create_app():
     # BLUEPRINTS
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(songs_bp, url_prefix='/api/songs')
+    app.register_blueprint(streaming_bp, url_prefix='/stream')
 
     # The whole app will run on the homepage and make API requests to the backend
     # to get information.

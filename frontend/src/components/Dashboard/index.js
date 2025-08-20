@@ -1,10 +1,10 @@
 import useStore from "../../stores/useStore";
-import {SongList} from "../MainContent/SongList";
-import {AudioPlayer} from "../MainContent/AudioPlayer";
 
 import './Dashboard.css';
 
 export const Dashboard = () => {
+    console.log("Dashboard is actually rendering!");
+
     const { user, logout, loading, oAuthLoading } = useStore();
     const isLoading = loading || oAuthLoading;
 
@@ -87,11 +87,6 @@ export const Dashboard = () => {
             {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Recently'}
           </span>
         </div>
-      </div>
-
-      <div>
-        <SongList/>
-        <AudioPlayer/>
       </div>
     </div>
   );

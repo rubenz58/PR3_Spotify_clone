@@ -9,6 +9,8 @@ import './SignUpForm.css';
 
 
 const SignUpForm = () => {
+    console.log("SignUpForm is actually rendering!");
+
     // Variables that will hold input information
     const [formData, setFormData] = useState({
         email: '',

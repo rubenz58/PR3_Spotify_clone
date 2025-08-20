@@ -1,12 +1,13 @@
-Spotify Clone - v.1.0
+PR3 – Spotify Clone - v.1.0
 
 Steps:
 > // Implement Authentication using Zustand. Change code.
 > Implement One song streaming.
     > // Display Song component
-    > Add DB of songs
-    > Add BKND route. /api/songs (get all songs/)
-    > Seed with a single DB entry.
+    > // Create Song Model
+    > // Add one song for testing.
+    > +BKND route. /api/songs (get all songs/)
+    > +BKND route. /stream/songs/song_id
 
 
 Music. 

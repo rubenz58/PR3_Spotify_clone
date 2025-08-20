@@ -5,9 +5,9 @@ import { Song } from "../Song";
 import useStore from "../../../stores/useStore";
 
 export function SongList() {
-  const { songs, fetchSongs, songLoading } = useStore();
-
   console.log("Rendering SongList");
+
+  const { songs, fetchSongs, songLoading } = useStore();
   
   useEffect(() => {
     fetchSongs()

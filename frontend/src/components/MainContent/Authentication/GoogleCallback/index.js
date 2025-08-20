@@ -7,6 +7,9 @@ import { Dashboard } from "../../../Dashboard";
 
 const GoogleCallback = () => {
 
+    console.log("GoogleCallback is actually rendering!");
+
+
     const [error, setError] = useState(null);
     const { setUser, setToken, setOAuthLoading } = useStore();
     const navigate = useNavigate();

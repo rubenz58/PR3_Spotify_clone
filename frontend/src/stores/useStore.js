@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 const useStore = create((set, get) => ({
 
-    getApiBase: () => process.env.REACT_APP_API_BASE_URL,
+    getUrlBase: () => process.env.REACT_APP_BASE_URL,
 
     /////// AUTHENTICATION STATE ///////
     user: null,
@@ -18,6 +18,7 @@ const useStore = create((set, get) => ({
 
     // CHECK FOR EXISTING LOGIN ON APP START
     checkExistingAuth: async () => {
+        console.log("checkExistingAuth: Running")
         const { user } = get()
         
         if (user) return // Skip if user already exists
@@ -26,8 +27,11 @@ const useStore = create((set, get) => ({
 
         if (stored_token) {
             try {
+                const { getUrlBase } = get();
+                const BASE_URL = getUrlBase();
+
                 // Verify token is still valid by calling /me endpoint
-                const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/me`, {
+                const response = await fetch(`${BASE_URL}/api/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${stored_token}`,
                         'Content-Type': 'application/json'
@@ -55,8 +59,11 @@ const useStore = create((set, get) => ({
     loginWithGoogle: async () => {
         console.log("google login attempt")
 
+        const { getUrlBase } = get();
+        const BASE_URL = getUrlBase();
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/google/login`)
+            const response = await fetch(`${BASE_URL}/api/auth/google/login`)
             const { auth_url } = await response.json()
             window.location.href = auth_url
         } catch (error) {
@@ -72,8 +79,11 @@ const useStore = create((set, get) => ({
     login: async (credentials) => {
         set({ loading: true })
 
+        const { getUrlBase } = get();
+        const BASE_URL = getUrlBase();
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,10 +113,13 @@ const useStore = create((set, get) => ({
     signup: async (userData) => {
         set({ loading: true })
 
+        const { getUrlBase } = get();
+        const BASE_URL = getUrlBase();
+
         try {
             console.log("Signup Attempt");
-            console.log("API_BASE: " + process.env.REACT_APP_API_BASE_URL);
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/signup`, {
+            console.log("BASE_URL: " + BASE_URL);
+            const response = await fetch(`${BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -151,19 +164,19 @@ const useStore = create((set, get) => ({
 
     // Fetch all songs from backend
     fetchSongs: async () => {
-    const { getApiBase } = get()
-    const API_BASE = getApiBase()
-    
-    try {
-        set({ songLoading: true })
-        const response = await fetch(`${API_BASE}/api/songs`)
-        const data = await response.json()
-        set({ songs: data.songs })
-    } catch (error) {
-        console.error('Failed to fetch songs:', error)
-    } finally {
-        set({ songLoading: false })
-    }
+        const { getUrlBase } = get();
+        const BASE_URL = getUrlBase();
+        
+        try {
+            set({ songLoading: true })
+            const response = await fetch(`${BASE_URL}/api/songs`)
+            const data = await response.json()
+            set({ songs: data.songs })
+        } catch (error) {
+            console.error('Failed to fetch songs:', error)
+        } finally {
+            set({ songLoading: false })
+        }
     },
 
     // Play a specific song

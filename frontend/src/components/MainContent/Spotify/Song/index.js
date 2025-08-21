@@ -1,4 +1,4 @@
-import useStore from "../../../stores/useStore";
+import useStore from "../../../../stores/useStore";
 import './Song.css';
 
 // This is just UI. Updates Zustand state.

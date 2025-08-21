@@ -1,0 +1,153 @@
+/* components/Header/Header.css */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #000;
+  color: white;
+  padding: 16px 24px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #282828;
+}
+
+/* Left Section - Logo */
+.header-left {
+  flex: 0 0 auto;
+  min-width: 200px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1db954; /* Spotify green */
+}
+
+.logo-text {
+  margin-left: 8px;
+  color: white;
+}
+
+/* Center Section - Search */
+.header-center {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.search-form {
+  width: 100%;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 50px 12px 16px;
+  border: none;
+  border-radius: 25px;
+  background-color: #242424;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.search-input:focus {
+  background-color: #2a2a2a;
+  box-shadow: 0 0 0 2px #1db954;
+}
+
+.search-input::placeholder {
+  color: #a7a7a7;
+}
+
+.search-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #a7a7a7;
+  font-size: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color 0.2s ease;
+}
+
+.search-button:hover {
+  color: white;
+}
+
+/* Right Section - User */
+.header-right {
+  flex: 0 0 auto;
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: 1px solid #727272;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.logout-button:hover {
+  background-color: white;
+  color: black;
+  border-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+    height: 56px;
+  }
+  
+  .header-center {
+    margin: 0 16px;
+  }
+  
+  .logo-text {
+    display: none;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .search-input {
+    font-size: 16px; /* Prevents zoom on mobile */
+  }
+}

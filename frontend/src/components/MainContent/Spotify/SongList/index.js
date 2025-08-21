@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 import { Song } from "../Song";
-import useStore from "../../../stores/useStore";
+import useStore from "../../../../stores/useStore";
 
 export function SongList() {
   console.log("Rendering SongList");

@@ -15,6 +15,9 @@ export const MainContentRouter = ({ view }) => {
     
     // Determine view from prop or URL
     const currentView = view || (location.pathname === '/signup' ? 'signup' : 'login');
+    // const currentView = location.pathname === '/signup' ? 'signup' 
+    //                 : location.pathname === '/login' ? 'login' 
+    //                 : null; // When at "/", don't show auth forms
     console.log("current view: ", currentView);
 
     if (currentView === 'login') {
@@ -22,7 +25,9 @@ export const MainContentRouter = ({ view }) => {
             return <LoginForm/>;
         } else {
             // User already logged in -> Go to Content
-            return <Navigate to="/" replace />;
+            return <MainContent/>;
+            // console.log("Navigate to /");
+            // return <Navigate to="/" replace />;
         }
     }
 
@@ -31,10 +36,10 @@ export const MainContentRouter = ({ view }) => {
             return <SignupForm/>;
         } else {
             // User already logged in -> Go to Content
-            return <Navigate to="/" replace />;
+            return <MainContent/>;
+            // return <Navigate to="/" replace />;
         }
     }
-    
     
     return <MainContent/>;
 

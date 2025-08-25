@@ -18,6 +18,9 @@ export function Header() {
     // TODO: Add real-time search suggestions
   };
 
+  // IF: !user or loading -> display loading state for this component.
+  
+
   return (
     <header className="header">
       <div className="header-left">

@@ -6,7 +6,7 @@ import SignUpForm from "./Authentication/SignUpForm/SignUpForm";
 import GoogleCallback from "./Authentication/GoogleCallback";
 import { NotFound } from "../IntroComponents";
 import { Dashboard } from "../Dashboard";
-import { Layout } from "./Spotify/Layout";
+// import { Layout } from "./Spotify/Layout";
 
 
 const MainContent = () => {
@@ -42,7 +42,7 @@ const MainContent = () => {
                 <Route path='/spotify' element={
                     <ProtectedRoute>
                         {/* {console.log("START: /spotify")} */}
-                        <Layout/>
+                        {/* <Layout/> */}
                         {/* <SongList/>
                         <AudioPlayer/> */}
                         {/* {console.log("END: /spotify")} */}

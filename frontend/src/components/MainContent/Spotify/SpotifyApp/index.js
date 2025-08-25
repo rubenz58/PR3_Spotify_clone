@@ -5,9 +5,9 @@ import { MiddleContent } from "../MiddleContent";
 import { Header } from '../Header';
 import { Sidebar } from '../Sidebar';
 import { RightSidebar } from '../RightSidebar';
-import './Layout.css';
+import './SpotifyApp.css';
 
-export function Layout({ children }) {
+export function SpotifyApp({ children }) {
   return (
     <div className="spotify-layout">
       {/* Fixed Header */}

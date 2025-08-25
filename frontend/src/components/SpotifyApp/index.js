@@ -1,13 +1,15 @@
 // components/Layout/Layout.js
-import { AudioPlayer } from "../AudioPlayer";
-import { SongList } from "../SongList";
-import { MiddleContent } from "../MiddleContent";
-import { Header } from '../Header';
-import { Sidebar } from '../Sidebar';
-import { RightSidebar } from '../RightSidebar';
+import { AudioPlayer } from '../Spotify/AudioPlayer';
+import { SongList } from '../Spotify/SongList';
+import { Header } from '../Spotify/Header';
+import { Sidebar } from '../Spotify/Sidebar';
+import { RightSidebar } from '../Spotify/RightSidebar';
+import { MainContentRouter } from "../Spotify/MainContent/MainContentRouter";
 import './SpotifyApp.css';
 
-export function SpotifyApp({ children }) {
+export function SpotifyApp({ view }) {
+  console.log("SpotifyApp");
+
   return (
     <div className="spotify-layout">
       {/* Fixed Header */}
@@ -23,8 +25,7 @@ export function SpotifyApp({ children }) {
         
         {/* Main Content Area */}
         <main className="content-area">
-          {children}
-          <MiddleContent/>
+          <MainContentRouter view = {view}/>
         </main>
         
         {/* Right Sidebar - Song Info & Queue */}

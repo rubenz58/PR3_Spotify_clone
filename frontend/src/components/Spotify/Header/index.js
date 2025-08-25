@@ -1,6 +1,6 @@
 // components/Header/Header.js
 import { useState } from 'react';
-import useStore from '../../../../stores/useStore';
+import useStore from '../../../stores/useStore';
 import './Header.css';
 
 export function Header() {

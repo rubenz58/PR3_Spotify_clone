@@ -1,6 +1,6 @@
 // components/RightSidebar/RightSidebar.js
 import { useState } from 'react';
-import useStore from '../../../../stores/useStore';
+import useStore from '../../../stores/useStore';
 import './RightSidebar.css';
 
 export function RightSidebar() {

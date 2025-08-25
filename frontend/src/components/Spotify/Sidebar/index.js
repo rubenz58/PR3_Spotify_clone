@@ -1,6 +1,6 @@
 // components/Sidebar/Sidebar.js
 import { useState, useEffect } from 'react';
-import useStore from '../../../../stores/useStore';
+import useStore from '../../../stores/useStore';
 import './Sidebar.css';
 
 export function Sidebar() {

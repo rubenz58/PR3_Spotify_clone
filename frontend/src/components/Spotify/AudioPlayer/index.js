@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import useStore from '../../../../stores/useStore';
+import useStore from '../../../stores/useStore';
 
 // HOW IT WORKS
 // 1. Song component = just UI + button clicks → updates Zustand state

@@ -1,11 +1,11 @@
-// components/MainContent/MainContent.js
+import useStore from '../../../stores/useStore';
 import { SongList } from '../SongList';
-import { LoginForm } from '../../Authentication/LoginForm/LoginForm';
-import './MiddleContent.css';
+import './MainContent.css';
 
-export function MiddleContent() {
+export function MainContent() {
 
-  // If user is not logged in display loginForm.
+  console.log("MainContent");
+  
   return (
     <div className="main-content">
       {/* Page Header */}

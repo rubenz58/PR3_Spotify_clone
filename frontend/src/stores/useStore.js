@@ -16,6 +16,44 @@ const useStore = create((set, get) => ({
     setLoading: (loading) => set({ loading }),
     setOAuthLoading: (oAuthLoading) => set({ oAuthLoading }),
 
+    // Same function for user and admin. Just attaches whatever token is availabl for requests.
+    makeAuthenticatedRequest: async (url, options = {}) => {
+        const { token, getUrlBase, logout } = get();
+        const BASE_URL = getUrlBase();
+
+        console.log('Making request to:', `${BASE_URL}${url}`);
+        console.log('Token exists:', !!token);
+        console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'NO TOKEN');
+
+        if (!token) {
+            throw new Error('No authentication token available');
+        }
+
+        const defaultOptions = {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                ...options.headers,
+            },
+        };
+
+        const response = await fetch(`${BASE_URL}${url}`, {
+            ...defaultOptions,
+            ...options,
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired, logout user
+                logout();
+                throw new Error('Authentication expired. Please log in again.');
+            }
+            throw new Error(`API call failed: ${response.statusText}`);
+        }
+
+        return response.json();
+    },
+
     // CHECK FOR EXISTING LOGIN ON APP START
     checkExistingAuth: async () => {
         console.log("checkExistingAuth: Running")

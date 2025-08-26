@@ -3,12 +3,15 @@ import { Navigate } from 'react-router-dom';
 import useStore from '../../../stores/useStore';
 import './Admin.css';
 
+// TO ADD
+// UPLOADING NEW SONGS FUNCTIONALITY
+
 const Admin = () => {
     console.log("Admin");
     const { user, makeAuthenticatedRequest } = useStore();
     const [adminData, setAdminData] = useState(null);
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [adminLoading, setAdmingLoading] = useState(false);
     
     console.log(user);
     const isAdmin = user?.is_admin || false;
@@ -18,7 +21,7 @@ const Admin = () => {
         const fetchAdminData = async () => {
             if (!isAdmin) return; // Don't make request if not admin
             
-            setLoading(true);
+            setAdmingLoading(true);
             setError('');
             
             try {
@@ -28,7 +31,7 @@ const Admin = () => {
                 setError(error.message);
                 console.error('Admin request failed:', error);
             } finally {
-                setLoading(false);
+                setAdmingLoading(false);
             }
         };
 
@@ -56,7 +59,7 @@ const Admin = () => {
     return (
         <div>
             <h1>ADMIN</h1>
-            {loading && <p>Loading admin data...</p>}
+            {adminLoading && <p>Loading admin data...</p>}
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             {adminData && (
                 <div>

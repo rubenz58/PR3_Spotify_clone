@@ -9,9 +9,9 @@ export function MainContent() {
 
   console.log("MainContent");
 
-  const { user, loading } = useStore();
+  const { user, authLoading } = useStore();
 
-  if (loading) return <LoadingSpinner/>;
+  if (authLoading) return <LoadingSpinner/>;
   if (!user) return <Navigate to="/login" replace/>;
 
   return (

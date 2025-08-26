@@ -16,15 +16,15 @@ const AppContent = () => {
 }
 
 function App() {
-  const loading = useStore(state => state.loading);
+  // const loading = useStore(state => state.loading);
 
   useEffect(() => {
     useStore.getState().checkExistingAuth()
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   // This returns immediately.
   // ORDER.

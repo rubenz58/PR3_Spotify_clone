@@ -18,9 +18,9 @@ const SignUpForm = () => {
         name: '',
     });
     const [error, setError] = useState('');
-    const { user, signup, loading, signupWithGoogle, loginWithGoogle } = useStore();
+    const { user, signup, authLoading, signupWithGoogle, loginWithGoogle } = useStore();
 
-    if (loading) return <LoadingSpinner/>;
+    if (authLoading) return <LoadingSpinner/>;
     if (user) return <Navigate to="/" replace/>;
 
     // As a user types, values displayed will change
@@ -60,7 +60,7 @@ const SignUpForm = () => {
     }
 
     return (
-        <div className={`signup-container ${loading ? 'signup-container-loading' : ''}`}>
+        <div className={`signup-container ${authLoading ? 'signup-container-loading' : ''}`}>
             <h2 className="signup-title">Sign Up</h2>
 
             {error && (
@@ -72,10 +72,10 @@ const SignUpForm = () => {
                 type="button"
                 onClick={handleGoogleSignup}
                 disabled={loading}
-                className={`google-login-btn ${loading ? 'google-login-btn-loading' : ""}`}
+                className={`google-login-btn ${authLoading ? 'google-login-btn-loading' : ""}`}
             >
-                {!loading && <div className="google-icon"></div>}
-                {loading ? "" : "Signup with Google"}
+                {!authLoading && <div className="google-icon"></div>}
+                {authLoading ? "" : "Signup with Google"}
             </button>
             <div className="form-divider">
                 <span>or</span>
@@ -134,7 +134,7 @@ const SignUpForm = () => {
                     disabled={loading}
                     className="signup-submit-button"
                 >
-                    {loading ? "Signing in..." : "Sign up"}
+                    {authLoading ? "Signing in..." : "Sign up"}
                 </button>
 
                 <div className="form-footer">

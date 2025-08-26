@@ -19,9 +19,9 @@ const LoginForm = () => {
     // If any value in a used CONTEXT CHANGES, it triggers a rerender 
     // of that component. That's why loading gets re-rendered while
     // waiting for something like login()
-    const { user, login, loginWithGoogle, loading } = useStore();
+    const { user, login, loginWithGoogle, authLoading } = useStore();
 
-    if (loading) return <LoadingSpinner/>;
+    if (authLoading) return <LoadingSpinner/>;
     if (user) return <Navigate to="/" replace/>;
 
     // As a user types, values displayed will change
@@ -66,7 +66,7 @@ const LoginForm = () => {
     }
 
     return (
-        <div className={`login-container ${loading ? 'login-container-loading' : ''}`}>
+        <div className={`login-container ${authLoading ? 'login-container-loading' : ''}`}>
             <h2 className="login-title">Login</h2>
 
             {error && (
@@ -79,11 +79,11 @@ const LoginForm = () => {
             <button
                 type="button"
                 onClick={handleGoogleLogin}
-                disabled={loading}
+                disabled={authLoading}
                 className="google-login-btn"
             >
-                {!loading && <div className="google-icon"></div>}
-                {loading ? "" : "Continue with Google"}
+                {!authLoading && <div className="google-icon"></div>}
+                {authLoading ? "" : "Continue with Google"}
             </button>
             <div className="form-divider">
                 <span>or</span>
@@ -123,10 +123,10 @@ const LoginForm = () => {
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={authLoading}
                     className="login-submit-button"
                 >
-                    {loading ? "Logging in..." : "Login"}
+                    {authLoading ? "Logging in..." : "Login"}
                 </button>
 
                 <div className="form-footer">

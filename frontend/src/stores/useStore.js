@@ -5,15 +5,20 @@ const useStore = create((set, get) => ({
     getUrlBase: () => process.env.REACT_APP_BASE_URL,
 
     /////// AUTHENTICATION STATE ///////
+    authLoading: true,        // Login/signup/token verification
+    playlistLoading: false,   // Playlist data
+    searchLoading: false,     // Search operations
+    playerLoading: false,     // Audio file loading/buffering
+    uploadLoading: false,     // File uploads (if you add that feature)
+    oAuthLoading: false,      // Google login
     user: null,
     token: null,
-    loading: true,
-    oAuthLoading: false,
+    // loading: true, -> Now: authLoading
 
     // Setters (for direct state updates if needed)
     setUser: (user) => set({ user }),
     setToken: (token) => set({ token }),
-    setLoading: (loading) => set({ loading }),
+    setAuthLoading: (authLoading) => set({ authLoading }),
     setOAuthLoading: (oAuthLoading) => set({ oAuthLoading }),
 
     // Same function for user and admin. Just attaches whatever token is availabl for requests.
@@ -90,7 +95,7 @@ const useStore = create((set, get) => ({
             }
         }
 
-        set({ loading: false })
+        set({ authLoading: false })
     },
 
     // Fetches Google Auth Url from BKND
@@ -115,7 +120,7 @@ const useStore = create((set, get) => ({
 
     // LOGIN FUNCTION
     login: async (credentials) => {
-        set({ loading: true })
+        set({ authLoading: true })
 
         const { getUrlBase } = get();
         const BASE_URL = getUrlBase();
@@ -144,12 +149,12 @@ const useStore = create((set, get) => ({
             // Network error
             return { success: false, error: "Network error occurred" }
         } finally {
-            set({ loading: false }) // Hide loading state
+            set({ authLoading: false }) // Hide loading state
         }
     },
 
     signup: async (userData) => {
-        set({ loading: true })
+        set({ authLoading: true })
 
         const { getUrlBase } = get();
         const BASE_URL = getUrlBase();
@@ -180,7 +185,7 @@ const useStore = create((set, get) => ({
             // Network error
             return { success: false, error: "Network error occurred" }
         } finally {
-            set({ loading: false }) // Hide loading state
+            set({ authLoading: false }) // Hide loading state
         }
     },
 

@@ -19,6 +19,9 @@ class User(db.Model):
     google_id = db.Column(db.String(100), unique=True, nullable=True)
     auth_method = db.Column(db.String(20), nullable=False, default="email")
 
+    is_admin = db.Column(db.Boolean, default=False, nullable=True)
+
+
     def __repr__(self):
         return f"<User {self.email}>"
     

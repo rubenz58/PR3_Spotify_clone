@@ -4,12 +4,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 import useStore from './stores/useStore';
 
 /// COMPONENT IMPORT ///
-import SpotifyRouter from './components/SpotifyRouter';
+// import SpotifyRouter from './components/SpotifyRouter';
+import { SpotifyApp } from './components/SpotifyApp';
 
 const AppContent = () => {
   return (
     <div className="App">
-        <SpotifyRouter/>
+        <SpotifyApp />
     </div>
   );
 }

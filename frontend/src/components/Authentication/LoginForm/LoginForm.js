@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import useStore from "../../../stores/useStore";
+import { LoadingSpinner } from "../../Utils/Utils";
 import './LoginForm.css';
 
 
 const LoginForm = () => {
-    console.log("LoginForm is actually rendering!");
+    console.log("LoginForm!");
 
     // Variables that will hold input information
     const [formData, setFormData] = useState({
@@ -18,7 +19,10 @@ const LoginForm = () => {
     // If any value in a used CONTEXT CHANGES, it triggers a rerender 
     // of that component. That's why loading gets re-rendered while
     // waiting for something like login()
-    const { login, loginWithGoogle, loading } = useStore();
+    const { user, login, loginWithGoogle, loading } = useStore();
+
+    if (loading) return <LoadingSpinner/>;
+    if (user) return <Navigate to="/" replace/>;
 
     // As a user types, values displayed will change
     const handleChange = (e) => {

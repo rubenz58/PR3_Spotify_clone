@@ -32,5 +32,6 @@ class User(db.Model):
             "email": self.email,
             "name": self.name,
             "auth_method": self.auth_method,
-            "created_at": self.created_at
+            "created_at": self.created_at,
+            "is_admin": self.is_admin,
         }

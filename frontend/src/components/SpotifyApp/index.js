@@ -25,7 +25,7 @@ export function SpotifyApp({ view }) {
         
         {/* Main Content Area */}
         <main className="content-area">
-          <MainContentRouter view = {view}/>
+          <MainContentRouter/>
         </main>
         
         {/* Right Sidebar - Song Info & Queue */}

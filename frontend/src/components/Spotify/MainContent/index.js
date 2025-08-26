@@ -1,11 +1,19 @@
+import { Navigate } from 'react-router-dom';
+
 import useStore from '../../../stores/useStore';
+import { LoadingSpinner } from '../../Utils/Utils';
 import { SongList } from '../SongList';
 import './MainContent.css';
 
 export function MainContent() {
 
   console.log("MainContent");
-  
+
+  const { user, loading } = useStore();
+
+  if (loading) return <LoadingSpinner/>;
+  if (!user) return <Navigate to="/login" replace/>;
+
   return (
     <div className="main-content">
       {/* Page Header */}
@@ -40,7 +48,7 @@ export function MainContent() {
             <h2 className="section-title">All Songs</h2>
             <button className="view-all-btn">Show all</button>
           </div>
-          <SongList />
+          {/* <SongList /> */}
         </section>
 
         {/* Placeholder for other sections */}

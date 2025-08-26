@@ -1,15 +1,15 @@
 // SignUpForm.js
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import useStore from "../../../stores/useStore";
-
+import { LoadingSpinner } from "../../Utils/Utils";
 
 import './SignUpForm.css';
 
 
 const SignUpForm = () => {
-    console.log("SignUpForm is actually rendering!");
+    console.log("SignUpForm");
 
     // Variables that will hold input information
     const [formData, setFormData] = useState({
@@ -18,7 +18,10 @@ const SignUpForm = () => {
         name: '',
     });
     const [error, setError] = useState('');
-    const { signup, loading, signupWithGoogle, loginWithGoogle } = useStore();
+    const { user, signup, loading, signupWithGoogle, loginWithGoogle } = useStore();
+
+    if (loading) return <LoadingSpinner/>;
+    if (user) return <Navigate to="/" replace/>;
 
     // As a user types, values displayed will change
     const handleChange = (e) => {

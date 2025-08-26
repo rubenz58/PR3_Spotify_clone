@@ -1,13 +1,15 @@
-/* SignUpForm.css */
-
-/* Main form container */
+/* SignUpForm.css - Spotify Theme */
+/* Main form container - Dark theme to match Spotify */
 .signup-container {
-  background: white;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   padding: 2.5rem;
-  max-width: 420px;
-  width: 100%;
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto;
   position: relative;
   z-index: 10;
 }
@@ -16,17 +18,106 @@
 .signup-title {
   text-align: center;
   margin-bottom: 2rem;
-  color: #1a1a1a;
+  color: white;
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
-/* Error message styling - same as login */
+/* Google Sign Up Button - Spotify style */
+.google-signup-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.google-signup-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.google-signup-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.google-signup-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Google Icon - Updated for dark theme */
+.google-icon {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(45deg, 
+    #4285f4 0%, #4285f4 25%, 
+    #34a853 25%, #34a853 50%, 
+    #fbbc05 50%, #fbbc05 75%, 
+    #ea4335 75%);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Form Divider - Dark theme */
+.form-divider {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+}
+
+.form-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.form-divider span {
+  background: rgba(18, 18, 18, 0.95);
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Error message styling - Spotify red */
 .error-message {
-  background: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
+  background: rgba(226, 65, 65, 0.1);
+  border: 1px solid rgba(226, 65, 65, 0.3);
+  color: #e24141;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Success message for completed signup */
+.success-message {
+  background: rgba(29, 185, 84, 0.1);
+  border: 1px solid rgba(29, 185, 84, 0.3);
+  color: #1db954;
   padding: 0.875rem 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -51,116 +142,173 @@
   margin-bottom: 1.5rem;
 }
 
-/* Form labels */
+/* Form labels - Improved visibility with text shadow and contrast */
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #374151;
-  font-weight: 500;
+  color: #ffffff;
+  font-weight: 600; /* Increased from 500 for better readability */
   font-size: 0.9rem;
   letter-spacing: 0.025em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); /* Added text shadow for contrast */
+  background: rgba(0, 0, 0, 0.3); /* Optional: subtle background */
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
 }
 
-/* Form inputs - BASE styles (shared with login) */
+/* Form inputs - Dark theme styling */
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   font-size: 1rem;
   line-height: 1.5;
-  color: #1f2937;
-  background-color: #ffffff;
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.05);
   transition: all 0.2s ease;
   outline: none;
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: #b3b3b3;
 }
 
 .form-input:hover:not(:focus) {
-  border-color: #9ca3af;
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* SIGNUP-specific input focus (GREEN) */
+/* SIGNUP-specific input focus (Spotify Green) */
 .signup-form-input:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: #1db954;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
 }
 
 /* Invalid input state */
 .form-input.invalid {
-  border-color: #ef4444;
+  border-color: #e24141;
+  background-color: rgba(226, 65, 65, 0.05);
 }
 
 .form-input.invalid:focus {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  border-color: #e24141;
+  box-shadow: 0 0 0 2px rgba(226, 65, 65, 0.2);
 }
 
-/* SIGNUP Submit button (GREEN gradient) */
+/* SIGNUP Submit button (Spotify Green) */
 .signup-submit-button {
   width: 100%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
+  background: #1db954;
+  color: black;
   padding: 0.875rem 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 500px; /* Spotify's signature rounded button */
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   outline: none;
   letter-spacing: 0.025em;
+  text-transform: uppercase;
 }
 
 .signup-submit-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  background: #1ed760;
+  transform: scale(1.02);
 }
 
 .signup-submit-button:active:not(:disabled) {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .signup-submit-button:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
 }
 
 .signup-submit-button:focus {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.3);
 }
 
 /* Form footer with navigation links */
 .form-footer {
   text-align: center;
   margin-top: 1.5rem;
-  color: #6b7280;
+  color: #b3b3b3;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-/* SIGNUP footer link (GREEN) */
+/* SIGNUP footer link (Spotify Green) */
 .signup-form-footer-link {
-  color: #10b981;
+  color: #1db954;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .signup-form-footer-link:hover {
-  color: #059669;
+  color: #1ed760;
   text-decoration: underline;
 }
 
 .signup-form-footer-link:focus {
-  outline: 2px solid #10b981;
+  outline: 2px solid #1db954;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.password-strength-weak {
+  color: #e24141;
+}
+
+.password-strength-medium {
+  color: #f59e0b;
+}
+
+.password-strength-strong {
+  color: #1db954;
+}
+
+/* Form requirements text */
+.form-requirements {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #b3b3b3;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Terms and conditions text */
+.terms-text {
+  font-size: 0.8rem;
+  color: #b3b3b3;
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.terms-text a {
+  color: #1db954;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.terms-text a:hover {
+  color: #1ed760;
+  text-decoration: underline;
 }
 
 /* Loading state for submit button */
@@ -177,8 +325,8 @@
   width: 20px;
   height: 20px;
   margin: -10px 0 0 -10px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid white;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-top: 2px solid black;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -188,95 +336,13 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Password strength indicator (for future enhancement) */
-.password-strength {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-}
-
-.password-strength-weak {
-  color: #ef4444;
-}
-
-.password-strength-medium {
-  color: #f59e0b;
-}
-
-.password-strength-strong {
-  color: #10b981;
-}
-
-/* Form requirements text */
-.form-requirements {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: #6b7280;
-  line-height: 1.4;
-}
-
-/* Success message for completed signup */
-.success-message {
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-  padding: 0.875rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-  animation: slideIn 0.3s ease-out;
-}
-
-/* Form divider for future social login */
-.form-divider {
-  text-align: center;
-  margin: 1.5rem 0;
-  position: relative;
-  color: #9ca3af;
-  font-size: 0.875rem;
-}
-
-.form-divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: #e5e7eb;
-  z-index: 1;
-}
-
-.form-divider span {
-  background: white;
-  padding: 0 1rem;
-  position: relative;
-  z-index: 2;
-}
-
-/* Terms and conditions text */
-.terms-text {
-  font-size: 0.8rem;
-  color: #6b7280;
-  text-align: center;
-  margin-top: 1rem;
-  line-height: 1.4;
-}
-
-.terms-text a {
-  color: #10b981;
-  text-decoration: none;
-}
-
-.terms-text a:hover {
-  text-decoration: underline;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .signup-container {
     padding: 2rem;
-    margin: 1rem;
+    margin: 1rem auto;
+    width: 95%;
+    max-width: 450px;
   }
 
   .signup-title {
@@ -289,6 +355,7 @@
   .signup-container {
     padding: 1.5rem;
     border-radius: 8px;
+    width: 95%;
   }
 
   .signup-title {
@@ -299,35 +366,16 @@
     padding: 0.6875rem 0.875rem;
   }
 
-  .signup-submit-button {
+  .signup-submit-button, .google-signup-btn {
     padding: 0.8125rem 1rem;
   }
 }
 
-/* SIGNUP footer link (GREEN) */
-.signup-form-footer-link {
-  color: #10b981;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.signup-form-footer-link:hover {
-  color: #059669;
-  text-decoration: underline;
-}
-
-.signup-form-footer-link:focus {
-  outline: 2px solid #10b981;
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-/* Loading overlay effect for signup form - ADD THESE */
+/* Loading overlay effect - Dark theme */
 .signup-container-loading {
   position: relative;
-  pointer-events: none; /* Disable all interactions */
-  user-select: none;    /* Disable text selection */
+  pointer-events: none;
+  user-select: none;
 }
 
 .signup-container-loading::before {
@@ -337,10 +385,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-  backdrop-filter: blur(2px);            /* Glossy blur effect */
-  border-radius: 12px;                   /* Match container radius */
-  z-index: 20;                          /* Above form content */
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  z-index: 20;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -352,10 +400,10 @@
   width: 40px;
   height: 40px;
   margin: -20px 0 0 -20px;
-  border: 3px solid rgba(16, 185, 129, 0.3); /* Green theme */
-  border-top: 3px solid #10b981;             /* Green spinner */
+  border: 3px solid rgba(29, 185, 84, 0.3);
+  border-top: 3px solid #1db954;
   border-radius: 50%;
-  z-index: 21;                               /* Above overlay */
+  z-index: 21;
   animation: spin 1s linear infinite, fadeIn 0.3s ease-out;
 }
 

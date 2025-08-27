@@ -4,15 +4,16 @@ import useStore from '../../../stores/useStore';
 import './RightSidebar.css';
 
 export function RightSidebar() {
-  const { currentSong, queue, isPlaying, playSong, removeFromQueue } = useStore();
-  const [activeTab, setActiveTab] = useState('queue'); // 'queue' or 'lyrics'
+  const { user, currentSong, queue, isPlaying, playSong, removeFromQueue } = useStore();
+  const [activeTab, setActiveTab] = useState('queue');
 
   const handlePlayFromQueue = (song, index) => {
+    if (!user) return; // Prevent action if not logged in
     playSong(song);
-    // TODO: Also remove played songs from queue and update queue position
   };
 
   const handleRemoveFromQueue = (index) => {
+    if (!user) return; // Prevent action if not logged in
     removeFromQueue(index);
   };
 
@@ -24,13 +25,13 @@ export function RightSidebar() {
   };
 
   return (
-    <div className="right-sidebar">
+    <div className={`right-sidebar ${!user ? 'sidebar-disabled' : ''}`}>
       {/* Current Song Info */}
       {currentSong && (
         <div className="current-song-section">
           <div className="current-song-header">
             <h3>Now Playing</h3>
-            <button className="minimize-btn">−</button>
+            <button className="minimize-btn" disabled={!user}>−</button>
           </div>
           
           <div className="current-song-info">
@@ -39,7 +40,7 @@ export function RightSidebar() {
                 🎵
               </div>
               <div className="playing-indicator">
-                {isPlaying && (
+                {isPlaying && user && (
                   <div className="sound-bars">
                     <div className="bar"></div>
                     <div className="bar"></div>
@@ -59,8 +60,8 @@ export function RightSidebar() {
             </div>
             
             <div className="song-actions">
-              <button className="action-btn like-btn">💚</button>
-              <button className="action-btn options-btn">⋯</button>
+              <button className="action-btn like-btn" disabled={!user}>💚</button>
+              <button className="action-btn options-btn" disabled={!user}>⋯</button>
             </div>
           </div>
         </div>
@@ -70,13 +71,15 @@ export function RightSidebar() {
       <div className="tab-navigation">
         <button 
           className={`tab-btn ${activeTab === 'queue' ? 'active' : ''}`}
-          onClick={() => setActiveTab('queue')}
+          onClick={() => user && setActiveTab('queue')}
+          disabled={!user}
         >
           Queue
         </button>
         <button 
           className={`tab-btn ${activeTab === 'lyrics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('lyrics')}
+          onClick={() => user && setActiveTab('lyrics')}
+          disabled={!user}
         >
           Lyrics
         </button>
@@ -84,12 +87,21 @@ export function RightSidebar() {
 
       {/* Tab Content */}
       <div className="tab-content">
+        {/* {!user && (
+          <div className="login-required-overlay">
+            <div className="login-message">
+              <h4>Login Required</h4>
+              <p>Sign in to access your music queue and lyrics</p>
+            </div>
+          </div>
+        )} */}
+        
         {activeTab === 'queue' && (
           <div className="queue-section">
             <div className="queue-header">
               <h4>Next Up</h4>
               {queue && queue.length > 0 && (
-                <button className="clear-queue-btn">Clear queue</button>
+                <button className="clear-queue-btn" disabled={!user}>Clear queue</button>
               )}
             </div>
             
@@ -97,7 +109,11 @@ export function RightSidebar() {
               {queue && queue.length > 0 ? (
                 queue.map((song, index) => (
                   <div key={`${song.id}-${index}`} className="queue-item">
-                    <div className="queue-song-info" onClick={() => handlePlayFromQueue(song, index)}>
+                    <div 
+                      className="queue-song-info" 
+                      onClick={() => handlePlayFromQueue(song, index)}
+                      style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+                    >
                       <div className="queue-album-art">🎵</div>
                       <div className="queue-details">
                         <div className="queue-title">{song.title}</div>
@@ -109,6 +125,7 @@ export function RightSidebar() {
                       <button 
                         className="remove-btn"
                         onClick={() => handleRemoveFromQueue(index)}
+                        disabled={!user}
                       >
                         ✕
                       </button>

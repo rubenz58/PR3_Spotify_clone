@@ -16,8 +16,8 @@ export function Sidebar() {
 
   const handleCreatePlaylist = (e) => {
     e.preventDefault();
+    if (!user) return; // Prevent action if not logged in
     if (newPlaylistName.trim()) {
-      // TODO: Implement createPlaylist in useStore
       console.log('Creating playlist:', newPlaylistName);
       setNewPlaylistName('');
       setShowCreateForm(false);
@@ -25,37 +25,51 @@ export function Sidebar() {
   };
 
   const handlePlaylistClick = (playlist) => {
-    // TODO: Navigate to playlist view
+    if (!user) return; // Prevent action if not logged in
     console.log('Opening playlist:', playlist.name);
   };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${!user ? 'sidebar-disabled' : ''}`}>
       {/* Library Header */}
       <div className="library-header">
         <div className="library-title">
           <span className="library-icon">📚</span>
           Your Library
         </div>
-        <button 
+        <button
           className="create-playlist-btn"
-          onClick={() => setShowCreateForm(true)}
+          onClick={() => user && setShowCreateForm(true)}
+          disabled={!user}
           title="Create Playlist"
         >
           ➕
         </button>
       </div>
 
+      {/* Login required overlay */}
+      {!user && (
+        <div className="login-required-overlay">
+          <div className="login-message">
+            <h4>Login Required</h4>
+            <p>Sign in to access your library and create playlists</p>
+          </div>
+        </div>
+      )}
+
       {/* Quick Access Items */}
       <div className="quick-access">
-        <div className="quick-item liked-songs">
+        <div 
+          className="quick-item liked-songs"
+          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+        >
           <div className="quick-item-icon liked-icon">💚</div>
           <span className="quick-item-text">Liked Songs</span>
         </div>
       </div>
 
       {/* Create Playlist Form */}
-      {showCreateForm && (
+      {showCreateForm && user && (
         <div className="create-form">
           <form onSubmit={handleCreatePlaylist}>
             <input
@@ -65,16 +79,18 @@ export function Sidebar() {
               onChange={(e) => setNewPlaylistName(e.target.value)}
               className="playlist-name-input"
               autoFocus
+              disabled={!user}
             />
             <div className="form-buttons">
-              <button type="submit" className="save-btn">Save</button>
-              <button 
-                type="button" 
+              <button type="submit" className="save-btn" disabled={!user}>Save</button>
+              <button
+                type="button"
                 className="cancel-btn"
                 onClick={() => {
                   setShowCreateForm(false);
                   setNewPlaylistName('');
                 }}
+                disabled={!user}
               >
                 Cancel
               </button>
@@ -88,10 +104,11 @@ export function Sidebar() {
         <div className="playlists-list">
           {playlists && playlists.length > 0 ? (
             playlists.map(playlist => (
-              <div 
-                key={playlist.id} 
+              <div
+                key={playlist.id}
                 className="playlist-item"
                 onClick={() => handlePlaylistClick(playlist)}
+                style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
               >
                 <div className="playlist-icon">🎵</div>
                 <div className="playlist-info">
@@ -114,7 +131,10 @@ export function Sidebar() {
       {/* Recently Played Section */}
       <div className="recently-played">
         <h3 className="section-title">Recently Played</h3>
-        <div className="recent-item">
+        <div 
+          className="recent-item"
+          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+        >
           <div className="recent-icon">🎵</div>
           <div className="recent-info">
             <div className="recent-name">Today's Hits</div>

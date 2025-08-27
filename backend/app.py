@@ -13,6 +13,8 @@ from database import db
 # Creates the tables in the DB automatically if imported
 from models.user import User
 from models.song import Song
+from models.playlist import Playlist
+from models.playlist import PlaylistSong
 
 
 def create_app():

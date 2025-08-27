@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 
 import useStore from "../../../stores/useStore";
 import { LoadingSpinner } from "../../Utils/Utils";
+import { MainContentSkeleton } from "../../Utils/MainContentSkeleton";
 
 import './SignUpForm.css';
 
@@ -20,7 +21,7 @@ const SignUpForm = () => {
     const [error, setError] = useState('');
     const { user, signup, authLoading, signupWithGoogle, loginWithGoogle } = useStore();
 
-    if (authLoading) return <LoadingSpinner/>;
+    if (authLoading) return <MainContentSkeleton/>;
     if (user) return <Navigate to="/" replace/>;
 
     // As a user types, values displayed will change
@@ -71,7 +72,7 @@ const SignUpForm = () => {
             <button
                 type="button"
                 onClick={handleGoogleSignup}
-                disabled={loading}
+                disabled={authLoading}
                 className={`google-login-btn ${authLoading ? 'google-login-btn-loading' : ""}`}
             >
                 {!authLoading && <div className="google-icon"></div>}
@@ -131,7 +132,7 @@ const SignUpForm = () => {
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={authLoading}
                     className="signup-submit-button"
                 >
                     {authLoading ? "Signing in..." : "Sign up"}

@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 
 import useStore from '../../../stores/useStore';
 import { LoadingSpinner } from '../../Utils/Utils';
+import { MainContentSkeleton } from '../../Utils/MainContentSkeleton';
 import { SongList } from '../SongList';
 import './MainContent.css';
 
@@ -11,7 +12,7 @@ export function MainContent() {
 
   const { user, authLoading } = useStore();
 
-  if (authLoading) return <LoadingSpinner/>;
+  if (authLoading) return <MainContentSkeleton />;
   if (!user) return <Navigate to="/login" replace/>;
 
   return (

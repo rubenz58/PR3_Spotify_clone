@@ -20,6 +20,8 @@ const useStore = create((set, get) => ({
     setAuthLoading: (authLoading) => set({ authLoading }),
     setOAuthLoading: (oAuthLoading) => set({ oAuthLoading }),
 
+    delay: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+
     // Same function for user and admin. Just attaches whatever token is availabl for requests.
     makeAuthenticatedRequest: async (url, options = {}) => {
         const { token, getUrlBase, logout } = get();
@@ -120,6 +122,9 @@ const useStore = create((set, get) => ({
     // LOGIN FUNCTION
     login: async (credentials) => {
         set({ authLoading: true })
+
+        const { delay } = get();
+        await delay(3000);
 
         const { getUrlBase } = get();
         const BASE_URL = getUrlBase();

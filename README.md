@@ -1,5 +1,8 @@
 PR3 – Spotify Clone - v.1.0
 
+NOW: FR loading states for components while not logged in
+NEXT: Playlists
+
 Core Music Features (Must-Have)
 
 ✅ Play/pause functionality

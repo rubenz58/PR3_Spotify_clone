@@ -13,7 +13,6 @@ const useStore = create((set, get) => ({
     oAuthLoading: false,      // Google login
     user: null,
     token: null,
-    // loading: true, -> Now: authLoading
 
     // Setters (for direct state updates if needed)
     setUser: (user) => set({ user }),

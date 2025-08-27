@@ -62,3 +62,21 @@ Steps:
 > Add: 3-5 songs/artist. 6-8 different artists. Just use 30 second snippets.
 
 
+from models.song import Song
+from database import db
+
+# Update all Iron Maiden songs with that album
+songs = Song.query.filter_by(artist='Iron Maiden').all()
+for song in songs:
+    song.album = 'Best Of Iron Maiden'
+print(f"Updated {len(songs)} songs")
+
+from models.song import Song
+from database import db
+song = Song.query.filter_by(title='Addio').first()
+song.track_number=4
+
+db.session.commit()
+
+
+> python -m scripts.seed_iron_maiden

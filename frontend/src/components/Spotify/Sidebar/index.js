@@ -10,7 +10,7 @@ export function Sidebar() {
 
   useEffect(() => {
     if (user) {
-      // fetchPlaylists();
+      fetchPlaylists();
     }
   }, [user]);
 

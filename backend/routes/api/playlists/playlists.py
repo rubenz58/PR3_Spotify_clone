@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, g
 from database import db
 from models.playlist import Playlist, PlaylistSong
 from models.song import Song
@@ -8,12 +8,18 @@ from ..authentification.utils import decode_token_from_header
 playlists_bp = Blueprint('playlists', __name__)
 
 # Using <user_id> for testing. Will be extracted from JWT directly
-# @playlists_bp.route('/', methods=['GET'])
-@playlists_bp.route('/<int:user_id>', methods=['GET'])
-# @jwt_required
-def get_all_playlists_of_user(user_id):
+@playlists_bp.route('/', methods=['GET'])
+# @playlists_bp.route('/<int:user_id>', methods=['GET'])
+@jwt_required
+def get_all_playlists_of_user():
+    if request.method == 'OPTIONS':
+        return '', 200
     # 1. Get user_id from JWT
     # user_id  = decode_token_from_header(request)
+    # user_id = 2
+    print("/api/playlists")
+    user_id = g.current_user_id
+
 
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401

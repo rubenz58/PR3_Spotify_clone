@@ -29,7 +29,12 @@ const useStore = create((set, get) => ({
 
         console.log('Making request to:', `${BASE_URL}${url}`);
         console.log('Token exists:', !!token);
-        console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'NO TOKEN');
+        console.log('Full token:', token); // Add this line
+        console.log('Request headers:', {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...options.headers,
+        }); // Add this line
 
         if (!token) {
             throw new Error('No authentication token available');
@@ -48,9 +53,11 @@ const useStore = create((set, get) => ({
             ...options,
         });
 
+        console.log('Response status:', response.status); // Add this line
+
         if (!response.ok) {
+            console.log('Response not ok, status:', response.status, response.statusText); // Add this line
             if (response.status === 401) {
-                // Token expired, logout user
                 logout();
                 throw new Error('Authentication expired. Please log in again.');
             }
@@ -123,8 +130,8 @@ const useStore = create((set, get) => ({
     login: async (credentials) => {
         set({ authLoading: true })
 
-        const { delay } = get();
-        await delay(3000);
+        // const { delay } = get();
+        // await delay(3000);
 
         const { getUrlBase } = get();
         const BASE_URL = getUrlBase();
@@ -208,6 +215,37 @@ const useStore = create((set, get) => ({
     playlist: [],
     queue: [],
     songLoading: false,
+
+    fetchPlaylists: async () => {
+        console.log("Fetching Playlists");
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) {
+            console.error('No user logged in');
+            return;
+        }
+        
+        try {
+            set({ playlistLoading: true });
+
+            // const { getUrlBase } = get();
+            // const BASE_URL = getUrlBase();
+            
+            // // Simple fetch without authentication for testing
+            // const response = await fetch(`${BASE_URL}/api/playlists`);
+            // const data = await response.json();
+            
+            // For testing with user_id in URL (matches your current backend route)
+            // const data = await makeAuthenticatedRequest(`/api/playlists/${user.id}`);
+            const data = await makeAuthenticatedRequest(`/api/playlists/`);
+            
+            set({ playlists: data.playlists });
+        } catch (error) {
+            console.error('Failed to fetch playlists:', error);
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
 
     // Fetch all songs from backend
     fetchSongs: async () => {

@@ -10,6 +10,11 @@ def jwt_required(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        print("testing JWT")
+        # Skip JWT for OPTIONS requests (preflight)
+        if request.method == 'OPTIONS':
+            return f(*args, **kwargs)
+        
         try:
             user_id, is_admin = decode_token_from_header(request)
             

@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from routes.api.authentification.authentification import auth_bp
 from routes.api.songs.songs import songs_bp
 from routes.api.admin.admin import admin_bp
+from routes.api.playlists.playlists import playlists_bp
 from routes.stream.streaming import streaming_bp
 
 from database import db
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(songs_bp, url_prefix='/api/songs')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
+    app.register_blueprint(playlists_bp, url_prefix='/api/playlists')
 
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 

@@ -40,11 +40,13 @@ def get_all_playlists_of_user():
     return jsonify({'playlists': result})
 
 
-@playlists_bp.route('/<int:user_id>/<int:playlist_id>/songs', methods=['GET'])
-# @jwt_required
-def get_songs_of_playlist(user_id, playlist_id):  # Add playlist_id parameter
-    # 1. Get user_id from JWT
-    # user_id = decode_token_from_header(request)
+@playlists_bp.route('/<int:playlist_id>/songs', methods=['GET'])
+# @playlists_bp.route('/<int:user_id>/<int:playlist_id>/songs', methods=['GET'])
+@jwt_required
+def get_songs_of_playlist(playlist_id):
+    # 1. Get user_id from JWT saved to global g
+    user_id = g.current_user_id
+
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
     

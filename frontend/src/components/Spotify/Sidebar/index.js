@@ -2,11 +2,15 @@
 import { useState, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
 import './Sidebar.css';
+import { useNavigate } from 'react-router-dom';
+
 
 export function Sidebar() {
-  const { user, playlists, fetchPlaylists } = useStore();
+  const { user, playlists, fetchPlaylists, fetchPlaylistSongs } = useStore();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -27,6 +31,8 @@ export function Sidebar() {
   const handlePlaylistClick = (playlist) => {
     if (!user) return; // Prevent action if not logged in
     console.log('Opening playlist:', playlist.name);
+    navigate(`/playlist/${playlist.id}`);
+    // fetchPlaylistSongs(playlist.id);
   };
 
   return (

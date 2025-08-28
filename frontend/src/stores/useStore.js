@@ -215,7 +215,13 @@ const useStore = create((set, get) => ({
     playlist: [],
     queue: [],
     songLoading: false,
+    currentPlaylistSongs: [],
+    currentPlaylistId: null,
 
+    setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
+    setCurrentPlaylistId: (currentPlaylistId) => set({ currentPlaylistId }),
+
+    // Fetch all playlists for a specific user
     fetchPlaylists: async () => {
         console.log("Fetching Playlists");
         const { user, makeAuthenticatedRequest } = get();
@@ -228,20 +234,27 @@ const useStore = create((set, get) => ({
         try {
             set({ playlistLoading: true });
 
-            // const { getUrlBase } = get();
-            // const BASE_URL = getUrlBase();
-            
-            // // Simple fetch without authentication for testing
-            // const response = await fetch(`${BASE_URL}/api/playlists`);
-            // const data = await response.json();
-            
-            // For testing with user_id in URL (matches your current backend route)
-            // const data = await makeAuthenticatedRequest(`/api/playlists/${user.id}`);
             const data = await makeAuthenticatedRequest(`/api/playlists/`);
             
             set({ playlists: data.playlists });
         } catch (error) {
             console.error('Failed to fetch playlists:', error);
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
+
+    fetchPlaylistSongs: async (playlistId) => {
+        const { user, makeAuthenticatedRequest } = get();
+    
+        if (!user) return;
+        
+        try {
+            set({ playlistLoading: true });
+            const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs`);
+            set({ currentPlaylistSongs: data.songs, currentPlaylistId: playlistId });
+        } catch (error) {
+            console.error('Failed to fetch playlist songs:', error);
         } finally {
             set({ playlistLoading: false });
         }

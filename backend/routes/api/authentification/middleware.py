@@ -10,7 +10,7 @@ def jwt_required(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print("testing JWT")
+        # print("testing JWT")
         # Skip JWT for OPTIONS requests (preflight)
         if request.method == 'OPTIONS':
             return f(*args, **kwargs)

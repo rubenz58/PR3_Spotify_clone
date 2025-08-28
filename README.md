@@ -71,10 +71,10 @@ for song in songs:
     song.album = 'Best Of Iron Maiden'
 print(f"Updated {len(songs)} songs")
 
-from models.song import Song
+from models.playlist import PlaylistSong
 from database import db
-song = Song.query.filter_by(title='Addio').first()
-song.track_number=4
+playlist_song = PlaylistSong.query.filter_by(song_id=1).first()
+playlist_song.song_id=11
 
 db.session.commit()
 

@@ -9,18 +9,42 @@ import useStore from '../../../stores/useStore';
 export function AudioPlayer() {
   const { currentSong, isPlaying } = useStore();
   const audioRef = useRef(null);
-  
+
   useEffect(() => {
-    // audioRef.current: points to <audio/> element
-    // Check that a DOM element before trying to call methods on it.
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.play();
-      } else {
+      if (currentSong && isPlaying) {
+        audioRef.current.play().catch(error => {
+          console.log('Play failed:', error);
+        });
+      } else if (!isPlaying) {
         audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [currentSong, isPlaying]);
+
+  
+  // useEffect(() => {
+  //   // audioRef.current: points to <audio/> element
+  //   // Check that a DOM element exists before trying to call methods on it.
+  //   if (audioRef.current) {
+  //     if (isPlaying) {
+  //       audioRef.current.play();
+  //     } else {
+  //       audioRef.current.pause();
+  //     }
+  //   }
+  // }, [isPlaying]);
+
+  // // Have to reset audio element when song changes.
+  // useEffect(() => {
+  //   if (audioRef.current && currentSong) {
+  //     // Song changed, load new source
+  //     audioRef.current.load(); // Reset the audio element
+  //     if (isPlaying) {
+  //       audioRef.current.play();
+  //     }
+  //   }
+  // }, [currentSong]);
   
   if (!currentSong) return null;
   

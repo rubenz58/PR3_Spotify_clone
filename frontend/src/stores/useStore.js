@@ -27,14 +27,14 @@ const useStore = create((set, get) => ({
         const { token, getUrlBase, logout } = get();
         const BASE_URL = getUrlBase();
 
-        console.log('Making request to:', `${BASE_URL}${url}`);
-        console.log('Token exists:', !!token);
-        console.log('Full token:', token); // Add this line
-        console.log('Request headers:', {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            ...options.headers,
-        }); // Add this line
+        // console.log('Making request to:', `${BASE_URL}${url}`);
+        // console.log('Token exists:', !!token);
+        // console.log('Full token:', token);
+        // console.log('Request headers:', {
+        //     'Authorization': `Bearer ${token}`,
+        //     'Content-Type': 'application/json',
+        //     ...options.headers,
+        // });
 
         if (!token) {
             throw new Error('No authentication token available');
@@ -53,10 +53,10 @@ const useStore = create((set, get) => ({
             ...options,
         });
 
-        console.log('Response status:', response.status); // Add this line
+        // console.log('Response status:', response.status); // Add this line
 
         if (!response.ok) {
-            console.log('Response not ok, status:', response.status, response.statusText); // Add this line
+            // console.log('Response not ok, status:', response.status, response.statusText); // Add this line
             if (response.status === 401) {
                 logout();
                 throw new Error('Authentication expired. Please log in again.');
@@ -279,11 +279,13 @@ const useStore = create((set, get) => ({
 
     // Play a specific song
     playSong: (song) => {
-        set({ currentSong: song, isPlaying: true })
+        set({ currentSong: song, isPlaying: true });
+
     },
 
     // Toggle play/pause for current song
     togglePlay: () => {
+        console.log("toggle play");
         set((state) => ({ isPlaying: !state.isPlaying }))
     },
 

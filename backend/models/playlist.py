@@ -7,6 +7,8 @@ class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     name = db.Column(db.String(255))
+    song_count = db.Column(db.Integer, default=0)  # Add this field
+
     
     # Many-to-many relationship through junction table
     songs = db.relationship('Song', 

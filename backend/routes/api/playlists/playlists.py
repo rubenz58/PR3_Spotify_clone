@@ -16,22 +16,17 @@ def get_playlists_of_user(user_id):
 
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
-    # 2. Query playlists for matching user_id
-    playlists = db.session.query(
-        Playlist,
-        db.func.count(PlaylistSong.song_id).label('song_count')
-    ).outerjoin(PlaylistSong)\
-     .filter(Playlist.user_id == user_id)\
-     .group_by(Playlist.id)\
-     .all()
     
-    # 3. Format response
+    # 2. Query playlists for matching user_id
+    playlists = Playlist.query.filter_by(user_id=user_id).all()
+    
+    # Format response
     result = []
-    for playlist, song_count in playlists:
+    for playlist in playlists:
         result.append({
             'id': playlist.id,
             'name': playlist.name,
-            # 'song_count': song_count,
+            'song_count': playlist.song_count,
             # 'created_at': playlist.created_at.isoformat() if playlist.created_at else None
         })
     

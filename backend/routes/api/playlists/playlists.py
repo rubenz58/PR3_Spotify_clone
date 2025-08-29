@@ -66,6 +66,25 @@ def create_playlist():
         }
     })
 
+@playlists_bp.route('/<int:playlist_id>', methods=['DELETE'])
+@jwt_required
+def delete_playlist(playlist_id):
+    user_id = g.current_user_id
+    
+    # Find playlist and verify ownership
+    playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+    if not playlist:
+        return jsonify({'error': 'Playlist not found or unauthorized'}), 404
+    
+    # Delete all playlist-song relationships first (foreign key constraint)
+    PlaylistSong.query.filter_by(playlist_id=playlist_id).delete()
+    
+    # Delete the playlist
+    db.session.delete(playlist)
+    db.session.commit()
+    
+    return jsonify({'message': 'Playlist deleted successfully'})
+
 
 @playlists_bp.route('/<int:playlist_id>/songs', methods=['GET'])
 # @playlists_bp.route('/<int:user_id>/<int:playlist_id>/songs', methods=['GET'])

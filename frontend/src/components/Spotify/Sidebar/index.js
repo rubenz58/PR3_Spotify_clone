@@ -14,6 +14,8 @@ export function Sidebar() {
     fetchPlaylists,
     fetchPlaylistSongs,
     createNewPlaylist,
+    deletePlaylist,
+    renamePlaylist,
   } = useStore();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -21,9 +23,12 @@ export function Sidebar() {
 
   const navigate = useNavigate();
 
-  const handleDeletePlaylist = (playlist) => {
-    console.log('Delete playlist:', playlist.name);
-    // TODO: Add deletePlaylist function to useStore
+  const handleDeletePlaylist = async (playlist) => {
+    console.log('Delete playlist:', playlist.id);
+    const result = await deletePlaylist(playlist.id);
+    if (!result.success) {
+        console.error('Delete failed:', result.error);
+    }
   };
 
   const handleRenamePlaylist = (playlist) => {

@@ -268,8 +268,8 @@ const useStore = create((set, get) => ({
         try {
             set({ playlistLoading: true });
 
-            const { delay } = get();
-            await delay(3000);
+            // const { delay } = get();
+            // await delay(3000);
             
             // Make POST request to create playlist
             const data = await makeAuthenticatedRequest('/api/playlists/', {
@@ -291,6 +291,33 @@ const useStore = create((set, get) => ({
             set({ playlistLoading: false });
         }
     },
+
+    deletePlaylist: async (playlistId) => {
+        const { user, makeAuthenticatedRequest } = get();
+
+        try {
+            set({ playlistLoading: true });
+            
+            await makeAuthenticatedRequest(`/api/playlists/${playlistId}`, {
+                method: 'DELETE'
+            });
+            
+            // Remove from local state only if API call succeeds
+            set((state) => ({
+                playlists: state.playlists.filter(p => p.id !== playlistId)
+            }));
+            
+            return { success: true };
+            
+        } catch (error) {
+            console.error('Failed to delete playlist:', error);
+            return { success: false, error: error.message };
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
+
+    // renamePlaylist: async ()
 
     // JUST USED FOR TESTING INITIALLY
     // Fetch all songs from backend

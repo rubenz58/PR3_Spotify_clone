@@ -144,3 +144,43 @@ def get_songs_of_playlist(playlist_id):
         })
     
     return jsonify({'songs': result})
+
+
+@playlists_bp.route('/<int:playlist_id>/songs/<int:song_id>', methods=['DELETE'])
+@jwt_required
+def remove_song_from_playlist(playlist_id, song_id):
+    user_id = g.current_user_id
+    
+    # Verify playlist ownership
+    playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+    if not playlist:
+        return jsonify({'error': 'Playlist not found or unauthorized'}), 404
+    
+    # Find the playlist-song entry to remove
+    playlist_song = PlaylistSong.query.filter_by(
+        playlist_id=playlist_id, 
+        song_id=song_id
+    ).first()
+    
+    if not playlist_song:
+        return jsonify({'error': 'Song not found in playlist'}), 404
+    
+    removed_position = playlist_song.position
+    
+    # Remove the song from playlist
+    db.session.delete(playlist_song)
+    
+    # Update positions of all songs that came after the removed song
+    PlaylistSong.query.filter(
+        PlaylistSong.playlist_id == playlist_id,
+        PlaylistSong.position > removed_position
+    ).update({
+        PlaylistSong.position: PlaylistSong.position - 1
+    })
+    
+    # Update playlist song count
+    playlist.song_count -= 1
+    
+    db.session.commit()
+    
+    return jsonify({'message': 'Song removed from playlist successfully'})

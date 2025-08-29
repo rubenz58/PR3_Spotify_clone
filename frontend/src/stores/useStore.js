@@ -319,7 +319,7 @@ const useStore = create((set, get) => ({
 
     renamePlaylist: async (playlistId, newName) => {
         const { makeAuthenticatedRequest } = get();
-        
+
         try {
             set({ playlistLoading: true });
             
@@ -344,6 +344,32 @@ const useStore = create((set, get) => ({
             return { success: false, error: error.message };
         } finally {
             set({ playlistLoading: false });
+        }
+    },
+
+    removeSongFromPlaylist: async (playlistId, songId) => {
+
+        const { makeAuthenticatedRequest } = get();
+
+        try {
+            await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs/${songId}`, {
+            method: 'DELETE'
+            });
+            
+            // Update local state after successful API call
+            set((state) => ({
+            currentPlaylistSongs: state.currentPlaylistSongs.filter(s => s.id !== songId),
+            playlists: state.playlists.map(p => 
+                p.id === parseInt(playlistId) 
+                ? { ...p, song_count: p.song_count - 1 }
+                : p
+            )
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to remove song from playlist:', error);
+            return { success: false, error: error.message };
         }
     },
 

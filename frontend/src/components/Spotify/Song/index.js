@@ -1,29 +1,37 @@
+import { useState } from 'react';
 import useStore from "../../../stores/useStore";
+import { AddToPlaylistDropdown } from './AddToPlaylistDropdown';
 import './Song.css';
 
-// This is just UI. Updates Zustand state.
-
-export function Song({ song }) {
+export function Song({ song, showRemoveButton = false, onRemove }) {
   const { currentSong, isPlaying, playSong, togglePlay } = useStore();
-  
+  const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
+
   const handlePlayClick = () => {
     if (currentSong?.id === song.id) {
-      // If this song is already current, toggle play/pause
       togglePlay();
     } else {
-      // If different song, start playing this one
       playSong(song);
     }
   };
-  
+
+  const handleAddClick = (e) => {
+    e.stopPropagation();
+    setShowPlaylistDropdown(!showPlaylistDropdown);
+  };
+
+  const handleRemoveClick = (e) => {
+    e.stopPropagation();
+    if (onRemove) {
+      onRemove(song);
+    }
+  };
+
   const isCurrentSong = currentSong?.id === song.id;
-  
+
   return (
     <div className="song-row">
-      <button 
-        className="play-button"
-        onClick={handlePlayClick}
-      >
+      <button className="play-button" onClick={handlePlayClick}>
         {isCurrentSong && isPlaying ? '⏸️' : '▶️'}
       </button>
       
@@ -35,34 +43,34 @@ export function Song({ song }) {
       <div className="song-duration">
         {song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : '--:--'}
       </div>
+
+      <div className="song-actions">
+        {showRemoveButton && (
+          <button 
+            className="action-button remove-button" 
+            onClick={handleRemoveClick}
+            title="Remove from playlist"
+          >
+            −
+          </button>
+        )}
+        
+        <div className="add-button-container">
+          <button 
+            className="action-button add-button" 
+            onClick={handleAddClick}
+            title="Add to playlist"
+          >
+            +
+          </button>
+          {showPlaylistDropdown && (
+            <AddToPlaylistDropdown 
+              song={song} 
+              onClose={() => setShowPlaylistDropdown(false)}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
-
-
-
-/* import useStore from "../../../stores/useStore";
-
-export function Song({ song }) {
-  const { currentSong, isPlaying, playSong } = useStore();
-
-  console.log("Rendering Song");
-  
-  const handlePlay = () => {
-    playSong(song)
-  }
-  
-  const isCurrentSong = currentSong?.id === song.id
-  
-  return (
-    <div className="song-item">
-      <div className="song-info">
-        <h4>{song.title}</h4>
-        <p>{song.artist}</p>
-      </div>
-      <button onClick={handlePlay}>
-        {isCurrentSong && isPlaying ? 'Pause' : 'Play'}
-      </button>
-    </div>
-  )
-} */

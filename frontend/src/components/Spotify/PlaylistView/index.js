@@ -13,6 +13,7 @@ export function PlaylistView({ playlistId }) {
     playlists,
     authLoading,
     playlistLoading,
+    removeSongFromPlaylist,
   } = useStore();
   
   useEffect(() => {
@@ -25,12 +26,25 @@ export function PlaylistView({ playlistId }) {
   if (!user) return <Navigate to="/login" replace/>;
   if (authLoading || playlistLoading) return <MainContentSkeleton />;
 
+  const removeSongFromCurrentPlaylist = async (song) => {
+    const result = await removeSongFromPlaylist(playlistId, song.id);
+    
+    if (!result.success) {
+      console.error('Failed to remove song:', result.error);
+    }
+  };
+
   return (
     <div className="playlist-view">
       <h1>{playlist?.name || 'Loading...'}</h1>
       <div className="songs-list">
         {currentPlaylistSongs?.map(song => (
-          <Song key={song.id} song={song} />
+          <Song 
+            key={song.id} 
+            song={song} 
+            showRemoveButton={true}
+            onRemove={(song) => removeSongFromCurrentPlaylist(song)}
+          />
         ))}
       </div>
     </div>

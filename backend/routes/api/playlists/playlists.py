@@ -40,6 +40,33 @@ def get_all_playlists_of_user():
     return jsonify({'playlists': result})
 
 
+@playlists_bp.route('/', methods=['POST'])
+@jwt_required
+def create_playlist():
+    user_id = g.current_user_id
+    data = request.get_json()
+    
+    if not data or not data.get('name'):
+        return jsonify({'error': 'Playlist name required'}), 400
+    
+    new_playlist = Playlist(
+        user_id=user_id,
+        name=data['name'],
+        song_count=0
+    )
+    
+    db.session.add(new_playlist)
+    db.session.commit()
+    
+    return jsonify({
+        'playlist': {
+            'id': new_playlist.id,
+            'name': new_playlist.name,
+            'song_count': new_playlist.song_count
+        }
+    })
+
+
 @playlists_bp.route('/<int:playlist_id>/songs', methods=['GET'])
 # @playlists_bp.route('/<int:user_id>/<int:playlist_id>/songs', methods=['GET'])
 @jwt_required

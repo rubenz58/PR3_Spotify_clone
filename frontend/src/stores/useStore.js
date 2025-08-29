@@ -277,10 +277,41 @@ const useStore = create((set, get) => ({
         }
     },
 
+    createNewPlaylist: async (newPlaylistName) => {
+        const { user, makeAuthenticatedRequest } = get();
+    
+        if (!user) return;
+
+        try {
+            set({ playlistLoading: true });
+
+            const { delay } = get();
+            await delay(3000);
+            
+            // Make POST request to create playlist
+            const data = await makeAuthenticatedRequest('/api/playlists/', {
+                method: 'POST',
+                body: JSON.stringify({ name: newPlaylistName })
+            });
+            
+            // Add new playlist to existing playlists array
+            set((state) => ({ 
+                playlists: [...state.playlists, data.playlist] 
+            }));
+            
+            return { success: true, playlist: data.playlist };
+            
+        } catch (error) {
+            console.error('Failed to create playlist:', error);
+            return { success: false, error: error.message };
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
+
     // Play a specific song
     playSong: (song) => {
         set({ currentSong: song, isPlaying: true });
-
     },
 
     // Toggle play/pause for current song

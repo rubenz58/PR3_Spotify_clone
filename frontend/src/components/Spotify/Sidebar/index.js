@@ -6,7 +6,14 @@ import { useNavigate } from 'react-router-dom';
 
 
 export function Sidebar() {
-  const { user, playlists, fetchPlaylists, fetchPlaylistSongs } = useStore();
+  const {
+    user,
+    playlists,
+    fetchPlaylists,
+    fetchPlaylistSongs,
+    createNewPlaylist,
+  } = useStore();
+
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState('');
 
@@ -23,6 +30,7 @@ export function Sidebar() {
     if (!user) return; // Prevent action if not logged in
     if (newPlaylistName.trim()) {
       console.log('Creating playlist:', newPlaylistName);
+      createNewPlaylist(newPlaylistName);
       setNewPlaylistName('');
       setShowCreateForm(false);
     }

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+from .playlist import Playlist, PlaylistType
 
 from database import db
 
@@ -35,3 +36,34 @@ class User(db.Model):
             "created_at": self.created_at,
             "is_admin": self.is_admin,
         }
+    
+def create_special_playlists_for_user(user_id):
+    """Create special playlists for a new user"""
+    special_playlists = [
+        {
+            'name': 'Liked Songs',
+            'playlist_type': PlaylistType.LIKED_SONGS,
+            'is_editable': False
+        },
+        {
+            'name': 'Queue',
+            'playlist_type': PlaylistType.QUEUE,
+            'is_editable': False
+        },
+        {
+            'name': 'Recently Played',
+            'playlist_type': PlaylistType.RECENTLY_PLAYED,
+            'is_editable': False
+        }
+    ]
+    
+    for playlist_data in special_playlists:
+        playlist = Playlist(
+            user_id=user_id,
+            name=playlist_data['name'],
+            playlist_type=playlist_data['playlist_type'],
+            is_editable=playlist_data['is_editable']
+        )
+        db.session.add(playlist)
+    
+    db.session.commit()

@@ -6,7 +6,7 @@ from flask import (
     request,
     jsonify
 )
-from models.user import User
+from models.user import User, create_special_playlists_for_user
 from database import db
 # from  import User, db
 from .utils import (
@@ -100,6 +100,8 @@ def signup():
         new_user = User(email=email, name=name, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+
+        create_special_playlists_for_user(new_user.id)
 
         # 4. Generate JWT w/ user Id // .id automatically available after commit
         token = generate_jwt_token(new_user.id)

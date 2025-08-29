@@ -293,7 +293,7 @@ const useStore = create((set, get) => ({
     },
 
     deletePlaylist: async (playlistId) => {
-        const { user, makeAuthenticatedRequest } = get();
+        const { makeAuthenticatedRequest } = get();
 
         try {
             set({ playlistLoading: true });
@@ -317,7 +317,36 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // renamePlaylist: async ()
+    renamePlaylist: async (playlistId, newName) => {
+        const { makeAuthenticatedRequest } = get();
+        
+        try {
+            set({ playlistLoading: true });
+            
+            const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ name: newName })
+            });
+            
+            // Update playlist name in local state only after successful API response
+            set((state) => ({
+                playlists: state.playlists.map(playlist => 
+                    playlist.id === playlistId 
+                        ? { ...playlist, name: data.playlist.name }
+                        : playlist
+                )
+            }));
+            
+            return { success: true, playlist: data.playlist };
+            
+        } catch (error) {
+            console.error('Failed to rename playlist:', error);
+            return { success: false, error: error.message };
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
+
 
     // JUST USED FOR TESTING INITIALLY
     // Fetch all songs from backend

@@ -4,6 +4,7 @@ import useStore from '../../../stores/useStore';
 import { useNavigate } from 'react-router-dom';
 
 import { PlaylistDropdown } from './PlaylistDropdown';
+import { PlaylistRename } from './PlaylistRename';
 import './Sidebar.css';
 
 
@@ -12,7 +13,6 @@ export function Sidebar() {
     user,
     playlists,
     fetchPlaylists,
-    fetchPlaylistSongs,
     createNewPlaylist,
     deletePlaylist,
     renamePlaylist,
@@ -20,6 +20,7 @@ export function Sidebar() {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState('');
+  const [renamingPlaylistId, setRenamingPlaylistId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -33,7 +34,17 @@ export function Sidebar() {
 
   const handleRenamePlaylist = (playlist) => {
     console.log('Rename playlist:', playlist.name);
-    // TODO: Add renamePlaylist function to useStore
+    setRenamingPlaylistId(playlist.id);
+  };
+
+  const handleSaveRename = (playlistId, newName) => {
+    console.log('Save rename:', playlistId, newName);
+    renamePlaylist(playlistId, newName);
+    setRenamingPlaylistId(null);
+  };
+
+  const handleCancelRename = () => {
+    setRenamingPlaylistId(null);
   };
 
   useEffect(() => {
@@ -135,25 +146,34 @@ export function Sidebar() {
         <div className="playlists-list">
           {playlists && playlists.length > 0 ? (
             playlists.map(playlist => (
-              <div
-                key={playlist.id}
-                className="playlist-item"
-                onClick={() => handlePlaylistClick(playlist)}
-                style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-              >
-                <div className="playlist-icon">🎵</div>
-                <div className="playlist-info">
-                  <div className="playlist-name">{playlist.name}</div>
-                  <div className="playlist-details">
-                    Playlist • {playlist.song_count || 0} songs
-                  </div>
-                </div>
-                <PlaylistDropdown 
+              renamingPlaylistId === playlist.id ? (
+                <PlaylistRename
+                  key={playlist.id}
                   playlist={playlist}
-                  onDelete={handleDeletePlaylist}
-                  onRename={handleRenamePlaylist}
+                  onSave={handleSaveRename}
+                  onCancel={handleCancelRename}
                 />
-              </div>
+              ) : (
+                <div
+                  key={playlist.id}
+                  className="playlist-item"
+                  onClick={() => handlePlaylistClick(playlist)}
+                  style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+                >
+                  <div className="playlist-icon">🎵</div>
+                  <div className="playlist-info">
+                    <div className="playlist-name">{playlist.name}</div>
+                    <div className="playlist-details">
+                      Playlist • {playlist.song_count || 0} songs
+                    </div>
+                  </div>
+                  <PlaylistDropdown
+                    playlist={playlist}
+                    onDelete={handleDeletePlaylist}
+                    onRename={handleRenamePlaylist}
+                  />
+                </div>
+              )
             ))
           ) : (
             <div className="empty-state">

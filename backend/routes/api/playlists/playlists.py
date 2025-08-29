@@ -39,7 +39,7 @@ def get_all_playlists_of_user():
     
     return jsonify({'playlists': result})
 
-
+# Create New Playlist
 @playlists_bp.route('/', methods=['POST'])
 @jwt_required
 def create_playlist():
@@ -66,6 +66,7 @@ def create_playlist():
         }
     })
 
+# Delete Playlist
 @playlists_bp.route('/<int:playlist_id>', methods=['DELETE'])
 @jwt_required
 def delete_playlist(playlist_id):
@@ -85,9 +86,33 @@ def delete_playlist(playlist_id):
     
     return jsonify({'message': 'Playlist deleted successfully'})
 
+# Modify Playlist Name
+@playlists_bp.route('/<int:playlist_id>', methods=['PUT'])
+@jwt_required
+def rename_playlist(playlist_id):
+    user_id = g.current_user_id
+    data = request.get_json()
+    
+    if not data or not data.get('name'):
+        return jsonify({'error': 'Playlist name required'}), 400
+    
+    playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+    if not playlist:
+        return jsonify({'error': 'Playlist not found or unauthorized'}), 404
+    
+    playlist.name = data['name']
+    db.session.commit()
+    
+    return jsonify({
+        'playlist': {
+            'id': playlist.id,
+            'name': playlist.name,
+            'song_count': playlist.song_count
+        }
+    })
+
 
 @playlists_bp.route('/<int:playlist_id>/songs', methods=['GET'])
-# @playlists_bp.route('/<int:user_id>/<int:playlist_id>/songs', methods=['GET'])
 @jwt_required
 def get_songs_of_playlist(playlist_id):
     # 1. Get user_id from JWT saved to global g

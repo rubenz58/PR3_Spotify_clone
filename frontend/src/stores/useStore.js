@@ -373,6 +373,36 @@ const useStore = create((set, get) => ({
         }
     },
 
+    addSongToPlaylist: async (playlist_id, song_id) => {
+        const { makeAuthenticatedRequest } = get();
+        
+        try {
+            set({ playlistLoading: true });
+            
+            await makeAuthenticatedRequest(`/api/playlists/${playlist_id}/songs`, {
+                method: 'POST',
+                body: JSON.stringify({ song_id })
+            });
+            
+            // Update local state - increment song count for the playlist
+            set((state) => ({
+                playlists: state.playlists.map(p => 
+                    p.id === playlist_id 
+                        ? { ...p, song_count: p.song_count + 1 }
+                        : p
+                )
+            }));
+            
+            return { success: true };
+            
+        } catch (error) {
+            console.error('Failed to add song to playlist:', error);
+            return { success: false, error: error.message };
+        } finally {
+            set({ playlistLoading: false });
+        }
+    },
+
 
     // JUST USED FOR TESTING INITIALLY
     // Fetch all songs from backend

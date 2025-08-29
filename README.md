@@ -24,7 +24,7 @@ User Library Management
 ✅ "Like" songs (favorites)
 ✅ Create custom playlists
 Add/remove songs from playlists
-Delete playlists
+// Delete playlists
 ✅ Add to queue functionality
 
 User Experience
@@ -44,22 +44,11 @@ Progress persistence (remember where you left off)
 
 Backend Features to Showcase Skills
 
-User authentication (you have this)
+// User authentication (you have this)
 RESTful API design
-Database relationships (users, songs, playlists)
+// Database relationships (users, songs, playlists)
 File upload (for adding new songs)
 
-Steps:
-> // Implement Authentication using Zustand. Change code.
-> // Implement One song streaming.
-    > // Display Song component
-    > // Create Song Model
-    > // Add one song for testing.
-    > // +BKND route. /api/songs (get all songs/)
-    > // +BKND route. /stream/songs/song_id
-
-> Make plan forward.
-> Add: 3-5 songs/artist. 6-8 different artists. Just use 30 second snippets.
 
 
 from models.song import Song

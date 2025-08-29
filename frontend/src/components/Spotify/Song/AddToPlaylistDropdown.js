@@ -3,8 +3,18 @@ import { useState, useRef, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
 import './AddToPlaylistDropdown.css';
 
+/// TO ADD ///
+/// Dropdown should show the user playlists, but not
+/// the current playlist if the song is already in it.
+/// Or it can, and you're just allowing duplicates.
+/// To fix later.
+
 export function AddToPlaylistDropdown({ song, onClose }) {
-  const { playlists, addSongToPlaylist } = useStore();
+  const {
+    playlists,
+    addSongToPlaylist
+  } = useStore();
+
   const dropdownRef = useRef(null);
 
   useEffect(() => {

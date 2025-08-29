@@ -4,7 +4,13 @@ import { AddToPlaylistDropdown } from './AddToPlaylistDropdown';
 import './Song.css';
 
 export function Song({ song, showRemoveButton = false, onRemove }) {
-  const { currentSong, isPlaying, playSong, togglePlay } = useStore();
+  const {
+    currentSong,
+    isPlaying,
+    playSong,
+    togglePlay
+  } = useStore();
+  
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
 
   const handlePlayClick = () => {

@@ -184,3 +184,56 @@ def remove_song_from_playlist(playlist_id, song_id):
     db.session.commit()
     
     return jsonify({'message': 'Song removed from playlist successfully'})
+
+@playlists_bp.route('/<int:playlist_id>/songs', methods=['POST'])
+@jwt_required
+def add_song_to_playlist(playlist_id):
+    user_id = g.current_user_id
+    data = request.get_json()
+    
+    if not data or not data.get('song_id'):
+        return jsonify({'error': 'Song ID required'}), 400
+    
+    song_id = data['song_id']
+    
+    # Verify playlist ownership
+    playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+    if not playlist:
+        return jsonify({'error': 'Playlist not found or unauthorized'}), 404
+    
+    # Check if song exists
+    song = Song.query.get(song_id)
+    if not song:
+        return jsonify({'error': 'Song not found'}), 404
+    
+    # Check if song is already in playlist
+    existing = PlaylistSong.query.filter_by(
+        playlist_id=playlist_id, 
+        song_id=song_id
+    ).first()
+    
+    if existing:
+        return jsonify({'error': 'Song already in playlist'}), 409
+    
+    # Get the next position (max position + 1)
+    max_position = db.session.query(db.func.max(PlaylistSong.position))\
+        .filter(PlaylistSong.playlist_id == playlist_id)\
+        .scalar()
+    
+    next_position = (max_position or 0) + 1
+    
+    # Add song to playlist
+    playlist_song = PlaylistSong(
+        playlist_id=playlist_id,
+        song_id=song_id,
+        position=next_position
+    )
+    
+    db.session.add(playlist_song)
+    
+    # Update playlist song count
+    playlist.song_count += 1
+    
+    db.session.commit()
+    
+    return jsonify({'message': 'Song added to playlist successfully'})

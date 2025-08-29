@@ -260,23 +260,6 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // Fetch all songs from backend
-    fetchSongs: async () => {
-        const { getUrlBase } = get();
-        const BASE_URL = getUrlBase();
-        
-        try {
-            set({ songLoading: true })
-            const response = await fetch(`${BASE_URL}/api/songs`)
-            const data = await response.json()
-            set({ songs: data.songs })
-        } catch (error) {
-            console.error('Failed to fetch songs:', error)
-        } finally {
-            set({ songLoading: false })
-        }
-    },
-
     createNewPlaylist: async (newPlaylistName) => {
         const { user, makeAuthenticatedRequest } = get();
     
@@ -306,6 +289,24 @@ const useStore = create((set, get) => ({
             return { success: false, error: error.message };
         } finally {
             set({ playlistLoading: false });
+        }
+    },
+
+    // JUST USED FOR TESTING INITIALLY
+    // Fetch all songs from backend
+    fetchSongs: async () => {
+        const { getUrlBase } = get();
+        const BASE_URL = getUrlBase();
+        
+        try {
+            set({ songLoading: true })
+            const response = await fetch(`${BASE_URL}/api/songs`)
+            const data = await response.json()
+            set({ songs: data.songs })
+        } catch (error) {
+            console.error('Failed to fetch songs:', error)
+        } finally {
+            set({ songLoading: false })
         }
     },
 

@@ -1,8 +1,10 @@
 // components/Sidebar/Sidebar.js
 import { useState, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
-import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
+
+import { PlaylistDropdown } from './PlaylistDropdown';
+import './Sidebar.css';
 
 
 export function Sidebar() {
@@ -18,6 +20,16 @@ export function Sidebar() {
   const [newPlaylistName, setNewPlaylistName] = useState('');
 
   const navigate = useNavigate();
+
+  const handleDeletePlaylist = (playlist) => {
+    console.log('Delete playlist:', playlist.name);
+    // TODO: Add deletePlaylist function to useStore
+  };
+
+  const handleRenamePlaylist = (playlist) => {
+    console.log('Rename playlist:', playlist.name);
+    // TODO: Add renamePlaylist function to useStore
+  };
 
   useEffect(() => {
     if (user) {
@@ -131,6 +143,11 @@ export function Sidebar() {
                     Playlist • {playlist.song_count || 0} songs
                   </div>
                 </div>
+                <PlaylistDropdown 
+                  playlist={playlist}
+                  onDelete={handleDeletePlaylist}
+                  onRename={handleRenamePlaylist}
+                />
               </div>
             ))
           ) : (

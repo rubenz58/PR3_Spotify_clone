@@ -7,11 +7,11 @@ import { PlaylistDropdown } from './PlaylistDropdown';
 import { PlaylistRename } from './PlaylistRename';
 import './Sidebar.css';
 
-
 export function Sidebar() {
   const {
     user,
     playlists,
+    specialPlaylists,
     fetchPlaylists,
     createNewPlaylist,
     deletePlaylist,
@@ -55,7 +55,7 @@ export function Sidebar() {
 
   const handleCreatePlaylist = (e) => {
     e.preventDefault();
-    if (!user) return; // Prevent action if not logged in
+    if (!user) return;
     if (newPlaylistName.trim()) {
       console.log('Creating playlist:', newPlaylistName);
       createNewPlaylist(newPlaylistName);
@@ -65,10 +65,35 @@ export function Sidebar() {
   };
 
   const handlePlaylistClick = (playlist) => {
-    if (!user) return; // Prevent action if not logged in
+    if (!user) return;
     console.log('Opening playlist:', playlist.name);
     navigate(`/playlist/${playlist.id}`);
-    // fetchPlaylistSongs(playlist.id);
+  };
+
+  // Helper function to get the appropriate icon for special playlists
+  const getSpecialPlaylistIcon = (playlistType) => {
+    switch (playlistType) {
+      case 'liked_songs':
+        return '💚';
+      case 'queue':
+        return '📋';
+      case 'recently_played':
+        return '🕒';
+      default:
+        return '🎵';
+    }
+  };
+
+  // Sort special playlists in the desired order
+  const getSortedSpecialPlaylists = () => {
+    if (!specialPlaylists) return [];
+    
+    const order = ['liked_songs', 'queue', 'recently_played'];
+    return specialPlaylists.sort((a, b) => {
+      const aIndex = order.indexOf(a.playlist_type);
+      const bIndex = order.indexOf(b.playlist_type);
+      return aIndex - bIndex;
+    });
   };
 
   return (
@@ -98,17 +123,6 @@ export function Sidebar() {
           </div>
         </div>
       )}
-
-      {/* Quick Access Items */}
-      <div className="quick-access">
-        <div 
-          className="quick-item liked-songs"
-          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-        >
-          <div className="quick-item-icon liked-icon">💚</div>
-          <span className="quick-item-text">Liked Songs</span>
-        </div>
-      </div>
 
       {/* Create Playlist Form */}
       {showCreateForm && user && (
@@ -144,6 +158,28 @@ export function Sidebar() {
       {/* Playlists List */}
       <div className="playlists-section">
         <div className="playlists-list">
+          {/* Special Playlists First */}
+          {getSortedSpecialPlaylists().map(playlist => (
+            <div
+              key={`special-${playlist.id}`}
+              className="playlist-item special-playlist"
+              onClick={() => handlePlaylistClick(playlist)}
+              style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+            >
+              <div className="playlist-icon">
+                {getSpecialPlaylistIcon(playlist.playlist_type)}
+              </div>
+              <div className="playlist-info">
+                <div className="playlist-name">{playlist.name}</div>
+                <div className="playlist-details">
+                  {playlist.playlist_type === 'liked_songs' ? 'Liked Songs' : 'Playlist'} • {playlist.song_count || 0} songs
+                </div>
+              </div>
+              {/* No dropdown for special playlists since they're not editable */}
+            </div>
+          ))}
+
+          {/* User Created Playlists */}
           {playlists && playlists.length > 0 ? (
             playlists.map(playlist => (
               renamingPlaylistId === playlist.id ? (
@@ -156,7 +192,7 @@ export function Sidebar() {
               ) : (
                 <div
                   key={playlist.id}
-                  className="playlist-item"
+                  className="playlist-item user-playlist"
                   onClick={() => handlePlaylistClick(playlist)}
                   style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
                 >
@@ -176,28 +212,19 @@ export function Sidebar() {
               )
             ))
           ) : (
-            <div className="empty-state">
-              <p>No playlists yet</p>
-              <p className="empty-subtitle">Create your first playlist!</p>
-            </div>
+            // Only show empty state if no special playlists and no user playlists
+            (!specialPlaylists || specialPlaylists.length === 0) && (
+              <div className="empty-state">
+                <p>No playlists yet</p>
+                <p className="empty-subtitle">Create your first playlist!</p>
+              </div>
+            )
           )}
         </div>
       </div>
 
-      {/* Recently Played Section */}
-      <div className="recently-played">
-        <h3 className="section-title">Recently Played</h3>
-        <div 
-          className="recent-item"
-          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-        >
-          <div className="recent-icon">🎵</div>
-          <div className="recent-info">
-            <div className="recent-name">Today's Hits</div>
-            <div className="recent-type">Playlist</div>
-          </div>
-        </div>
-      </div>
+      {/* Recently Played Section - Remove this since it's now in the main list */}
+      {/* You can keep this section for other recent items if needed */}
     </div>
   );
 }

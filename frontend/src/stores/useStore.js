@@ -213,6 +213,7 @@ const useStore = create((set, get) => ({
     volume: 50,
     songs: [],
     playlist: [],
+    specialPlaylists: [],
     queue: [],
     songLoading: false,
     currentPlaylistSongs: [],
@@ -221,10 +222,12 @@ const useStore = create((set, get) => ({
     setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
     setCurrentPlaylistId: (currentPlaylistId) => set({ currentPlaylistId }),
 
-    // Fetch all playlists for a specific user
     fetchPlaylists: async () => {
         console.log("Fetching Playlists");
-        const { user, makeAuthenticatedRequest } = get();
+        const {
+            user,
+            makeAuthenticatedRequest,
+        } = get();
         
         if (!user) {
             console.error('No user logged in');
@@ -233,16 +236,21 @@ const useStore = create((set, get) => ({
         
         try {
             set({ playlistLoading: true });
-
             const data = await makeAuthenticatedRequest(`/api/playlists/`);
             
-            set({ playlists: data.playlists });
+            // Update state to handle both user and special playlists
+            set({ 
+                playlists: data.user_playlists,
+                specialPlaylists: data.special_playlists
+            });
+
         } catch (error) {
             console.error('Failed to fetch playlists:', error);
         } finally {
             set({ playlistLoading: false });
         }
     },
+
 
     fetchPlaylistSongs: async (playlistId) => {
         const { user, makeAuthenticatedRequest } = get();

@@ -1,44 +1,57 @@
 from flask import Blueprint, jsonify, request, g
 from database import db
-from models.playlist import Playlist, PlaylistSong
+from models.playlist import Playlist, PlaylistSong, PlaylistType
 from models.song import Song
 from ..authentification.middleware import jwt_required
 from ..authentification.utils import decode_token_from_header
 
 playlists_bp = Blueprint('playlists', __name__)
 
-# Using <user_id> for testing. Will be extracted from JWT directly
+
 @playlists_bp.route('/', methods=['GET'])
-# @playlists_bp.route('/<int:user_id>', methods=['GET'])
 @jwt_required
 def get_all_playlists_of_user():
     if request.method == 'OPTIONS':
         return '', 200
+    
     # 1. Get user_id from JWT
-    # user_id  = decode_token_from_header(request)
-    # user_id = 2
     print("/api/playlists")
     user_id = g.current_user_id
-
 
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
     
     # 2. Query playlists for matching user_id
-    playlists = Playlist.query.filter_by(user_id=user_id).all()
+    # playlists = Playlist.query.filter_by(user_id=user_id).all()
+    all_playlists = Playlist.query.filter_by(user_id=user_id).all()
+
+    user_playlists = []
+    special_playlists = []
     
-    # Format response
-    result = []
-    for playlist in playlists:
-        result.append({
+    for playlist in all_playlists:
+        playlist_data = {
             'id': playlist.id,
             'name': playlist.name,
             'song_count': playlist.song_count,
-            # 'created_at': playlist.created_at.isoformat() if playlist.created_at else None
-        })
+            'playlist_type': playlist.playlist_type.value if playlist.playlist_type else 'user_created',
+            'is_editable': playlist.is_editable
+        }
+        
+        # Check if it's a special playlist or user-created
+        if playlist.playlist_type and playlist.playlist_type.value != 'user_created':
+            special_playlists.append(playlist_data)
+        else:
+            user_playlists.append(playlist_data)
     
-    return jsonify({'playlists': result})
+    # print("User playlists:", user_playlists)
+    # print("Special playlists:", special_playlists)
+    
+    return jsonify({
+        'user_playlists': user_playlists,
+        'special_playlists': special_playlists
+    })
 
+    
 # Create New Playlist
 @playlists_bp.route('/', methods=['POST'])
 @jwt_required

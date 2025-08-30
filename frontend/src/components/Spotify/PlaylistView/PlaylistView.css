@@ -1,0 +1,31 @@
+.playlist-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.playlist-icon-large {
+  font-size: 4rem;
+  margin-right: 1rem;
+}
+
+.playlist-info h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.playlist-subtitle {
+  margin: 0.5rem 0;
+  color: #888;
+}
+
+.empty-playlist {
+  text-align: center;
+  padding: 3rem;
+}
+
+.empty-playlist-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}

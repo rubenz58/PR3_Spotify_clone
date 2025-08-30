@@ -8,7 +8,7 @@ from routes.api.songs.songs import songs_bp
 from routes.api.admin.admin import admin_bp
 from routes.api.playlists.playlists import playlists_bp
 from routes.stream.streaming import streaming_bp
-
+ 
 from database import db
 
 # Creates the tables in the DB automatically if imported

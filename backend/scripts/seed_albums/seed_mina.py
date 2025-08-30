@@ -1,4 +1,4 @@
-# scripts/seed_iron_maiden_album.py
+# scripts/seed_mina_album.py
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,9 +13,9 @@ app = create_app()
 with app.app_context():
     # Create the album first
     album = Album(
-        title="Best Of",
-        artist="Iron Maiden",
-        genre="Heavy Metal",
+        title="Studio Uno 66",
+        artist="Mina",
+        genre="Italian Pop",
         track_count=4
     )
     
@@ -27,28 +27,28 @@ with app.app_context():
     # Create the songs linked to this album
     songs_data = [
         {
-            'title': "Wasted Years",
-            'duration': 65,
+            'title': "Se Telefonando",
+            'duration': 30,
             'track_number': 1,
-            'file_path': "iron_maiden/best_of/1_wasted_years.m4a"
+            'file_path': "mina/studio_uno_66/1_se_telefonando.m4a"
         },
         {
-            'title': "Hallowed Be Thy Name",
-            'duration': 71,
+            'title': "Mi Sei Scoppiato Dentro Al Cuore",
+            'duration': 45,
             'track_number': 2,
-            'file_path': "iron_maiden/best_of/2_hallowed_be_thy_name.m4a"
+            'file_path': "mina/studio_uno_66/2_mi_sei_scoppiato_dentro_al_cuore.m4a"
         },
         {
-            'title': "The Trooper",
-            'duration': 34,
+            'title': "Una Casa In Cima Al Mondo",
+            'duration': 32,
             'track_number': 3,
-            'file_path': "iron_maiden/best_of/3_the_trooper.m4a"
+            'file_path': "mina/studio_uno_66/3_una_casa_in_cima_al_mondo.m4a"
         },
         {
-            'title': "Fear Of The Dark",
-            'duration': 58,
-            'track_number': 4,
-            'file_path': "iron_maiden/best_of/4_fear_of_the_dark.m4a"
+            'title': "Addio",
+            'duration': 17,
+            'track_number': 4,  # Fixed: was 31, should be 4
+            'file_path': "mina/studio_uno_66/4_addio.m4a"
         }
     ]
     
@@ -56,8 +56,8 @@ with app.app_context():
     for song_data in songs_data:
         song = Song(
             title=song_data['title'],
-            artist="Iron Maiden",    # Artist stored on song for flexibility
-            album_id=album.id,       # Link to album
+            artist="Mina",               # Artist stored on song for flexibility
+            album_id=album.id,            # Link to album
             duration=song_data['duration'],
             track_number=song_data['track_number'],
             file_path=song_data['file_path']

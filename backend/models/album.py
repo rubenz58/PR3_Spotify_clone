@@ -14,3 +14,5 @@ class Album(db.Model):
     # cover_image_url = db.Column(db.String(512))
     # total_duration = db.Column(db.Integer)  # seconds
     track_count = db.Column(db.Integer, default=0)
+
+    songs = db.relationship('Song', back_populates='album')

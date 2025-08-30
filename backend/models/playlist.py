@@ -36,7 +36,6 @@ class RecentlyPlayedSong(db.Model):
 
 class PlaylistType(Enum):
     USER_CREATED = "user_created"
-    ALBUM = "album"
     CURATED_PLAYLIST = "curated_playlist"
 
 class Playlist(db.Model):

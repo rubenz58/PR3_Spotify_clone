@@ -1,4 +1,4 @@
-# scripts/seed_iron_maiden_album.py
+# scripts/seed_manu_chao_album.py
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,9 +13,9 @@ app = create_app()
 with app.app_context():
     # Create the album first
     album = Album(
-        title="Best Of",
-        artist="Iron Maiden",
-        genre="Heavy Metal",
+        title="La Radiolina",
+        artist="Manu Chao",
+        genre="World Music",
         track_count=4
     )
     
@@ -27,28 +27,28 @@ with app.app_context():
     # Create the songs linked to this album
     songs_data = [
         {
-            'title': "Wasted Years",
-            'duration': 65,
+            'title': "13 Dias",
+            'duration': 29,
             'track_number': 1,
-            'file_path': "iron_maiden/best_of/1_wasted_years.m4a"
+            'file_path': "manu_chao/la_radiolina/1_13_dias.m4a"
         },
         {
-            'title': "Hallowed Be Thy Name",
-            'duration': 71,
+            'title': "Tristeza Maleza",
+            'duration': 24,
             'track_number': 2,
-            'file_path': "iron_maiden/best_of/2_hallowed_be_thy_name.m4a"
+            'file_path': "manu_chao/la_radiolina/2_tristeza_maleza.m4a"
         },
         {
-            'title': "The Trooper",
-            'duration': 34,
+            'title': "Besoin De La Lune",
+            'duration': 19,
             'track_number': 3,
-            'file_path': "iron_maiden/best_of/3_the_trooper.m4a"
+            'file_path': "manu_chao/la_radiolina/3_besoin_de_la_lune.m4a"
         },
         {
-            'title': "Fear Of The Dark",
-            'duration': 58,
+            'title': "El Kitapena",
+            'duration': 17,
             'track_number': 4,
-            'file_path': "iron_maiden/best_of/4_fear_of_the_dark.m4a"
+            'file_path': "manu_chao/la_radiolina/4_el_kitapena.m4a"
         }
     ]
     
@@ -56,8 +56,8 @@ with app.app_context():
     for song_data in songs_data:
         song = Song(
             title=song_data['title'],
-            artist="Iron Maiden",    # Artist stored on song for flexibility
-            album_id=album.id,       # Link to album
+            artist="Manu Chao",       # Artist stored on song for flexibility
+            album_id=album.id,        # Link to album
             duration=song_data['duration'],
             track_number=song_data['track_number'],
             file_path=song_data['file_path']

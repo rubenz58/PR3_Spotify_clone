@@ -1,4 +1,4 @@
-# scripts/seed_iron_maiden_album.py
+# scripts/seed_tribalistas_album.py
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,9 +13,9 @@ app = create_app()
 with app.app_context():
     # Create the album first
     album = Album(
-        title="Best Of",
-        artist="Iron Maiden",
-        genre="Heavy Metal",
+        title="Tribalistas",
+        artist="Tribalistas",
+        genre="Brazilian Pop",
         track_count=4
     )
     
@@ -27,28 +27,28 @@ with app.app_context():
     # Create the songs linked to this album
     songs_data = [
         {
-            'title': "Wasted Years",
-            'duration': 65,
+            'title': "Carnavalia",
+            'duration': 49,
             'track_number': 1,
-            'file_path': "iron_maiden/best_of/1_wasted_years.m4a"
+            'file_path': "tribalistas/tribalistas/1_carnavalia.m4a"
         },
         {
-            'title': "Hallowed Be Thy Name",
-            'duration': 71,
+            'title': "Um A Um",
+            'duration': 39,
             'track_number': 2,
-            'file_path': "iron_maiden/best_of/2_hallowed_be_thy_name.m4a"
+            'file_path': "tribalistas/tribalistas/2_um_a_um.m4a"
         },
         {
-            'title': "The Trooper",
-            'duration': 34,
+            'title': "Velha Infancia",
+            'duration': 48,
             'track_number': 3,
-            'file_path': "iron_maiden/best_of/3_the_trooper.m4a"
+            'file_path': "tribalistas/tribalistas/3_velha_infancia.m4a"
         },
         {
-            'title': "Fear Of The Dark",
+            'title': "Passe Em Casa",
             'duration': 58,
             'track_number': 4,
-            'file_path': "iron_maiden/best_of/4_fear_of_the_dark.m4a"
+            'file_path': "tribalistas/tribalistas/4_passe_em_casa.m4a"
         }
     ]
     
@@ -56,8 +56,8 @@ with app.app_context():
     for song_data in songs_data:
         song = Song(
             title=song_data['title'],
-            artist="Iron Maiden",    # Artist stored on song for flexibility
-            album_id=album.id,       # Link to album
+            artist="Tribalistas",         # Artist stored on song for flexibility
+            album_id=album.id,             # Link to album
             duration=song_data['duration'],
             track_number=song_data['track_number'],
             file_path=song_data['file_path']

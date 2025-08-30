@@ -20,7 +20,6 @@ def get_all_playlists_of_user():
     print("/api/playlists")
     user_id = g.current_user_id
 
-
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
     

@@ -33,3 +33,4 @@ class PlaylistSong(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey('song.id'), primary_key=True)
     position = db.Column(db.Integer)
     added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    is_liked = db.Column(db.Boolean, default=False)

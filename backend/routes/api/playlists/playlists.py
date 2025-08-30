@@ -134,18 +134,23 @@ def get_songs_of_playlist(playlist_id):
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
     
+    # Check if playlist belongs to user
+    playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+    if not playlist:
+        return jsonify({'error': 'Playlist not found'}), 404
+    
     # 2. Query playlistsongs to get all the songs from the
     # specific playlist in the order of their 'position'
-    songs = db.session.query(Song, PlaylistSong.position)\
+    songs = db.session.query(Song, PlaylistSong.is_liked, PlaylistSong.position)\
         .join(PlaylistSong, Song.id == PlaylistSong.song_id)\
         .filter(PlaylistSong.playlist_id == playlist_id)\
         .order_by(PlaylistSong.position)\
         .all()
     
     # Format response
-    result = []
-    for song, position in songs:
-        result.append({
+    songs_data = []
+    for song, is_liked, position in songs:
+        songs_data.append({
             'id': song.id,
             'title': song.title,
             'artist': song.artist,
@@ -153,10 +158,20 @@ def get_songs_of_playlist(playlist_id):
             'duration': song.duration,
             'track_number': song.track_number,
             'position': position,
+            'is_liked': is_liked,
             'file_path': song.file_path
         })
+
+    return jsonify({
+        'songs': songs_data,
+        'playlist': {
+            'id': playlist.id,
+            'name': playlist.name,
+            'playlist_type': playlist.playlist_type.value
+        }
+    })
     
-    return jsonify({'songs': result})
+    # return jsonify({'songs': result})
 
 
 @playlists_bp.route('/<int:playlist_id>/songs/<int:song_id>', methods=['DELETE'])

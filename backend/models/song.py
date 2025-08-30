@@ -10,3 +10,10 @@ class Song(db.Model):
     track_number = db.Column(db.Integer)  # Add this line
     file_path = db.Column(db.String(500), nullable=False)  # e.g., "1.mp3"
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # Each song belongs to exactly ONE album
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
+    track_number = db.Column(db.Integer)  # Position within album
+    
+    # Relationship back to album
+    album = db.relationship('Album', backref='songs')

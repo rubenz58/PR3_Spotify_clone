@@ -19,7 +19,7 @@ with app.app_context():
     db.session.flush()  # Get the playlist ID before committing
     
     # Add songs to playlist with positions
-    song_ids = [21, 1, 13, 2, 6, 17]  # Replace with actual song IDs
+    song_ids = [21, 1, 13, 2, 6, 17]
     
     for position, song_id in enumerate(song_ids, 1):
         playlist_song = PlaylistSong(

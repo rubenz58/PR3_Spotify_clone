@@ -16,6 +16,7 @@ from models.user import User
 from models.song import Song
 from models.playlist import Playlist
 from models.playlist import PlaylistSong
+from models.album import Album
 
 
 def create_app():

@@ -518,6 +518,8 @@ const useStore = create((set, get) => ({
             set({ albumLoading: true });
             const data = await makeAuthenticatedRequest(`/api/albums/${parseInt(albumId)}`);
 
+            // console.log("Setting currentAlbumSongs:", data.album.songs);
+
             // Store the album data and its songs
             set({ 
                 currentAlbum: data.album,

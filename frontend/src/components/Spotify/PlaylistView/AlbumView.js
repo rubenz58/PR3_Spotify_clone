@@ -25,7 +25,7 @@ export function AlbumView({ albumId }) {
   if (!user) return <Navigate to="/login" replace/>;
 
   return (
-    <div className="playlist-view">
+    <div className="album-view">
       <h1>{currentAlbum?.title || 'Loading...'}</h1>
       <div className="songs-list">
         {currentAlbumSongs?.map(song => (

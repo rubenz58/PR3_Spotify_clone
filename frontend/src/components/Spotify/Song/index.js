@@ -4,12 +4,19 @@ import { AddToPlaylistDropdown } from './AddToPlaylistDropdown';
 import './Song.css';
 
 export function Song({ song, showRemoveButton = false, onRemove }) {
+  
   const {
     currentSong,
     isPlaying,
     playSong,
     togglePlay
   } = useStore();
+
+  // console.log("Song component rendering:", song.title);
+  // console.log("currentSong from store:", currentSong);
+  // console.log("isPlaying from store:", isPlaying);
+
+  // console.log("Rendering song:", song.title, "Current song ID:", currentSong?.id);
   
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
 
@@ -33,14 +40,17 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
     }
   };
 
+
   const isCurrentSong = currentSong?.id === song.id;
+  // console.log("Is current song?", isCurrentSong, "Button text should be:", isCurrentSong && isPlaying ? '⏸️' : '▶️');
+
 
   return (
     <div className="song-row">
-      <button className="play-button" onClick={handlePlayClick}>
+      <button className="song-play-button" onClick={handlePlayClick}>
         {isCurrentSong && isPlaying ? '⏸️' : '▶️'}
       </button>
-      
+
       <div className="song-info">
         <div className="song-title">{song.title}</div>
         <div className="song-artist">{song.artist}</div>

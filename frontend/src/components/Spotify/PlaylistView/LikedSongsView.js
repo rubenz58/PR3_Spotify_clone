@@ -14,7 +14,7 @@ export function LikedSongsView() {
         fetchLikedSongs,
         likedSongs,
         authLoading,
-        userPlaylistsLoading, // Fixed typo: was userPlaylistLoading
+        playlistLoading, // Fixed typo: was userPlaylistLoading
         removeSongFromLikedSongs,
     } = useStore();
 
@@ -26,7 +26,7 @@ export function LikedSongsView() {
 
     if (!user) return <Navigate to="/login" replace/>;
     
-    if (authLoading || userPlaylistsLoading) return <MainContentSkeleton />;
+    if (authLoading || playlistLoading) return <MainContentSkeleton />;
 
     const removeSongFromCurrentPlaylist = async (song) => {
         if (removeSongFromLikedSongs) {

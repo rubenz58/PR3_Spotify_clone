@@ -46,15 +46,8 @@ def create_app():
     app.register_blueprint(user_playlists_bp, url_prefix='/api/user_playlists')
     app.register_blueprint(albums_bp, url_prefix='/api/albums')
 
-
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 
-    # The whole app will run on the homepage and make API requests to the backend
-    # to get information.
-    @app.route('/')
-    def hello():
-        return "Hello World! Flask is running"
-    
     # Create database tables
     with app.app_context():
         db.create_all()

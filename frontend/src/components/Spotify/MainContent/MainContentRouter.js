@@ -8,6 +8,7 @@ import { PlaylistView } from "../PlaylistView";
 import { LikedSongsView } from "../PlaylistView/LikedSongsView";
 import { QueueView } from "../PlaylistView/QueueView";
 import { RecentlyPlayedView } from "../PlaylistView/RecentlyPlayedView";
+import { AlbumView } from "../PlaylistView/AlbumView";
 
 export const MainContentRouter = ({ view }) => {
 
@@ -43,6 +44,12 @@ export const MainContentRouter = ({ view }) => {
     if (location.pathname.startsWith('/playlist/')) {
         const playlistId = location.pathname.split('/')[2];
         return <PlaylistView playlistId={playlistId} />;
+    }
+
+    if (location.pathname.startsWith('/albums/')) {
+        const albumId = location.pathname.split('/')[2];
+        console.log("-> /albums/", albumId);
+        return <AlbumView albumId={albumId} />;
     }
     
     return <MainContent />;

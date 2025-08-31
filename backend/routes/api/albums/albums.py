@@ -40,3 +40,56 @@ def get_all_albums():
         'albums': result,
         'count': len(result)
     })
+
+
+@albums_bp.route('/<int:album_id>', methods=['GET'])
+@jwt_required
+def get_album_by_id(album_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/albums/{album_id}")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Query the specific album by ID
+    album = Album.query.get(album_id)
+    
+    if not album:
+        return jsonify({'error': 'Album not found'}), 404
+    
+    # Get all songs for this album
+    songs = Song.query.filter_by(album_id=album_id).order_by(Song.track_number).all()
+    
+    # Format songs data
+    songs_data = []
+    for song in songs:
+        songs_data.append({
+            'id': song.id,
+            'title': song.title,
+            'artist': song.artist,
+            'album': album.title,
+            'duration': song.duration,
+            'track_number': song.track_number if hasattr(song, 'track_number') else None,
+            'file_path': song.file_path
+        })
+    
+    # Format album response with songs
+    album_data = {
+        'id': album.id,
+        'title': album.title,
+        'artist': album.artist,
+        'release_date': album.release_date.isoformat() if album.release_date else None,
+        'genre': album.genre,
+        'cover_image_url': album.cover_image_url,
+        'track_count': album.track_count,
+        'created_at': album.created_at.isoformat() if album.created_at else None,
+        'songs': songs_data
+    }
+    
+    return jsonify({
+        'album': album_data,
+        'songs_count': len(songs_data)
+    })

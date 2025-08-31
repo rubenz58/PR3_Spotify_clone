@@ -14,7 +14,7 @@ export function RecentlyPlayedView() {
         fetchRecentlyPlayedSongs,
         recentlyPlayedSongs,
         authLoading,
-        userPlaylistsLoading,
+        playlistLoading,
         removeSongFromLikedSongs,
     } = useStore();
 
@@ -26,7 +26,7 @@ export function RecentlyPlayedView() {
 
     if (!user) return <Navigate to="/login" replace/>;
     
-    if (authLoading || userPlaylistsLoading) return <MainContentSkeleton />;
+    if (authLoading || playlistLoading) return <MainContentSkeleton />;
 
     const removeSongFromCurrentPlaylist = async (song) => {
         if (removeSongFromLikedSongs) {

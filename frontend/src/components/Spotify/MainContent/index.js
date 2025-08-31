@@ -50,7 +50,15 @@ export function MainContent() {
               <div className="quick-card-image">🌅</div>
               <span className="quick-card-title">Daily Mix 1</span>
             </div>
-            <div className="quick-card"
+            <div className="quick-card">
+            <div className="quick-card-image">🚗</div>
+              <span className="quick-card-title">Spotify Driving</span>
+            </div>
+            <div className="quick-card">
+              <div className="quick-card-image">☀️</div>
+              <span className="quick-card-title">Spotify Summer Recs</span>
+            </div>
+            {/* <div className="quick-card"
               onClick={handleLikedSongsClick}>
               <div className="quick-card-image">💚</div>
               <span className="quick-card-title">Liked Songs</span>
@@ -59,36 +67,85 @@ export function MainContent() {
               onClick={handleRecentlyPlayedClick}>
               <div className="quick-card-image">🎵</div>
               <span className="quick-card-title">Recently Played</span>
+            </div> */}
+          </div>
+        </section>
+
+        <section className="featured-albums-section">
+          <div className="section-header">
+            <h2 className="section-title">Featured Albums</h2>
+            <button className="view-all-btn">Show all</button>
+          </div>
+          <div className="albums-grid">
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🎵</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">Midnights</h3>
+                <p className="album-artist">Taylor Swift</p>
+              </div>
+            </div>
+            
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🎶</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">Harry's House</h3>
+                <p className="album-artist">Harry Styles</p>
+              </div>
+            </div>
+            
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🎤</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">Un Verano Sin Ti</h3>
+                <p className="album-artist">Bad Bunny</p>
+              </div>
+            </div>
+            
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🎸</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">30</h3>
+                <p className="album-artist">Adele</p>
+              </div>
+            </div>
+            
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🎹</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">Planet Her</h3>
+                <p className="album-artist">Doja Cat</p>
+              </div>
+            </div>
+            
+            <div className="album-card">
+              <div className="album-cover">
+                <div className="album-placeholder">🥁</div>
+                <div className="play-button">▶️</div>
+              </div>
+              <div className="album-info">
+                <h3 className="album-title">Sour</h3>
+                <p className="album-artist">Olivia Rodrigo</p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Song List Section */}
-        <section className="songs-section">
-          <div className="section-header">
-            <h2 className="section-title">All Songs</h2>
-            <button className="view-all-btn">Show all</button>
-          </div>
-          {/* <SongList /> */}
-        </section>
-
-        {/* Placeholder for other sections */}
-        <section className="placeholder-section">
-          <div className="section-header">
-            <h2 className="section-title">Made for You</h2>
-            <button className="view-all-btn">Show all</button>
-          </div>
-          <div className="placeholder-content">
-            <p>More content sections will go here...</p>
-            <ul>
-              <li>Search Results</li>
-              <li>Playlist Views</li>
-              <li>Artist Pages</li>
-              <li>Album Views</li>
-              <li>Recommendations</li>
-            </ul>
-          </div>
-        </section>
+        
       </div>
     </div>
   );

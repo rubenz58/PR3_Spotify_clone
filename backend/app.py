@@ -8,6 +8,7 @@ from routes.api.songs.songs import songs_bp
 from routes.api.admin.admin import admin_bp
 from routes.api.playlists.playlists import playlists_bp
 from routes.api.playlists.user_playlists import user_playlists_bp
+from routes.api.albums.albums import albums_bp
 from routes.stream.streaming import streaming_bp
  
 from database import db
@@ -43,6 +44,8 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(playlists_bp, url_prefix='/api/playlists')
     app.register_blueprint(user_playlists_bp, url_prefix='/api/user_playlists')
+    app.register_blueprint(albums_bp, url_prefix='/api/albums')
+
 
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 

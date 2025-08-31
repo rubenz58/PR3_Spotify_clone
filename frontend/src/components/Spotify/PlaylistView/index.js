@@ -10,7 +10,7 @@ export function PlaylistView({ playlistId }) {
     user,
     currentPlaylistSongs,
     fetchPlaylistSongs,
-    playlists,
+    userPlaylists,
     authLoading,
     playlistLoading,
     removeSongFromPlaylist,
@@ -21,7 +21,7 @@ export function PlaylistView({ playlistId }) {
   }, [playlistId]);
   
   // const playlist = playlists.find(p => p.id === parseInt(playlistId));
-  const playlist = playlists?.find(p => p.id === parseInt(playlistId));
+  const playlist = userPlaylists?.find(p => p.id === parseInt(playlistId));
 
   if (!user) return <Navigate to="/login" replace/>;
   if (authLoading || playlistLoading) return <MainContentSkeleton />;

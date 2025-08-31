@@ -6,7 +6,7 @@ const useStore = create((set, get) => ({
 
     /////// AUTHENTICATION STATE ///////
     authLoading: true,        // Login/signup/token verification
-    playlistLoading: false,   // Playlist data
+    userPlaylistsLoading: false,   // Playlist data
     searchLoading: false,     // Search operations
     playerLoading: false,     // Audio file loading/buffering
     uploadLoading: false,     // File uploads (if you add that feature)
@@ -212,17 +212,42 @@ const useStore = create((set, get) => ({
     isPlaying: false,
     volume: 50,
     songs: [],
-    playlist: [],
-    queue: [],
+    userPlaylists: [],
     songLoading: false,
     currentPlaylistSongs: [],
     currentPlaylistId: null,
+    likedSongs: [],
+    recentlyPlayed: [],
+    queue: [],
+
+    fetchLikedSongs: async () => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/liked_songs`);
+            set({ likedSongs: data.liked_songs });
+            set({ currentPlaylistSongs: data.liked_songs, currentPlaylistId: "liked_songs" });
+
+        } catch (error) {
+            console.error('Failed to fetch liked songs:', error);
+        }
+    },
+
+    fetchQueueSongs: async () => {
+
+    },
+
+    fetchRecentlyPlayed: async () => {
+
+    },
 
     setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
     setCurrentPlaylistId: (currentPlaylistId) => set({ currentPlaylistId }),
 
     // Fetch all playlists for a specific user
-    fetchPlaylists: async () => {
+    fetchUserPlaylists: async () => {
         console.log("Fetching Playlists");
         const { user, makeAuthenticatedRequest } = get();
         
@@ -232,15 +257,15 @@ const useStore = create((set, get) => ({
         }
         
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
 
             const data = await makeAuthenticatedRequest(`/api/playlists/`);
             
-            set({ playlists: data.playlists });
+            set({ userPlaylists: data.playlists });
         } catch (error) {
             console.error('Failed to fetch playlists:', error);
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 
@@ -250,13 +275,13 @@ const useStore = create((set, get) => ({
         if (!user) return;
         
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
             const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs`);
             set({ currentPlaylistSongs: data.songs, currentPlaylistId: playlistId });
         } catch (error) {
             console.error('Failed to fetch playlist songs:', error);
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 
@@ -266,7 +291,7 @@ const useStore = create((set, get) => ({
         if (!user) return;
 
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
 
             // const { delay } = get();
             // await delay(3000);
@@ -279,16 +304,16 @@ const useStore = create((set, get) => ({
             
             // Add new playlist to existing playlists array
             set((state) => ({ 
-                playlists: [...state.playlists, data.playlist] 
+                userPlaylists: [...state.userPlaylists, data.playlist] 
             }));
             
-            return { success: true, playlist: data.playlist };
+            return { success: true, userPlaylists: data.playlist };
             
         } catch (error) {
             console.error('Failed to create playlist:', error);
             return { success: false, error: error.message };
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 
@@ -296,7 +321,7 @@ const useStore = create((set, get) => ({
         const { makeAuthenticatedRequest } = get();
 
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
             
             await makeAuthenticatedRequest(`/api/playlists/${playlistId}`, {
                 method: 'DELETE'
@@ -304,7 +329,7 @@ const useStore = create((set, get) => ({
             
             // Remove from local state only if API call succeeds
             set((state) => ({
-                playlists: state.playlists.filter(p => p.id !== playlistId)
+                userPlaylists: state.userPlaylists.filter(p => p.id !== playlistId)
             }));
             
             return { success: true };
@@ -313,7 +338,7 @@ const useStore = create((set, get) => ({
             console.error('Failed to delete playlist:', error);
             return { success: false, error: error.message };
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 
@@ -321,7 +346,7 @@ const useStore = create((set, get) => ({
         const { makeAuthenticatedRequest } = get();
 
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
             
             const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}`, {
                 method: 'PUT',
@@ -330,20 +355,20 @@ const useStore = create((set, get) => ({
             
             // Update playlist name in local state only after successful API response
             set((state) => ({
-                playlists: state.playlists.map(playlist => 
+                userPlaylists: state.userPlaylists.map(playlist => 
                     playlist.id === playlistId 
                         ? { ...playlist, name: data.playlist.name }
                         : playlist
                 )
             }));
             
-            return { success: true, playlist: data.playlist };
+            return { success: true, userPlaylists: data.playlist };
             
         } catch (error) {
             console.error('Failed to rename playlist:', error);
             return { success: false, error: error.message };
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 
@@ -377,7 +402,7 @@ const useStore = create((set, get) => ({
         const { makeAuthenticatedRequest } = get();
         
         try {
-            set({ playlistLoading: true });
+            set({ userPlaylistsLoading: true });
             
             await makeAuthenticatedRequest(`/api/playlists/${playlist_id}/songs`, {
                 method: 'POST',
@@ -386,7 +411,7 @@ const useStore = create((set, get) => ({
             
             // Update local state - increment song count for the playlist
             set((state) => ({
-                playlists: state.playlists.map(p => 
+                userPlaylists: state.userPlaylists.map(p => 
                     p.id === playlist_id 
                         ? { ...p, song_count: p.song_count + 1 }
                         : p
@@ -399,7 +424,7 @@ const useStore = create((set, get) => ({
             console.error('Failed to add song to playlist:', error);
             return { success: false, error: error.message };
         } finally {
-            set({ playlistLoading: false });
+            set({ userPlaylistsLoading: false });
         }
     },
 

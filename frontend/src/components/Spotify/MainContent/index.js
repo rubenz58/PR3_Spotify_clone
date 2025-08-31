@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 import useStore from '../../../stores/useStore';
 import { LoadingSpinner } from '../../Utils/Utils';
@@ -10,10 +10,18 @@ export function MainContent() {
 
   console.log("MainContent");
 
+  const navigate = useNavigate();
+
   const { user, authLoading } = useStore();
 
   if (authLoading) return <MainContentSkeleton />;
   if (!user) return <Navigate to="/login" replace/>;
+
+  const handleLikedSongsClick = () => {
+    if (!user) return; // Prevent action if not logged in
+    console.log('Opening liked songs');
+    navigate('/liked-songs');
+  };
 
   return (
     <div className="main-content">
@@ -28,7 +36,8 @@ export function MainContent() {
         {/* Quick Access Cards - Recently Played */}
         <section className="quick-access-section">
           <div className="quick-access-grid">
-            <div className="quick-card">
+            <div className="quick-card"
+              onClick={handleLikedSongsClick}>
               <div className="quick-card-image">💚</div>
               <span className="quick-card-title">Liked Songs</span>
             </div>

@@ -5,6 +5,7 @@ import LoginForm from "../../Authentication/LoginForm/LoginForm";
 import SignupForm from "../../Authentication/SignUpForm/SignUpForm";
 import Admin from "../../Authentication/Admin";
 import { PlaylistView } from "../PlaylistView";
+import { LikedSongsView } from "../PlaylistView/LikedSongsView";
 
 export const MainContentRouter = ({ view }) => {
 
@@ -23,6 +24,10 @@ export const MainContentRouter = ({ view }) => {
     
     if (location.pathname === '/admin') {
         return <Admin />;
+    }
+
+    if (location.pathname === '/liked-songs') {
+        return <LikedSongsView />;
     }
 
     if (location.pathname.startsWith('/playlist/')) {

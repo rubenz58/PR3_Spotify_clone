@@ -7,12 +7,11 @@ import { PlaylistDropdown } from './PlaylistDropdown';
 import { PlaylistRename } from './PlaylistRename';
 import './Sidebar.css';
 
-
 export function Sidebar() {
   const {
     user,
-    playlists,
-    fetchPlaylists,
+    userPlaylists, // Fixed: should be userPlaylists not playlists
+    fetchUserPlaylists,
     createNewPlaylist,
     deletePlaylist,
     renamePlaylist,
@@ -49,7 +48,7 @@ export function Sidebar() {
 
   useEffect(() => {
     if (user) {
-      fetchPlaylists();
+      fetchUserPlaylists();
     }
   }, [user]);
 
@@ -68,7 +67,12 @@ export function Sidebar() {
     if (!user) return; // Prevent action if not logged in
     console.log('Opening playlist:', playlist.name);
     navigate(`/playlist/${playlist.id}`);
-    // fetchPlaylistSongs(playlist.id);
+  };
+
+  const handleLikedSongsClick = () => {
+    if (!user) return; // Prevent action if not logged in
+    console.log('Opening liked songs');
+    navigate('/liked-songs');
   };
 
   return (
@@ -104,6 +108,7 @@ export function Sidebar() {
         <div 
           className="quick-item liked-songs"
           style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+          onClick={handleLikedSongsClick}
         >
           <div className="quick-item-icon liked-icon">💚</div>
           <span className="quick-item-text">Liked Songs</span>
@@ -144,8 +149,8 @@ export function Sidebar() {
       {/* Playlists List */}
       <div className="playlists-section">
         <div className="playlists-list">
-          {playlists && playlists.length > 0 ? (
-            playlists.map(playlist => (
+          {userPlaylists && userPlaylists.length > 0 ? (
+            userPlaylists.map(playlist => (
               renamingPlaylistId === playlist.id ? (
                 <PlaylistRename
                   key={playlist.id}

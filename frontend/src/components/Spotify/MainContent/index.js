@@ -23,6 +23,12 @@ export function MainContent() {
     navigate('/liked-songs');
   };
 
+  const handleRecentlyPlayedClick = () => {
+    if (!user) return; // Prevent action if not logged in
+    console.log('Opening recently played');
+    navigate('/recently-played');
+  };
+
   return (
     <div className="main-content">
       {/* Page Header */}
@@ -36,18 +42,23 @@ export function MainContent() {
         {/* Quick Access Cards - Recently Played */}
         <section className="quick-access-section">
           <div className="quick-access-grid">
+            <div className="quick-card">
+              <div className="quick-card-image">🔥</div>
+              <span className="quick-card-title">Discover Weekly</span>
+            </div>
+            <div className="quick-card">
+              <div className="quick-card-image">🌅</div>
+              <span className="quick-card-title">Daily Mix 1</span>
+            </div>
             <div className="quick-card"
               onClick={handleLikedSongsClick}>
               <div className="quick-card-image">💚</div>
               <span className="quick-card-title">Liked Songs</span>
             </div>
-            <div className="quick-card">
+            <div className="quick-card"
+              onClick={handleRecentlyPlayedClick}>
               <div className="quick-card-image">🎵</div>
               <span className="quick-card-title">Recently Played</span>
-            </div>
-            <div className="quick-card">
-              <div className="quick-card-image">🔥</div>
-              <span className="quick-card-title">Discover Weekly</span>
             </div>
           </div>
         </section>

@@ -100,15 +100,15 @@ button:disabled {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  margin-bottom: 8px;
 }
 
 .quick-item:hover {
   background-color: #1a1a1a;
 }
 
-.liked-songs {
+.quick-item.liked-songs {
   background: linear-gradient(135deg, #450af5, #c4efd9);
-  margin-bottom: 8px;
 }
 
 .quick-item-icon {
@@ -120,16 +120,29 @@ button:disabled {
   border-radius: 4px;
   margin-right: 16px;
   font-size: 20px;
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .liked-icon {
   background: linear-gradient(135deg, #450af5, #8e8ffc, #c4efd9);
 }
 
+.queue-icon {
+  background-color: #282828;
+  color: #b3b3b3;
+}
+
+.recently-played-icon {
+  background-color: #282828;
+  color: #b3b3b3;
+}
+
 .quick-item-text {
   font-size: 14px;
   font-weight: 600;
   color: white;
+  flex: 1; /* Take up remaining space */
+  text-align: left; /* Ensure consistent text alignment */
 }
 
 /* Create Playlist Form */
@@ -263,7 +276,6 @@ button:disabled {
 
 /* Recently Played */
 .recently-played {
-  padding: 16px 24px;
   border-top: 1px solid #282828;
   background-color: #0d0d0d;
 }

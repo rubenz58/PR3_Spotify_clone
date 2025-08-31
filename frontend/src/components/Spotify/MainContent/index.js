@@ -23,17 +23,16 @@ export function MainContent() {
     if (user) {
       fetchAllAlbums();
     }
-  }, [user]);
+  }, [user]); // Fixed: Use user as dependency instead of all_albums
 
   if (authLoading) return <MainContentSkeleton />;
   if (!user) return <Navigate to="/login" replace/>;
-
 
   return (
     <div className="main-content">
       {/* Page Header */}
       <div className="content-header">
-        <h1 className="content-title">Hello, {user.name}</h1>
+        <h1 className="content-title">Good evening</h1>
         <p className="content-subtitle">Your music library</p>
       </div>
 
@@ -64,12 +63,17 @@ export function MainContent() {
         <section className="featured-albums-section">
           <div className="section-header">
             <h2 className="section-title">Featured Albums</h2>
-            {/* <button className="view-all-btn">Show all</button> */}
+            <button className="view-all-btn">Show all</button>
           </div>
           <div className="albums-grid">
             {all_albums && all_albums.length > 0 ? (
               all_albums.map(album => (
-                <div key={album.id} className="album-card">
+                <div 
+                  key={album.id} 
+                  className="album-card"
+                  onClick={() => navigate(`/albums/${album.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div className="album-cover">
                     {album.cover_image_url ? (
                       <img 

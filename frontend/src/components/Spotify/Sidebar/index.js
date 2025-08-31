@@ -75,6 +75,18 @@ export function Sidebar() {
     navigate('/liked-songs');
   };
 
+  const handleQueueClick = () => {
+    if (!user) return; // Prevent action if not logged in
+    console.log('Opening queue');
+    navigate('/queue');
+  };
+
+  const handleRecentlyPlayedClick = () => {
+    if (!user) return; // Prevent action if not logged in
+    console.log('Opening recently played');
+    navigate('/recently-played');
+  };
+
   return (
     <div className={`sidebar ${!user ? 'sidebar-disabled' : ''}`}>
       {/* Library Header */}
@@ -112,6 +124,24 @@ export function Sidebar() {
         >
           <div className="quick-item-icon liked-icon">💚</div>
           <span className="quick-item-text">Liked Songs</span>
+        </div>
+        
+        <div 
+          className="quick-item queue"
+          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+          onClick={handleQueueClick}
+        >
+          <div className="quick-item-icon queue-icon">📋</div>
+          <span className="quick-item-text">Queue</span>
+        </div>
+        
+        <div 
+          className="quick-item recently-played"
+          style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+          onClick={handleRecentlyPlayedClick}
+        >
+          <div className="quick-item-icon recently-played-icon">🕒</div>
+          <span className="quick-item-text">Recently Played</span>
         </div>
       </div>
 

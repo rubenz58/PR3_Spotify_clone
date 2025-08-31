@@ -6,6 +6,8 @@ import SignupForm from "../../Authentication/SignUpForm/SignUpForm";
 import Admin from "../../Authentication/Admin";
 import { PlaylistView } from "../PlaylistView";
 import { LikedSongsView } from "../PlaylistView/LikedSongsView";
+import { QueueView } from "../PlaylistView/QueueView";
+import { RecentlyPlayedView } from "../PlaylistView/RecentlyPlayedView";
 
 export const MainContentRouter = ({ view }) => {
 
@@ -28,6 +30,14 @@ export const MainContentRouter = ({ view }) => {
 
     if (location.pathname === '/liked-songs') {
         return <LikedSongsView />;
+    }
+
+    if (location.pathname === '/recently-played') {
+        return <RecentlyPlayedView />;
+    }
+
+    if (location.pathname === '/queue') {
+        return <QueueView />;
     }
 
     if (location.pathname.startsWith('/playlist/')) {

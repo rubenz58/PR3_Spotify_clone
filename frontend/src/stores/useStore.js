@@ -27,14 +27,14 @@ const useStore = create((set, get) => ({
         const { token, getUrlBase, logout } = get();
         const BASE_URL = getUrlBase();
 
-        // console.log('Making request to:', `${BASE_URL}${url}`);
-        // console.log('Token exists:', !!token);
-        // console.log('Full token:', token);
-        // console.log('Request headers:', {
-        //     'Authorization': `Bearer ${token}`,
-        //     'Content-Type': 'application/json',
-        //     ...options.headers,
-        // });
+        console.log('Making request to:', `${BASE_URL}${url}`);
+        console.log('Token exists:', !!token);
+        console.log('Full token:', token);
+        console.log('Request headers:', {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...options.headers,
+        });
 
         if (!token) {
             throw new Error('No authentication token available');
@@ -53,10 +53,10 @@ const useStore = create((set, get) => ({
             ...options,
         });
 
-        // console.log('Response status:', response.status); // Add this line
+        console.log('Response status:', response.status); // Add this line
 
         if (!response.ok) {
-            // console.log('Response not ok, status:', response.status, response.statusText); // Add this line
+            console.log('Response not ok, status:', response.status, response.statusText); // Add this line
             if (response.status === 401) {
                 logout();
                 throw new Error('Authentication expired. Please log in again.');
@@ -217,8 +217,8 @@ const useStore = create((set, get) => ({
     currentPlaylistSongs: [],
     currentPlaylistId: null,
     likedSongs: [],
-    recentlyPlayed: [],
-    queue: [],
+    recentlyPlayedSongs: [],
+    queueSongs: [],
 
     fetchLikedSongs: async () => {
         const { user, makeAuthenticatedRequest } = get();
@@ -226,7 +226,7 @@ const useStore = create((set, get) => ({
         if (!user) return;
         
         try {
-            const data = await makeAuthenticatedRequest(`/api/user_playlists/liked_songs`);
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/liked-songs`);
             set({ likedSongs: data.liked_songs });
             set({ currentPlaylistSongs: data.liked_songs, currentPlaylistId: "liked_songs" });
 
@@ -237,9 +237,35 @@ const useStore = create((set, get) => ({
 
     fetchQueueSongs: async () => {
 
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/queue`);
+            set({ queueSongs: data.queue_songs });
+            set({ currentPlaylistSongs: data.queue_songs, currentPlaylistId: "queue" });
+
+        } catch (error) {
+            console.error('Failed to fetch queue songs:', error);
+        }
+
     },
 
-    fetchRecentlyPlayed: async () => {
+    fetchRecentlyPlayedSongs: async () => {
+
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/recently-played`);
+            set({ recentlyPlayedSongs: data.recently_played_songs });
+            set({ currentPlaylistSongs: data.recently_played_songs, currentPlaylistId: "recently_played" });
+
+        } catch (error) {
+            console.error('Failed to fetch recently played songs:', error);
+        }
 
     },
 

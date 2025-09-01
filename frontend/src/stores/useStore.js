@@ -413,7 +413,7 @@ const useStore = create((set, get) => ({
             // Update local state after successful API call
             set((state) => ({
             currentPlaylistSongs: state.currentPlaylistSongs.filter(s => s.id !== songId),
-            playlists: state.playlists.map(p => 
+            userPlaylists: state.userPlaylists.map(p => 
                 p.id === parseInt(playlistId) 
                 ? { ...p, song_count: p.song_count - 1 }
                 : p

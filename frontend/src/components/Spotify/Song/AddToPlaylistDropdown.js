@@ -11,7 +11,7 @@ import './AddToPlaylistDropdown.css';
 
 export function AddToPlaylistDropdown({ song, onClose }) {
   const {
-    playlists,
+    userPlaylists,
     addSongToPlaylist
   } = useStore();
 
@@ -42,8 +42,8 @@ export function AddToPlaylistDropdown({ song, onClose }) {
     <div className="add-to-playlist-dropdown" ref={dropdownRef}>
       <div className="dropdown-header">Add to playlist</div>
       <div className="playlist-options">
-        {playlists && playlists.length > 0 ? (
-          playlists.map(playlist => (
+        {userPlaylists && userPlaylists.length > 0 ? (
+          userPlaylists.map(playlist => (
             <button
               key={playlist.id}
               className="playlist-option"

@@ -135,13 +135,13 @@ def get_songs_of_playlist(playlist_id):
             'id': song.id,
             'title': song.title,
             'artist': song.artist,
-            'album': song.album,
+            'album': song.album.title,
             'duration': song.duration,
             'track_number': song.track_number,
             'position': position,
             'file_path': song.file_path
         })
-    
+
     return jsonify({'songs': result})
 
 

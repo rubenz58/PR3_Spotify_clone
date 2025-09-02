@@ -5,20 +5,33 @@ import './Song.css';
 
 export function Song({ song, showRemoveButton = false, onRemove }) {
   
+  // Playlist or Album or whoever renders the Songs
+  // knows the context in which they are getting displayed
+  // Sets the Context with showRemoveButton.
+  // CONTEXT DEPENDENCE VS. CONTEXT INDEPENDENCE (eg. liked songs)
+
   const {
     currentSong,
     isPlaying,
     playSong,
-    togglePlay
+    togglePlay,
+    likedSongs,
+    removeLikedSong,
+    addLikedSong,
   } = useStore();
 
-  // console.log("Song component rendering:", song.title);
-  // console.log("currentSong from store:", currentSong);
-  // console.log("isPlaying from store:", isPlaying);
-
-  // console.log("Rendering song:", song.title, "Current song ID:", currentSong?.id);
-  
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
+
+  const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
+
+  const handleLikeClick = async (e) => {
+    e.stopPropagation();
+    if (isLiked) {
+      await removeLikedSong(song.id);
+    } else {
+      await addLikedSong(song.id);
+    }
+  };
 
   const handlePlayClick = () => {
     if (currentSong?.id === song.id) {
@@ -40,10 +53,7 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
     }
   };
 
-
   const isCurrentSong = currentSong?.id === song.id;
-  // console.log("Is current song?", isCurrentSong, "Button text should be:", isCurrentSong && isPlaying ? '⏸️' : '▶️');
-
 
   return (
     <div className="song-row">
@@ -86,6 +96,14 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
             />
           )}
         </div>
+
+        <button
+          className="action-button like-button"
+          onClick={handleLikeClick}
+          title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
+        >
+          {isLiked ? '💚' : '♡'}
+        </button>
       </div>
     </div>
   );

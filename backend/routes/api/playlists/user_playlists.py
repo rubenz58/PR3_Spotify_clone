@@ -38,16 +38,94 @@ def get_liked_songs():
             'id': song.id,
             'title': song.title,
             'artist': song.artist,
-            'album': song.album,
+            'album': song.album.title,
             'duration': song.duration,
             'file_path': song.file_path,
             'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None
         })
     
+    print("returning correctly")
+
     return jsonify({
         'liked_songs': result,
         'count': len(result)
     })
+
+@user_playlists_bp.route('/liked-songs/<int:song_id>', methods=['POST'])
+@jwt_required
+def add_liked_song(song_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/user_playlists/liked-songs/{song_id} - POST")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Check if song exists
+    song = Song.query.get(song_id)
+    if not song:
+        return jsonify({'error': 'Song not found'}), 404
+    
+    # Check if already liked
+    existing_like = LikedSong.query.filter_by(
+        user_id=user_id, 
+        song_id=song_id
+    ).first()
+    
+    if existing_like:
+        return jsonify({'error': 'Song already liked'}), 409
+    
+    # Add to liked songs
+    liked_song = LikedSong(user_id=user_id, song_id=song_id)
+    db.session.add(liked_song)
+    db.session.commit()
+    
+    # Return the full song data for frontend state management
+    song_data = {
+        'id': song.id,
+        'title': song.title,
+        'artist': song.artist,
+        'album': song.album.title if song.album else None,
+        'duration': song.duration,
+        'file_path': song.file_path,
+        'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None
+    }
+    
+    return jsonify({
+        'message': 'Song added to liked songs',
+        'song': song_data
+    }), 201
+
+@user_playlists_bp.route('/liked-songs/<int:song_id>', methods=['DELETE'])
+@jwt_required
+def remove_liked_song(song_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/user_playlists/liked-songs/{song_id} - DELETE")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Find and remove the liked song
+    liked_song = LikedSong.query.filter_by(
+        user_id=user_id, 
+        song_id=song_id
+    ).first()
+    
+    if not liked_song:
+        return jsonify({'error': 'Song not found in liked songs'}), 404
+    
+    db.session.delete(liked_song)
+    db.session.commit()
+    
+    return jsonify({
+        'message': 'Song removed from liked songs',
+        'song_id': song_id
+    }), 200
 
 
 @user_playlists_bp.route('/queue', methods=['GET'])

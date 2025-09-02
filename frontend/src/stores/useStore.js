@@ -235,6 +235,62 @@ const useStore = create((set, get) => ({
         }
     },
 
+    addLikedSong: async (song_id) => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/liked-songs/${song_id}`, {
+                method: 'POST'
+            });
+            
+            // Get the full song data that was added (assuming backend returns it)
+            const newLikedSong = data.song;
+            
+            // Update local state after successful API call
+            set((state) => ({
+                // Add to beginning of liked songs array (most recently liked first)
+                likedSongs: [newLikedSong, ...state.likedSongs],
+                // Also update currentPlaylistSongs if we're in the liked songs view  
+                currentPlaylistSongs: state.currentPlaylistId === "liked_songs"
+                    ? [newLikedSong, ...state.currentPlaylistSongs]
+                    : state.currentPlaylistSongs
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to add liked song:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    removeLikedSong: async (song_id) => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            await makeAuthenticatedRequest(`/api/user_playlists/liked-songs/${song_id}`, {
+                method: 'DELETE'
+            });
+            
+            // Update local state after successful API call
+            set((state) => ({
+                likedSongs: state.likedSongs.filter(song => song.id !== song_id),
+                // Also update currentPlaylistSongs if we're in the liked songs view
+                currentPlaylistSongs: state.currentPlaylistId === "liked_songs" 
+                    ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
+                    : state.currentPlaylistSongs
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to remove liked song:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
     fetchQueueSongs: async () => {
 
         const { user, makeAuthenticatedRequest } = get();

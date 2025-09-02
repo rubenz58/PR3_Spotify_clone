@@ -16,6 +16,7 @@ export function QueueView() {
         authLoading,
         playlistLoading,
         removeSongFromLikedSongs,
+        removeFromQueue,
     } = useStore();
 
     useEffect(() => {
@@ -51,7 +52,8 @@ export function QueueView() {
                     key={song.id}
                     song={song}
                     showRemoveButton={true}
-                    onRemove={(song) => removeSongFromCurrentPlaylist(song)}
+                    // onRemove={(song) => removeSongFromCurrentPlaylist(song)}
+                    onRemove={(song) => removeFromQueue(song.id)}
                 />
             ))
             ) : (

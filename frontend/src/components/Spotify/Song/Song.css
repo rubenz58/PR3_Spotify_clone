@@ -131,7 +131,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .song-row {
+  .song-row { 
     padding: 8px 12px;
   }
   

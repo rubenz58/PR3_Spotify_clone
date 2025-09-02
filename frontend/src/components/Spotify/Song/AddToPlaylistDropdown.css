@@ -86,3 +86,13 @@
   margin: 0;
   font-size: 14px;
 }
+
+.dropdown-separator {
+  height: 1px;
+  background-color: #282828;
+  margin: 8px 0;
+}
+
+.queue-option {
+  border-bottom: none; /* Remove border since separator handles it */
+}

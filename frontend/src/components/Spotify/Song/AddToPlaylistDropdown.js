@@ -12,10 +12,16 @@ import './AddToPlaylistDropdown.css';
 export function AddToPlaylistDropdown({ song, onClose }) {
   const {
     userPlaylists,
-    addSongToPlaylist
+    addSongToPlaylist,
+    queueSongs,
+    addToQueue,
+    removeFromQueue
   } = useStore();
-
+  
   const dropdownRef = useRef(null);
+  
+  // Check if song is in queue
+  const isInQueue = queueSongs?.some(queueSong => queueSong.id === song.id);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -23,7 +29,6 @@ export function AddToPlaylistDropdown({ song, onClose }) {
         onClose();
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -38,10 +43,43 @@ export function AddToPlaylistDropdown({ song, onClose }) {
     onClose();
   };
 
+  const handleQueueClick = async () => {
+    if (isInQueue) {
+      const result = await removeFromQueue(song.id);
+      if (result.success) {
+        console.log(`Removed "${song.title}" from queue`);
+      }
+    } else {
+      const result = await addToQueue(song.id);
+      if (result.success) {
+        console.log(`Added "${song.title}" to queue`);
+      }
+    }
+    onClose();
+  };
+
   return (
     <div className="add-to-playlist-dropdown" ref={dropdownRef}>
       <div className="dropdown-header">Add to playlist</div>
       <div className="playlist-options">
+        {/* Queue option as first item */}
+        <button
+          className="playlist-option queue-option"
+          onClick={handleQueueClick}
+        >
+          <div className="playlist-option-icon">📋</div>
+          <div className="playlist-option-info">
+            <div className="playlist-option-name">
+              {isInQueue ? 'Remove from Queue' : 'Add to Queue'}
+            </div>
+            <div className="playlist-option-count">Queue</div>
+          </div>
+        </button>
+
+        {/* Separator line */}
+        <div className="dropdown-separator"></div>
+
+        {/* Regular playlists */}
         {userPlaylists && userPlaylists.length > 0 ? (
           userPlaylists.map(playlist => (
             <button

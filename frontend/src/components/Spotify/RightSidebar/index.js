@@ -1,20 +1,40 @@
-// components/RightSidebar/RightSidebar.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
 import './RightSidebar.css';
 
 export function RightSidebar() {
-  const { user, currentSong, queue, isPlaying, playSong, removeFromQueue } = useStore();
+  const {
+    user,
+    currentSong,
+    queueSongs,
+    isPlaying,
+    playSong,
+    removeFromQueue,
+    fetchQueueSongs,
+    clearQueue,
+  } = useStore();
+
+  useEffect(() => {
+    if (user) {
+      fetchQueueSongs();
+    }
+  }, [user]);
+  
   const [activeTab, setActiveTab] = useState('queue');
 
-  const handlePlayFromQueue = (song, index) => {
+  const handlePlayFromQueue = (song) => {
     if (!user) return; // Prevent action if not logged in
     playSong(song);
   };
 
-  const handleRemoveFromQueue = (index) => {
+  const handleClearQueue = async () => {
+    if (!user) return;
+    await clearQueue();
+  };
+
+  const handleRemoveFromQueue = (songId) => {
     if (!user) return; // Prevent action if not logged in
-    removeFromQueue(index);
+    removeFromQueue(songId); // Pass song ID instead of index
   };
 
   const formatDuration = (seconds) => {
@@ -87,31 +107,28 @@ export function RightSidebar() {
 
       {/* Tab Content */}
       <div className="tab-content">
-        {/* {!user && (
-          <div className="login-required-overlay">
-            <div className="login-message">
-              <h4>Login Required</h4>
-              <p>Sign in to access your music queue and lyrics</p>
-            </div>
-          </div>
-        )} */}
-        
         {activeTab === 'queue' && (
           <div className="queue-section">
             <div className="queue-header">
               <h4>Next Up</h4>
-              {queue && queue.length > 0 && (
-                <button className="clear-queue-btn" disabled={!user}>Clear queue</button>
+              {queueSongs && queueSongs.length > 0 && (
+                <button
+                  className="clear-queue-btn"
+                  disabled={!user}
+                  onClick={ handleClearQueue }
+                >
+                  Clear queue
+                </button>
               )}
             </div>
             
             <div className="queue-list">
-              {queue && queue.length > 0 ? (
-                queue.map((song, index) => (
-                  <div key={`${song.id}-${index}`} className="queue-item">
+              {queueSongs && queueSongs.length > 0 ? (
+                queueSongs.map((song, index) => (
+                  <div key={song.id} className="queue-item">
                     <div 
                       className="queue-song-info" 
-                      onClick={() => handlePlayFromQueue(song, index)}
+                      onClick={() => handlePlayFromQueue(song)}
                       style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
                     >
                       <div className="queue-album-art">🎵</div>
@@ -124,7 +141,7 @@ export function RightSidebar() {
                       <span className="queue-duration">{formatDuration(song.duration)}</span>
                       <button 
                         className="remove-btn"
-                        onClick={() => handleRemoveFromQueue(index)}
+                        onClick={() => handleRemoveFromQueue(song.id)}
                         disabled={!user}
                       >
                         ✕

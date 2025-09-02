@@ -364,6 +364,32 @@ const useStore = create((set, get) => ({
         }
     },
 
+    clearQueue: async () => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            await makeAuthenticatedRequest('/api/user_playlists/queue', {
+                method: 'DELETE'
+            });
+            
+            // Clear local state after successful API call
+            set((state) => ({
+                queueSongs: [],
+                // Also update currentPlaylistSongs if we're in the queue view
+                currentPlaylistSongs: state.currentPlaylistId === "queue"
+                    ? []
+                    : state.currentPlaylistSongs
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to clear queue:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
     fetchRecentlyPlayedSongs: async () => {
 
         const { user, makeAuthenticatedRequest } = get();

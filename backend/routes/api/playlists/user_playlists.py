@@ -271,6 +271,27 @@ def remove_from_queue(song_id):
         'song_id': song_id
     }), 200
 
+@user_playlists_bp.route('/queue', methods=['DELETE'])
+@jwt_required
+def clear_queue():
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print("/api/user_playlists/queue - DELETE (clear all)")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Delete all queue songs for the user
+    deleted_count = QueueSong.query.filter_by(user_id=user_id).delete()
+    db.session.commit()
+    
+    return jsonify({
+        'message': f'Queue cleared - {deleted_count} songs removed',
+        'deleted_count': deleted_count
+    }), 200
+
 @user_playlists_bp.route('/recently-played', methods=['GET'])
 @jwt_required
 def get_recently_played_songs():  # Fixed function name

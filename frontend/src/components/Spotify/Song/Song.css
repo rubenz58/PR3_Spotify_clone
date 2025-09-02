@@ -119,6 +119,16 @@
   color: black;
 }
 
+.queue-button.in-queue {
+  background-color: #1db954;
+  color: black;
+}
+
+.queue-button:not(.in-queue) {
+  background-color: transparent;
+  color: #b3b3b3;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .song-row {

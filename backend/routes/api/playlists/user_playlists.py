@@ -162,7 +162,7 @@ def get_queue_songs():
             'id': song.id,
             'title': song.title,
             'artist': song.artist,
-            'album': song.album,
+            'album': song.album.title,
             'duration': song.duration,
             'file_path': song.file_path,
             'position': queue_song.position,  # Fixed: Use position instead of liked_at
@@ -173,6 +173,103 @@ def get_queue_songs():
         'queue_songs': result,
         'count': len(result)
     })
+
+@user_playlists_bp.route('/queue/<int:song_id>', methods=['POST'])
+@jwt_required
+def add_to_queue(song_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/user_playlists/queue/{song_id} - POST")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Check if song exists
+    song = Song.query.get(song_id)
+    if not song:
+        return jsonify({'error': 'Song not found'}), 404
+    
+    # Check if already in queue
+    existing_queue_item = QueueSong.query.filter_by(
+        user_id=user_id, 
+        song_id=song_id
+    ).first()
+    
+    if existing_queue_item:
+        return jsonify({'error': 'Song already in queue'}), 409
+    
+    # Get the next position in queue (last position + 1)
+    max_position = db.session.query(db.func.max(QueueSong.position))\
+        .filter_by(user_id=user_id).scalar()
+    next_position = (max_position or 0) + 1
+    
+    # Add to queue
+    queue_song = QueueSong(
+        user_id=user_id, 
+        song_id=song_id, 
+        position=next_position
+    )
+    db.session.add(queue_song)
+    db.session.commit()
+    
+    # Return the full song data for frontend state management
+    song_data = {
+        'id': song.id,
+        'title': song.title,
+        'artist': song.artist,
+        'album': song.album.title if song.album else None,
+        'duration': song.duration,
+        'file_path': song.file_path,
+        'position': queue_song.position,
+        'added_at': queue_song.added_at.isoformat() if queue_song.added_at else None
+    }
+    
+    return jsonify({
+        'message': 'Song added to queue',
+        'song': song_data
+    }), 201
+
+@user_playlists_bp.route('/queue/<int:song_id>', methods=['DELETE'])
+@jwt_required
+def remove_from_queue(song_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/user_playlists/queue/{song_id} - DELETE")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Find and remove the queue song
+    queue_song = QueueSong.query.filter_by(
+        user_id=user_id, 
+        song_id=song_id
+    ).first()
+    
+    if not queue_song:
+        return jsonify({'error': 'Song not found in queue'}), 404
+    
+    removed_position = queue_song.position
+    db.session.delete(queue_song)
+    
+    # Reorder remaining queue items (shift positions down)
+    remaining_songs = QueueSong.query.filter(
+        QueueSong.user_id == user_id,
+        QueueSong.position > removed_position
+    ).all()
+    
+    for song in remaining_songs:
+        song.position -= 1
+    
+    db.session.commit()
+    
+    return jsonify({
+        'message': 'Song removed from queue',
+        'song_id': song_id
+    }), 200
 
 @user_playlists_bp.route('/recently-played', methods=['GET'])
 @jwt_required
@@ -205,7 +302,7 @@ def get_recently_played_songs():  # Fixed function name
             'id': song.id,
             'title': song.title,
             'artist': song.artist,
-            'album': song.album,
+            'album': song.album.title,
             'duration': song.duration,
             'file_path': song.file_path,
             'played_at': recently_played_song.played_at.isoformat() if recently_played_song.played_at else None  # Fixed: Use played_at

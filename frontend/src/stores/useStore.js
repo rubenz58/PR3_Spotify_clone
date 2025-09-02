@@ -308,6 +308,62 @@ const useStore = create((set, get) => ({
 
     },
 
+    addToQueue: async (song_id) => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/queue/${song_id}`, {
+                method: 'POST'
+            });
+            
+            // Get the full song data that was added (assuming backend returns it)
+            const newQueueSong = data.song;
+            
+            // Update local state after successful API call
+            set((state) => ({
+                // Add to end of queue array (last in queue)
+                queueSongs: [...state.queueSongs, newQueueSong],
+                // Also update currentPlaylistSongs if we're in the queue view
+                currentPlaylistSongs: state.currentPlaylistId === "queue"
+                    ? [...state.currentPlaylistSongs, newQueueSong]
+                    : state.currentPlaylistSongs
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to add song to queue:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    removeFromQueue: async (song_id) => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            await makeAuthenticatedRequest(`/api/user_playlists/queue/${song_id}`, {
+                method: 'DELETE'
+            });
+            
+            // Update local state after successful API call
+            set((state) => ({
+                queueSongs: state.queueSongs.filter(song => song.id !== song_id),
+                // Also update currentPlaylistSongs if we're in the queue view
+                currentPlaylistSongs: state.currentPlaylistId === "queue"
+                    ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
+                    : state.currentPlaylistSongs
+            }));
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to remove song from queue:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
     fetchRecentlyPlayedSongs: async () => {
 
         const { user, makeAuthenticatedRequest } = get();

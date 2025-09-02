@@ -18,11 +18,25 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
     likedSongs,
     removeLikedSong,
     addLikedSong,
+    queueSongs,
+    addToQueue,
+    removeFromQueue,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
 
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
+  const isInQueue = queueSongs?.some(queueSong => queueSong.id === song.id);
+
+  const handleQueueClick = async (e) => {
+    e.stopPropagation();
+    if (isInQueue) {
+      await removeFromQueue(song.id);
+    } else {
+      await addToQueue(song.id);
+    }
+  };
+
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -96,6 +110,14 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
             />
           )}
         </div>
+
+        <button
+          className={`action-button queue-button ${isInQueue ? 'in-queue' : ''}`}
+          onClick={handleQueueClick}
+          title={isInQueue ? "Remove from queue" : "Add to queue"}
+        >
+          +Q
+        </button>
 
         <button
           className="action-button like-button"

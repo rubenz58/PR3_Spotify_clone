@@ -81,11 +81,11 @@ export function RightSidebar() {
     }
   };
 
-  // const handlePlaylistClick = () => {
-  //   console.log("handlePlaylistClick");
-  //   if (!user || !currentSong) return;
-  //   setShowPlaylistDropdown(!showPlaylistDropdown);
-  // };
+  const handlePlaylistClickNowPlaying = () => {
+    console.log("handlePlaylistClick");
+    if (!user || !currentSong) return;
+    setShowPlaylistDropdown(!showPlaylistDropdown);
+  };
 
   const handlePlaylistClick = (songId) => {
     console.log("handlePlaylistClick", songId);
@@ -96,6 +96,7 @@ export function RightSidebar() {
       setPlaylistDropdownSongId(playlistDropdownSongId === songId ? null : songId);
     } else {
       // For "Now Playing" section - toggle general dropdown
+      console.log("now playing");
       setShowPlaylistDropdown(!showPlaylistDropdown);
     }
   };
@@ -156,7 +157,7 @@ export function RightSidebar() {
                 <button 
                   className="action-btn playlist-btn" 
                   disabled={!user}
-                  onClick={ handlePlaylistClick }
+                  onClick={ handlePlaylistClickNowPlaying }
                   title="Add to playlist"
                 >
                   +

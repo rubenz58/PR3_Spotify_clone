@@ -16,7 +16,7 @@ export function PlaylistView({ playlistId }) {
     removeSongFromPlaylist,
     playlistRefresh,
   } = useStore();
-  
+
   useEffect(() => {
     fetchPlaylistSongs(playlistId);
   }, [playlistId, playlistRefresh]);

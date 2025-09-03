@@ -45,6 +45,7 @@ export function PlaylistView({ playlistId }) {
             song={song} 
             showRemoveButton={true}
             onRemove={(song) => removeSongFromCurrentPlaylist(song)}
+            context={{ id: playlistId, type: "playlist" }}
           />
         ))}
       </div>

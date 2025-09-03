@@ -31,7 +31,8 @@ export function AlbumView({ albumId }) {
         {currentAlbumSongs?.map(song => (
           <Song 
             key={song.id} 
-            song={song} 
+            song={song}
+            context={{ id: albumId, type: "album" }}
             // showRemoveButton={true}
             // onRemove={(song) => removeSongFromCurrentPlaylist(song)}
           />

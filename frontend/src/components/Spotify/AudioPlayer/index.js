@@ -13,7 +13,9 @@ export function AudioPlayer() {
     isPlaying,
     togglePlay,
     volume,
-    setVolume
+    setVolume,
+    playNextSong,
+    playPrevSong
   } = useStore();
 
   const audioRef = useRef(null);
@@ -92,7 +94,8 @@ export function AudioPlayer() {
       <audio
         ref={audioRef}
         src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
-        onEnded={() => useStore.getState().togglePlay()}
+        // onEnded={() => useStore.getState().togglePlay()}
+        onEnded={playNextSong} 
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
       />
@@ -108,13 +111,13 @@ export function AudioPlayer() {
       {/* Center - Player controls */}
       <div className="player-controls">
         <div className="control-buttons">
-          <button className="control-btn" title="Previous">
+          <button className="control-btn" title="Previous" onClick={ playPrevSong }>
             ⏮️
           </button>
           <button className="play-pause-btn" onClick={handlePlayPause}>
             {isPlaying ? '⏸️' : '▶️'}
           </button>
-          <button className="control-btn" title="Next">
+          <button className="control-btn" title="Next" onClick={ playNextSong }>
             ⏭️
           </button>
         </div>

@@ -3,7 +3,12 @@ import useStore from "../../../stores/useStore";
 import { AddToPlaylistDropdown } from './AddToPlaylistDropdown';
 import './Song.css';
 
-export function Song({ song, showRemoveButton = false, onRemove }) {
+export function Song({
+  song,
+  showRemoveButton = false,
+  onRemove,
+  context = null
+}) {
   
   // Playlist or Album or whoever renders the Songs
   // knows the context in which they are getting displayed
@@ -18,6 +23,15 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
     likedSongs,
     removeLikedSong,
     addLikedSong,
+    currentPlaylistId,
+    setCurrentPlaylistId,
+    setCurrentContext,
+    fetchPlaylistSongs,
+    fetchAlbumSongs,
+    fetchLikedSongs,
+    fetchQueueSongs,
+    fetchRecentlyPlayedSongs,
+    currentPlaylistSongs,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
@@ -33,11 +47,43 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
     }
   };
 
+  // const handlePlayClick = () => {
+  //   if (currentSong?.id === song.id) {
+  //     togglePlay();
+  //   } else {
+  //     playSong(song);
+  //   }
+  // };
+
   const handlePlayClick = () => {
     if (currentSong?.id === song.id) {
       togglePlay();
     } else {
       playSong(song);
+      
+      // Set context if provided
+      if (context) {
+        setCurrentPlaylistId(context.id);
+        setCurrentContext(context.type);
+
+        console.log("currentPlaylistId: ", context.id);
+        console.log("currentContext: ", context.type);
+        
+        // Only fetch songs if we're switching to a different context
+        if (currentPlaylistId !== context.id) {
+          if (context.type === "playlist") {
+            fetchPlaylistSongs(context.id);
+          } else if (context.type === "album") {
+            fetchAlbumSongs(context.id);
+          } else if (context.type === "liked_songs") {
+            fetchLikedSongs();
+          } else if (context.type === "queue") {
+            fetchQueueSongs();
+          } else if (context.type === "recently_played") {
+            fetchRecentlyPlayedSongs();
+          }
+        }
+      }
     }
   };
 

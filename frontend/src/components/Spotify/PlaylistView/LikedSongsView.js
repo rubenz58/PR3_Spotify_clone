@@ -50,6 +50,7 @@ export function LikedSongsView() {
                 <Song
                 key={song.id}
                 song={song}
+                context={{ id: "liked_songs", type: "liked_songs" }}
                 // showRemoveButton={true}
                 // onRemove={(song) => removeSongFromCurrentPlaylist(song)}
                 />

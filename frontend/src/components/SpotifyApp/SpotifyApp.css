@@ -17,6 +17,7 @@
   display: grid;
   grid-template-columns: 280px 1fr 416px; /* Left sidebar, Main content, Right sidebar (increased 30% from 320px to 416px) */
   height: 100%;
+  /* height: calc(100vh - 120px); */
   overflow: hidden;
   background-color: #121212;
 }

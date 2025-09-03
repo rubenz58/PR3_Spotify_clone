@@ -54,6 +54,7 @@ export function QueueView() {
                     showRemoveButton={true}
                     // onRemove={(song) => removeSongFromCurrentPlaylist(song)}
                     onRemove={(song) => removeFromQueue(song.id)}
+                    context={{ id: "queue", type: "queue" }}
                 />
             ))
             ) : (

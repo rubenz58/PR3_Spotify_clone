@@ -52,6 +52,7 @@ export function RecentlyPlayedView() {
                     song={song}
                     showRemoveButton={true}
                     onRemove={(song) => removeSongFromCurrentPlaylist(song)}
+                    context={{ id: "recently_played", type: "recently_played" }}
                 />
             ))
             ) : (

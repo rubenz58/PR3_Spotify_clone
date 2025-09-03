@@ -213,12 +213,19 @@ const useStore = create((set, get) => ({
     songs: [],
     userPlaylists: [],
     songLoading: false,
-    currentPlaylistSongs: [],
-    currentPlaylistId: null,
     likedSongs: [],
     recentlyPlayedSongs: [],
     queueSongs: [],
     playlistRefresh: false,
+
+    currentPlaylistSongs: [], // Determines prev/next
+    currentPlaylistId: null,
+    currentContext: null, // "playlist", "album", "liked", etc.
+
+    setCurrentPlaylistId: (id) => set({ currentPlaylistId: id }),
+    setCurrentContext: (context) => set({ currentContext: context }),
+    setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
+
 
     fetchLikedSongs: async () => {
         const { user, makeAuthenticatedRequest } = get();
@@ -658,6 +665,7 @@ const useStore = create((set, get) => ({
                 currentAlbum: data.album,
                 currentAlbumSongs: data.album.songs 
             });
+            set({ currentPlaylistSongs: data.album.songs, currentPlaylistId: "album" });
             
             return { success: true, album: data.album };
             
@@ -682,6 +690,36 @@ const useStore = create((set, get) => ({
     togglePlay: () => {
         console.log("toggle play");
         set((state) => ({ isPlaying: !state.isPlaying }))
+    },
+
+    playNextSong: () => {
+        const { currentSong, currentPlaylistSongs } = get();
+        if (!currentSong || currentPlaylistSongs.length === 0) return;
+
+        const currentIndex = currentPlaylistSongs.findIndex(
+        (s) => s.id === currentSong.id
+        );
+        if (currentIndex === -1) return;
+
+        const nextIndex = (currentIndex + 1) % currentPlaylistSongs.length; // wrap around
+        const nextSong = currentPlaylistSongs[nextIndex];
+        set({ currentSong: nextSong, isPlaying: true });
+    },
+
+    playPrevSong: () => {
+        const { currentSong, currentPlaylistSongs } = get();
+        if (!currentSong || currentPlaylistSongs.length === 0) return;
+
+        const currentIndex = currentPlaylistSongs.findIndex(
+        (s) => s.id === currentSong.id
+        );
+        if (currentIndex === -1) return;
+
+        const prevIndex =
+        (currentIndex - 1 + currentPlaylistSongs.length) %
+        currentPlaylistSongs.length; // wrap around
+        const prevSong = currentPlaylistSongs[prevIndex];
+        set({ currentSong: prevSong, isPlaying: true });
     },
 }))
 

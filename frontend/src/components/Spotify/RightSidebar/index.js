@@ -17,6 +17,8 @@ export function RightSidebar() {
     addLikedSong,
     removeLikedSong,
     fetchLikedSongs,
+    setCurrentPlaylistId,
+    setCurrentContext,
   } = useStore();
 
   useEffect(() => {
@@ -46,6 +48,10 @@ export function RightSidebar() {
   const handlePlayFromQueue = (song) => {
     if (!user) return;
     playSong(song);
+
+    setCurrentPlaylistId("queue");
+    setCurrentContext("queue");
+
   };
 
   const handleRemoveFromQueue = (songId) => {

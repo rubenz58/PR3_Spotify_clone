@@ -31,7 +31,6 @@ export function Song({
     fetchLikedSongs,
     fetchQueueSongs,
     fetchRecentlyPlayedSongs,
-    currentPlaylistSongs,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
@@ -146,7 +145,7 @@ export function Song({
         <button
           className="action-button like-button"
           onClick={ handleLikeClick }
-          title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
+          title={ isLiked ? "Remove from liked songs" : "Add to liked songs"}
         >
           {isLiked ? '💚' : '♡'}
         </button>

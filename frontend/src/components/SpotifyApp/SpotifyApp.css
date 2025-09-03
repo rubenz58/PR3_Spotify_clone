@@ -1,5 +1,3 @@
-/* components/Layout/Layout.css */
-
 .spotify-layout {
   display: grid;
   grid-template-rows: auto 1fr auto; /* Header, Main, Player */
@@ -17,7 +15,7 @@
 /* Main container with 3-column layout */
 .main-container {
   display: grid;
-  grid-template-columns: 280px 1fr 320px; /* Left sidebar, Main content, Right sidebar */
+  grid-template-columns: 280px 1fr 416px; /* Left sidebar, Main content, Right sidebar (increased 30% from 320px to 416px) */
   height: 100%;
   overflow: hidden;
   background-color: #121212;
@@ -77,7 +75,6 @@
   .main-container {
     grid-template-columns: 280px 1fr; /* Hide right sidebar */
   }
-  
   .right-sidebar {
     display: none;
   }
@@ -87,11 +84,9 @@
   .main-container {
     grid-template-columns: 1fr; /* Single column on mobile */
   }
-  
   .left-sidebar {
     display: none; /* Hide on mobile, could make it a slide-out menu */
   }
-  
   .content-area {
     padding: 16px;
   }

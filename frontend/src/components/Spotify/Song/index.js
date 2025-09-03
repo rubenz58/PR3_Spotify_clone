@@ -99,7 +99,7 @@ export function Song({ song, showRemoveButton = false, onRemove }) {
 
         <button
           className="action-button like-button"
-          onClick={handleLikeClick}
+          onClick={ handleLikeClick }
           title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
         >
           {isLiked ? '💚' : '♡'}

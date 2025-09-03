@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
+import { AddToPlaylistDropdown } from '../Song/AddToPlaylistDropdown';
 import './RightSidebar.css';
 
 export function RightSidebar() {
@@ -12,6 +13,10 @@ export function RightSidebar() {
     removeFromQueue,
     fetchQueueSongs,
     clearQueue,
+    likedSongs,
+    addLikedSong,
+    removeLikedSong,
+    fetchLikedSongs,
   } = useStore();
 
   useEffect(() => {
@@ -19,22 +24,67 @@ export function RightSidebar() {
       fetchQueueSongs();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchLikedSongs();
+    }
+  }, [user]);
   
   const [activeTab, setActiveTab] = useState('queue');
+  const [playlistDropdownSongId, setPlaylistDropdownSongId] = useState(null);
+  const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
 
-  const handlePlayFromQueue = (song) => {
-    if (!user) return; // Prevent action if not logged in
-    playSong(song);
-  };
+  // Check if current song is liked
+  const isCurrentSongLiked = currentSong && likedSongs?.some(likedSong => likedSong.id === currentSong.id);
 
   const handleClearQueue = async () => {
     if (!user) return;
     await clearQueue();
   };
 
+  const handlePlayFromQueue = (song) => {
+    if (!user) return;
+    playSong(song);
+  };
+
   const handleRemoveFromQueue = (songId) => {
-    if (!user) return; // Prevent action if not logged in
-    removeFromQueue(songId); // Pass song ID instead of index
+    if (!user) return;
+    removeFromQueue(songId);
+  };
+
+  const handleLikeClick = async (song) => {
+    console.log("handleLikeClick: ", song);
+    // if (!user || !currentSong) return;
+    if (!user) return;
+
+    const isSongLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
+    
+    if (isSongLiked) {
+      // await removeLikedSong(currentSong.id);
+      console.log("handleLikeClick: removing");
+      await removeLikedSong(song.id);
+    } else {
+      console.log("handleLikeClick: adding");
+      // await addLikedSong(currentSong.id);
+      await addLikedSong(song.id);
+    }
+  };
+
+  const handleLikeClickCurrentSong = async () => {
+    if (!user || !currentSong) return;
+    
+    if (isCurrentSongLiked) {
+      await removeLikedSong(currentSong.id);
+    } else {
+      await addLikedSong(currentSong.id);
+    }
+  };
+
+  const handlePlaylistClick = () => {
+    console.log("handlePlaylistClick");
+    if (!user || !currentSong) return;
+    setShowPlaylistDropdown(!showPlaylistDropdown);
   };
 
   const formatDuration = (seconds) => {
@@ -80,8 +130,31 @@ export function RightSidebar() {
             </div>
             
             <div className="song-actions">
-              <button className="action-btn like-btn" disabled={!user}>💚</button>
-              <button className="action-btn options-btn" disabled={!user}>⋯</button>
+              <button 
+                className="action-btn like-btn" 
+                disabled={!user}
+                onClick={ handleLikeClickCurrentSong }
+                title={isCurrentSongLiked ? "Remove from liked songs" : "Add to liked songs"}
+              >
+                {isCurrentSongLiked ? '💚' : '♡'}
+              </button>
+              
+              <div className="add-to-playlist-container">
+                <button 
+                  className="action-btn playlist-btn" 
+                  disabled={!user}
+                  onClick={handlePlaylistClick}
+                  title="Add to playlist"
+                >
+                  +
+                </button>
+                {showPlaylistDropdown && currentSong && (
+                  <AddToPlaylistDropdown
+                    song={currentSong}
+                    onClose={() => setShowPlaylistDropdown(false)}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -112,10 +185,10 @@ export function RightSidebar() {
             <div className="queue-header">
               <h4>Next Up</h4>
               {queueSongs && queueSongs.length > 0 && (
-                <button
-                  className="clear-queue-btn"
+                <button 
+                  className="clear-queue-btn" 
                   disabled={!user}
-                  onClick={ handleClearQueue }
+                  onClick={handleClearQueue}
                 >
                   Clear queue
                 </button>
@@ -124,31 +197,71 @@ export function RightSidebar() {
             
             <div className="queue-list">
               {queueSongs && queueSongs.length > 0 ? (
-                queueSongs.map((song, index) => (
-                  <div key={song.id} className="queue-item">
-                    <div 
-                      className="queue-song-info" 
-                      onClick={() => handlePlayFromQueue(song)}
-                      style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-                    >
-                      <div className="queue-album-art">🎵</div>
-                      <div className="queue-details">
-                        <div className="queue-title">{song.title}</div>
-                        <div className="queue-artist">{song.artist}</div>
+                queueSongs.map((song, index) => {
+                  const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
+                  
+                  return (
+                    <div key={song.id} className="queue-item">
+                      <div 
+                        className="queue-song-info" 
+                        onClick={() => handlePlayFromQueue(song)}
+                        style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
+                      >
+                        <div className="queue-album-art">🎵</div>
+                        <div className="queue-details">
+                          <div className="queue-title">{song.title}</div>
+                          <div className="queue-artist">{song.artist}</div>
+                        </div>
+                      </div>
+                      <div className="queue-actions">
+                        <span className="queue-duration">{formatDuration(song.duration)}</span>
+                        
+                        <button 
+                          className="queue-action-btn like-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikeClick(song);
+                          }}
+                          disabled={!user}
+                          title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
+                        >
+                          {isLiked ? '💚' : '♡'}
+                        </button>
+
+                        <div className="playlist-dropdown-container">
+                          <button 
+                            className="queue-action-btn playlist-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePlaylistClick(song.id);
+                            }}
+                            disabled={!user}
+                            title="Add to playlist"
+                          >
+                            +
+                          </button>
+                          {playlistDropdownSongId === song.id && (
+                            <AddToPlaylistDropdown
+                              song={song}
+                              onClose={() => setPlaylistDropdownSongId(null)}
+                            />
+                          )}
+                        </div>
+                        
+                        <button 
+                          className="remove-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveFromQueue(song.id);
+                          }}
+                          disabled={!user}
+                        >
+                          ✕
+                        </button>
                       </div>
                     </div>
-                    <div className="queue-actions">
-                      <span className="queue-duration">{formatDuration(song.duration)}</span>
-                      <button 
-                        className="remove-btn"
-                        onClick={() => handleRemoveFromQueue(song.id)}
-                        disabled={!user}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="empty-queue">
                   <div className="empty-icon">🎵</div>

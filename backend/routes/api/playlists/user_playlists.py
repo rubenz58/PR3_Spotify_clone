@@ -44,8 +44,6 @@ def get_liked_songs():
             'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None
         })
     
-    print("returning correctly")
-
     return jsonify({
         'liked_songs': result,
         'count': len(result)

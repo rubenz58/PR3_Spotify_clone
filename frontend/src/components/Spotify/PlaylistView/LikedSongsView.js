@@ -7,7 +7,7 @@ import { MainContentSkeleton } from '../../Utils/MainContentSkeleton';
 
 export function LikedSongsView() {
 
-    console.log("LikedSongsView");
+    // console.log("LikedSongsView");
 
     const {
         user,
@@ -22,7 +22,7 @@ export function LikedSongsView() {
         if (user) {
             fetchLikedSongs();
         }
-    }, [user]); // Added user as dependency
+    }, [user]);
 
     if (!user) return <Navigate to="/login" replace/>;
     

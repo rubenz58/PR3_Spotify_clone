@@ -236,6 +236,7 @@ const useStore = create((set, get) => ({
     },
 
     addLikedSong: async (song_id) => {
+        console.log("addLikedSong: ", song_id);
         const { user, makeAuthenticatedRequest } = get();
         
         if (!user) return;
@@ -266,6 +267,7 @@ const useStore = create((set, get) => ({
     },
 
     removeLikedSong: async (song_id) => {
+        console.log("removeLikedSongs: ", song_id);
         const { user, makeAuthenticatedRequest } = get();
         
         if (!user) return;

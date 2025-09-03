@@ -2,10 +2,13 @@
 
 .right-sidebar {
   height: 100%;
+  width: 416px;
+  min-width: 416px;
   background-color: #121212;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-left: 1px solid #282828;
 }
 
 /* Current Song Section */
@@ -123,29 +126,63 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+  align-items: center;
 }
 
 .action-btn {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
   transition: all 0.2s ease;
-}
-
-.like-btn {
-  color: #1db954;
-}
-
-.options-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #b3b3b3;
 }
 
-.action-btn:hover {
-  background-color: #282828;
+.action-btn:hover:not(:disabled) {
+  background-color: #404040;
+  color: white;
   transform: scale(1.1);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Like button specific styling */
+.action-btn.like-btn:hover:not(:disabled) {
+  color: #1db954;
+  background-color: rgba(29, 185, 84, 0.1);
+}
+
+/* Playlist button specific styling */
+.action-btn.playlist-btn {
+  font-size: 20px;
+}
+
+.action-btn.playlist-btn:hover:not(:disabled) {
+  background-color: #1db954;
+  color: black;
+}
+
+/* Playlist dropdown container for Now Playing section */
+.add-to-playlist-container {
+  position: relative;
+}
+
+.add-to-playlist-container .add-to-playlist-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  margin-top: 8px;
 }
 
 /* Tab Navigation */
@@ -298,22 +335,101 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
+.queue-item:hover .queue-actions {
+  opacity: 1;
+}
+
+/* Queue duration styling */
 .queue-duration {
   font-size: 12px;
   color: #b3b3b3;
+  min-width: 35px;
+  text-align: right;
 }
 
+/* Queue action buttons (like and playlist buttons) */
+.queue-action-btn {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.queue-item:hover .queue-action-btn {
+  opacity: 1;
+}
+
+.queue-action-btn:hover:not(:disabled) {
+  background-color: #404040;
+  color: white;
+  transform: scale(1.1);
+}
+
+.queue-action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Like button specific styling for queue items */
+.queue-action-btn.like-btn:hover:not(:disabled) {
+  color: #1db954;
+  background-color: rgba(29, 185, 84, 0.1);
+}
+
+/* Playlist button specific styling for queue items */
+.queue-action-btn.playlist-btn {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.queue-action-btn.playlist-btn:hover:not(:disabled) {
+  background-color: #1db954;
+  color: black;
+}
+
+/* Playlist dropdown container for queue items */
+.playlist-dropdown-container {
+  position: relative;
+}
+
+/* Position dropdown for queue items */
+.playlist-dropdown-container .add-to-playlist-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+/* Remove button styling for queue items */
 .remove-btn {
   background: none;
   border: none;
   color: #b3b3b3;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   padding: 4px;
-  border-radius: 4px;
+  border-radius: 50%;
   transition: all 0.2s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
 }
 
@@ -321,9 +437,10 @@
   opacity: 1;
 }
 
-.remove-btn:hover {
+.remove-btn:hover:not(:disabled) {
   color: white;
-  background-color: #282828;
+  background-color: #e22134;
+  transform: scale(1.1);
 }
 
 /* Empty Queue */
@@ -456,4 +573,55 @@ button:disabled {
 
 .tab-content::-webkit-scrollbar-thumb:hover {
   background-color: #727272;
+}
+
+/* Adjust dropdown positioning to prevent overflow */
+@media (max-width: 1400px) {
+  .playlist-dropdown-container .add-to-playlist-dropdown {
+    right: -80px;
+  }
+  
+  .add-to-playlist-container .add-to-playlist-dropdown {
+    right: -50px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .right-sidebar {
+    width: 380px;
+    min-width: 380px;
+  }
+  
+  .queue-actions {
+    gap: 6px;
+  }
+  
+  .queue-action-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+  
+  .queue-action-btn.playlist-btn {
+    font-size: 14px;
+  }
+  
+  .remove-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+  
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .album-placeholder {
+    width: 180px;
+    height: 180px;
+    font-size: 40px;
+  }
 }

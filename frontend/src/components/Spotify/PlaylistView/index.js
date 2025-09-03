@@ -14,11 +14,12 @@ export function PlaylistView({ playlistId }) {
     authLoading,
     playlistLoading,
     removeSongFromPlaylist,
+    playlistRefresh,
   } = useStore();
   
   useEffect(() => {
     fetchPlaylistSongs(playlistId);
-  }, [playlistId]);
+  }, [playlistId, playlistRefresh]);
   
   // const playlist = playlists.find(p => p.id === parseInt(playlistId));
   const playlist = userPlaylists?.find(p => p.id === parseInt(playlistId));

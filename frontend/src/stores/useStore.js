@@ -219,6 +219,7 @@ const useStore = create((set, get) => ({
     likedSongs: [],
     recentlyPlayedSongs: [],
     queueSongs: [],
+    playlistRefresh: false,
 
     fetchLikedSongs: async () => {
         const { user, makeAuthenticatedRequest } = get();
@@ -584,7 +585,8 @@ const useStore = create((set, get) => ({
                     p.id === playlist_id 
                         ? { ...p, song_count: p.song_count + 1 }
                         : p
-                )
+                ),
+                playlistRefresh: !state.playlistRefresh // Toggle refresh
             }));
             
             return { success: true };

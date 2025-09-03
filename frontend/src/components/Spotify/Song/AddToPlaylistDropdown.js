@@ -9,7 +9,8 @@ import './AddToPlaylistDropdown.css';
 /// Or it can, and you're just allowing duplicates.
 /// To fix later.
 
-export function AddToPlaylistDropdown({ song, onClose }) {
+export function AddToPlaylistDropdown({ song, onClose, showQueue=true }) {
+
   const {
     userPlaylists,
     addSongToPlaylist,
@@ -63,9 +64,21 @@ export function AddToPlaylistDropdown({ song, onClose }) {
       <div className="dropdown-header">Add to playlist</div>
       <div className="playlist-options">
         {/* Queue option as first item */}
-        <button
+        {/* {showQueue && (
+          <button
+            className="playlist-option queue-option"
+            onClick={handleQueueClick}
+          >
+            <div className="playlist-option-icon">📋</div>
+            <div className="playlist-option-info">
+              <div className="playlist-option-name">Queue Option Text</div>
+              <div className="playlist-option-count">Additional Info</div>
+            </div>
+          </button>
+        )} */}
+        {showQueue && (<button
           className="playlist-option queue-option"
-          onClick={handleQueueClick}
+          onClick={ handleQueueClick }
         >
           <div className="playlist-option-icon">📋</div>
           <div className="playlist-option-info">
@@ -74,7 +87,7 @@ export function AddToPlaylistDropdown({ song, onClose }) {
             </div>
             <div className="playlist-option-count">Queue</div>
           </div>
-        </button>
+        </button>)}
 
         {/* Separator line */}
         <div className="dropdown-separator"></div>

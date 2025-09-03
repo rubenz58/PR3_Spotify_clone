@@ -81,10 +81,23 @@ export function RightSidebar() {
     }
   };
 
-  const handlePlaylistClick = () => {
-    console.log("handlePlaylistClick");
-    if (!user || !currentSong) return;
-    setShowPlaylistDropdown(!showPlaylistDropdown);
+  // const handlePlaylistClick = () => {
+  //   console.log("handlePlaylistClick");
+  //   if (!user || !currentSong) return;
+  //   setShowPlaylistDropdown(!showPlaylistDropdown);
+  // };
+
+  const handlePlaylistClick = (songId) => {
+    console.log("handlePlaylistClick", songId);
+    if (!user) return;
+    
+    if (songId) {
+      // For queue items - toggle specific song's dropdown
+      setPlaylistDropdownSongId(playlistDropdownSongId === songId ? null : songId);
+    } else {
+      // For "Now Playing" section - toggle general dropdown
+      setShowPlaylistDropdown(!showPlaylistDropdown);
+    }
   };
 
   const formatDuration = (seconds) => {
@@ -143,14 +156,15 @@ export function RightSidebar() {
                 <button 
                   className="action-btn playlist-btn" 
                   disabled={!user}
-                  onClick={handlePlaylistClick}
+                  onClick={ handlePlaylistClick }
                   title="Add to playlist"
                 >
                   +
                 </button>
                 {showPlaylistDropdown && currentSong && (
                   <AddToPlaylistDropdown
-                    song={currentSong}
+                    showQueue={ false }
+                    song={ currentSong }
                     onClose={() => setShowPlaylistDropdown(false)}
                   />
                 )}
@@ -188,7 +202,7 @@ export function RightSidebar() {
                 <button 
                   className="clear-queue-btn" 
                   disabled={!user}
-                  onClick={handleClearQueue}
+                  onClick={ handleClearQueue }
                 >
                   Clear queue
                 </button>
@@ -240,10 +254,11 @@ export function RightSidebar() {
                           >
                             +
                           </button>
-                          {playlistDropdownSongId === song.id && (
+                          { playlistDropdownSongId === song.id && (
                             <AddToPlaylistDropdown
-                              song={song}
+                              song={ song }
                               onClose={() => setPlaylistDropdownSongId(null)}
+                              showQueue={ false }
                             />
                           )}
                         </div>

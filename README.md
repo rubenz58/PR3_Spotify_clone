@@ -23,15 +23,15 @@ User Library Management
 
 ✅ "Like" songs (favorites)
 ✅ Create custom playlists
-Add/remove songs from playlists
-// Delete playlists
+✅ Add/remove songs from playlists
+✅ Delete playlists
 ✅ Add to queue functionality
 
 User Experience
 
 Responsive design (mobile-friendly)
-Persistent player bar (stays while navigating)
-Loading states for all async operations
+✅ Persistent player bar (stays while navigating)
+✅ Loading states for all async operations
 Current song highlighting in lists
 
 Nice-to-Have Portfolio Enhancers
@@ -44,9 +44,9 @@ Progress persistence (remember where you left off)
 
 Backend Features to Showcase Skills
 
-// User authentication (you have this)
-RESTful API design
-// Database relationships (users, songs, playlists)
+✅ User authentication (you have this)
+✅ RESTful API design
+✅ Database relationships (users, songs, playlists)
 File upload (for adding new songs)
 
 

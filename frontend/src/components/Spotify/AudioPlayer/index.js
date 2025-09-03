@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import useStore from '../../../stores/useStore';
+import './AudioPlayer.css';
 
 // HOW IT WORKS
 // 1. Song component = just UI + button clicks → updates Zustand state
@@ -7,7 +8,7 @@ import useStore from '../../../stores/useStore';
 // 3. HTML5 <audio> element = does the real work of playing the sound
 
 export function AudioPlayer() {
-  const { currentSong, isPlaying } = useStore();
+  const { currentSong, isPlaying, togglePlay } = useStore();
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -22,51 +23,27 @@ export function AudioPlayer() {
     }
   }, [currentSong, isPlaying]);
 
-  
-  // useEffect(() => {
-  //   // audioRef.current: points to <audio/> element
-  //   // Check that a DOM element exists before trying to call methods on it.
-  //   if (audioRef.current) {
-  //     if (isPlaying) {
-  //       audioRef.current.play();
-  //     } else {
-  //       audioRef.current.pause();
-  //     }
-  //   }
-  // }, [isPlaying]);
-
-  // // Have to reset audio element when song changes.
-  // useEffect(() => {
-  //   if (audioRef.current && currentSong) {
-  //     // Song changed, load new source
-  //     audioRef.current.load(); // Reset the audio element
-  //     if (isPlaying) {
-  //       audioRef.current.play();
-  //     }
-  //   }
-  // }, [currentSong]);
-  
   if (!currentSong) return null;
-  
+
+  const handlePlayPause = () => {
+    togglePlay();
+  };
+
   return (
-    <div style={{ 
-      position: 'fixed', 
-      bottom: 0, 
-      left: 0, 
-      right: 0, 
-      background: '#333', 
-      color: 'white', 
-      padding: '16px',
-      display: 'flex',
-      alignItems: 'center'
-    }}>
+    <div className="audio-player">
       {/* This is actually PLAYING THE MUSIC */}
-      <audio 
+      <audio
         ref={audioRef}
         src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
         onEnded={() => useStore.getState().togglePlay()}
       />
-      <div>
+      
+      {/* Play/Pause Button */}
+      <button className="play-pause-btn" onClick={handlePlayPause}>
+        {isPlaying ? '⏸️' : '▶️'}
+      </button>
+
+      <div className="now-playing-text">
         Now playing: {currentSong.title} - {currentSong.artist}
       </div>
     </div>

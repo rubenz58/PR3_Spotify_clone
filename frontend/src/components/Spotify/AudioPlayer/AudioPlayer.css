@@ -1,0 +1,65 @@
+/* AudioPlayer.css */
+
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid #282828;
+  z-index: 1000;
+}
+
+.play-pause-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  transition: background-color 0.2s ease;
+}
+
+.play-pause-btn:hover {
+  background-color: #555;
+}
+
+.play-pause-btn:active {
+  background-color: #666;
+  transform: scale(0.95);
+}
+
+.now-playing-text {
+  font-size: 14px;
+  color: #b3b3b3;
+  flex: 1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .audio-player {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .play-pause-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .now-playing-text {
+    font-size: 12px;
+  }
+}

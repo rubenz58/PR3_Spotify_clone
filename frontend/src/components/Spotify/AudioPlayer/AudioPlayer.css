@@ -15,24 +15,89 @@
   z-index: 1000;
 }
 
-.play-pause-btn {
+/* Left side - Song info */
+.song-info-section {
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  flex: 1;
+}
+
+.now-playing-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.song-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: #b3b3b3;
+  line-height: 1.2;
+}
+
+/* Center - Player controls */
+.player-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 2;
+  max-width: 500px;
+}
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-btn {
   background: none;
   border: none;
-  color: white;
-  font-size: 24px;
+  color: #b3b3b3;
+  font-size: 20px;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  transition: background-color 0.2s ease;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  color: white;
+  background-color: #555;
+}
+
+.play-pause-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  transition: all 0.2s ease;
 }
 
 .play-pause-btn:hover {
   background-color: #555;
+  transform: scale(1.05);
 }
 
 .play-pause-btn:active {
@@ -40,17 +105,42 @@
   transform: scale(0.95);
 }
 
-.now-playing-text {
-  font-size: 14px;
-  color: #b3b3b3;
-  flex: 1;
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
+.time-display {
+  font-size: 12px;
+  color: #b3b3b3;
+  font-family: monospace;
+  min-width: 35px;
+  text-align: center;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #535353;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: height 0.2s ease;
+}
+
+.progress-bar:hover {
+  height: 6px;
+}
+
+/* Right side - Volume control */
 .volume-control {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 120px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .volume-icon {
@@ -107,61 +197,51 @@
   border: none;
 }
 
-/* Show filled portion of volume slider */
-.volume-slider {
-  background: linear-gradient(to right, #1db954 0%, #1db954 var(--volume-percent, 50%), #535353 var(--volume-percent, 50%), #535353 100%);
-}
-
-.progress-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  max-width: 400px;
-}
-
-.time-display {
-  font-size: 12px;
-  color: #b3b3b3;
-  font-family: monospace;
-  min-width: 35px;
-  text-align: center;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 4px;
-  background: #535353;
-  border-radius: 2px;
-  cursor: pointer;
-}
-
-.progress-bar:hover {
-  height: 6px;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
   .audio-player {
     padding: 12px;
-    gap: 12px;
+    gap: 8px;
   }
   
-  .play-pause-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+  .song-info-section {
+    min-width: 150px;
   }
   
-  .now-playing-text {
+  .song-title {
     font-size: 12px;
   }
   
+  .song-artist {
+    font-size: 10px;
+  }
+  
+  .player-controls {
+    max-width: 300px;
+  }
+  
+  .control-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .play-pause-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+  
+  .time-display {
+    font-size: 10px;
+    min-width: 30px;
+  }
+  
   .volume-control {
-    min-width: 100px;
+    min-width: 80px;
   }
   
   .volume-slider {
-    width: 80px;
+    width: 60px;
   }
 }

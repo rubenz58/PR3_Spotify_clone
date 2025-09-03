@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useStore from '../../../stores/useStore';
 import './AudioPlayer.css';
 
@@ -8,8 +8,50 @@ import './AudioPlayer.css';
 // 3. HTML5 <audio> element = does the real work of playing the sound
 
 export function AudioPlayer() {
-  const { currentSong, isPlaying, togglePlay, volume, setVolume } = useStore();
+  const {
+    currentSong,
+    isPlaying,
+    togglePlay,
+    volume,
+    setVolume
+  } = useStore();
+
   const audioRef = useRef(null);
+
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleProgressClick = (e) => {
+    if (audioRef.current && duration) {
+      const progressBar = e.currentTarget;
+      const clickX = e.clientX - progressBar.offsetLeft;
+      const width = progressBar.offsetWidth;
+      const newTime = (clickX / width) * duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
 
   useEffect(() => {
     if (audioRef.current) {
@@ -51,12 +93,31 @@ export function AudioPlayer() {
         ref={audioRef}
         src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
         onEnded={() => useStore.getState().togglePlay()}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
       />
+      {/* <audio
+        ref={audioRef}
+        src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
+        onEnded={() => useStore.getState().togglePlay()}
+      /> */}
       
       {/* Play/Pause Button */}
       <button className="play-pause-btn" onClick={handlePlayPause}>
         {isPlaying ? '⏸️' : '▶️'}
       </button>
+
+      <div className="progress-section">
+        <span className="time-display">{formatTime(currentTime)}</span>
+        <div 
+          className="progress-bar" 
+          onClick={handleProgressClick}
+          style={{
+            background: `linear-gradient(to right, #1db954 0%, #1db954 ${progressPercentage}%, #535353 ${progressPercentage}%, #535353 100%)`
+          }}
+        />
+        <span className="time-display">{formatTime(duration)}</span>
+      </div>
 
       <div className="now-playing-text">
         Now playing: {currentSong.title} - {currentSong.artist}

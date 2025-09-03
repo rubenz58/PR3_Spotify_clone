@@ -112,6 +112,34 @@
   background: linear-gradient(to right, #1db954 0%, #1db954 var(--volume-percent, 50%), #535353 var(--volume-percent, 50%), #535353 100%);
 }
 
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.time-display {
+  font-size: 12px;
+  color: #b3b3b3;
+  font-family: monospace;
+  min-width: 35px;
+  text-align: center;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #535353;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.progress-bar:hover {
+  height: 6px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .audio-player {

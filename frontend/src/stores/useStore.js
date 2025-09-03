@@ -210,7 +210,6 @@ const useStore = create((set, get) => ({
 
     currentSong: null, // { id: 1, title: "Song Name", artist: "Artist", file_path: "..." }
     isPlaying: false,
-    volume: 50,
     songs: [],
     userPlaylists: [],
     songLoading: false,
@@ -618,17 +617,6 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // Play a specific song
-    playSong: (song) => {
-        set({ currentSong: song, isPlaying: true });
-    },
-
-    // Toggle play/pause for current song
-    togglePlay: () => {
-        console.log("toggle play");
-        set((state) => ({ isPlaying: !state.isPlaying }))
-    },
-
     ///// ALBUM LOGIC //////
 
     all_albums: [],
@@ -680,13 +668,21 @@ const useStore = create((set, get) => ({
             set({ albumLoading: false });
         }
     },
-    
 
+    // Music Player Actions
+    volume: 0.5, // Default 50%
+    setVolume: (volume) => set({ volume }),
 
+    // Play a specific song
+    playSong: (song) => {
+        set({ currentSong: song, isPlaying: true });
+    },
 
-    // // Future: Music Player Actions
-    // setVolume: (volume) => set({ volume }),
-    // addToQueue: (song) => set((state) => ({ queue: [...state.queue, song] })),
+    // Toggle play/pause for current song
+    togglePlay: () => {
+        console.log("toggle play");
+        set((state) => ({ isPlaying: !state.isPlaying }))
+    },
 }))
 
 export default useStore

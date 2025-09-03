@@ -8,7 +8,7 @@ import './AudioPlayer.css';
 // 3. HTML5 <audio> element = does the real work of playing the sound
 
 export function AudioPlayer() {
-  const { currentSong, isPlaying, togglePlay } = useStore();
+  const { currentSong, isPlaying, togglePlay, volume, setVolume } = useStore();
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -23,10 +23,25 @@ export function AudioPlayer() {
     }
   }, [currentSong, isPlaying]);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
   if (!currentSong) return null;
 
   const handlePlayPause = () => {
     togglePlay();
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+
+    // This line sets the green background
+    const percentage = newVolume * 100;
+    e.target.style.background = `linear-gradient(to right, #1db954 0%, #1db954 ${percentage}%, #535353 ${percentage}%, #535353 100%)`;
   };
 
   return (
@@ -45,6 +60,20 @@ export function AudioPlayer() {
 
       <div className="now-playing-text">
         Now playing: {currentSong.title} - {currentSong.artist}
+      </div>
+
+      {/* Volume Control */}
+      <div className="volume-control">
+        <span className="volume-icon">🔊</span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={ handleVolumeChange }
+          className="volume-slider"
+        />
       </div>
     </div>
   );

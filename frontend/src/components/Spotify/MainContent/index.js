@@ -8,7 +8,7 @@ import { SongList } from '../SongList';
 import './MainContent.css';
 
 export function MainContent() {
-  console.log("MainContent");
+  // console.log("MainContent");
 
   const navigate = useNavigate();
 

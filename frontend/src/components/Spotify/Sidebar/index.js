@@ -65,7 +65,7 @@ export function Sidebar() {
 
   const handlePlaylistClick = (playlist) => {
     if (!user) return; // Prevent action if not logged in
-    console.log('Opening playlist:', playlist.name);
+    // console.log('Opening playlist:', playlist.name);
     navigate(`/playlist/${playlist.id}`);
   };
 

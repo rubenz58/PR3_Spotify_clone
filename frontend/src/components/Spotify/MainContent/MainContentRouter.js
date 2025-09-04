@@ -12,7 +12,7 @@ import { AlbumView } from "../PlaylistView/AlbumView";
 
 export const MainContentRouter = ({ view }) => {
 
-    console.log("MainContentRouter");
+    // console.log("MainContentRouter");
 
     // Handling the different cases for routing here.
     const location = useLocation();
@@ -48,7 +48,7 @@ export const MainContentRouter = ({ view }) => {
 
     if (location.pathname.startsWith('/albums/')) {
         const albumId = location.pathname.split('/')[2];
-        console.log("-> /albums/", albumId);
+        // console.log("-> /albums/", albumId);
         return <AlbumView albumId={albumId} />;
     }
     

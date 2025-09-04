@@ -17,13 +17,14 @@ export function QueueView() {
         playlistLoading,
         removeSongFromLikedSongs,
         removeFromQueue,
+        playlistRefresh,
     } = useStore();
 
     useEffect(() => {
         if (user) {
             fetchQueueSongs();
         }
-    }, [user]);
+    }, [user, playlistRefresh]);
 
     if (!user) return <Navigate to="/login" replace/>;
     
@@ -32,9 +33,9 @@ export function QueueView() {
     const removeSongFromCurrentPlaylist = async (song) => {
         if (removeSongFromLikedSongs) {
             const result = await removeSongFromLikedSongs(song.id);
-        if (!result?.success) {
-            console.error('Failed to remove song:', result?.error);
-        }
+            if (!result?.success) {
+                console.error('Failed to remove song:', result?.error);
+            }
         }
     };
 

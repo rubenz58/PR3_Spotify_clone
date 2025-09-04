@@ -10,7 +10,7 @@ import './SignUpForm.css';
 
 
 const SignUpForm = () => {
-    console.log("SignUpForm");
+    // console.log("SignUpForm");
 
     // Variables that will hold input information
     const [formData, setFormData] = useState({

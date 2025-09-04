@@ -27,14 +27,14 @@ const useStore = create((set, get) => ({
         const { token, getUrlBase, logout } = get();
         const BASE_URL = getUrlBase();
 
-        console.log('Making request to:', `${BASE_URL}${url}`);
-        console.log('Token exists:', !!token);
-        console.log('Full token:', token);
-        console.log('Request headers:', {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            ...options.headers,
-        });
+        // console.log('Making request to:', `${BASE_URL}${url}`);
+        // console.log('Token exists:', !!token);
+        // console.log('Full token:', token);
+        // console.log('Request headers:', {
+        //     'Authorization': `Bearer ${token}`,
+        //     'Content-Type': 'application/json',
+        //     ...options.headers,
+        // });
 
         if (!token) {
             throw new Error('No authentication token available');
@@ -53,10 +53,10 @@ const useStore = create((set, get) => ({
             ...options,
         });
 
-        console.log('Response status:', response.status); // Add this line
+        // console.log('Response status:', response.status); // Add this line
 
         if (!response.ok) {
-            console.log('Response not ok, status:', response.status, response.statusText); // Add this line
+            // console.log('Response not ok, status:', response.status, response.statusText); // Add this line
             if (response.status === 401) {
                 logout();
                 throw new Error('Authentication expired. Please log in again.');
@@ -69,7 +69,7 @@ const useStore = create((set, get) => ({
 
     // CHECK FOR EXISTING LOGIN ON APP START
     checkExistingAuth: async () => {
-        console.log("checkExistingAuth: Running")
+        // console.log("checkExistingAuth: Running")
         const { user } = get()
         
         if (user) return // Skip if user already exists
@@ -225,7 +225,7 @@ const useStore = create((set, get) => ({
     setCurrentPlaylistId: (id) => set({ currentPlaylistId: id }),
     setCurrentContext: (context) => set({ currentContext: context }),
     setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
-
+    setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
 
     fetchLikedSongs: async () => {
         const { user, makeAuthenticatedRequest } = get();
@@ -236,6 +236,7 @@ const useStore = create((set, get) => ({
             const data = await makeAuthenticatedRequest(`/api/user_playlists/liked-songs`);
             set({ likedSongs: data.liked_songs });
             set({ currentPlaylistSongs: data.liked_songs, currentPlaylistId: "liked_songs" });
+            // console.log("data.liked_songs: ", data.liked_songs);
 
         } catch (error) {
             console.error('Failed to fetch liked songs:', error);
@@ -416,12 +417,9 @@ const useStore = create((set, get) => ({
 
     },
 
-    setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
-    setCurrentPlaylistId: (currentPlaylistId) => set({ currentPlaylistId }),
-
     // Fetch all playlists for a specific user
     fetchUserPlaylists: async () => {
-        console.log("Fetching Playlists");
+        // console.log("Fetching Playlists");
         const { user, makeAuthenticatedRequest } = get();
         
         if (!user) {
@@ -605,27 +603,7 @@ const useStore = create((set, get) => ({
         }
     },
 
-
-    // JUST USED FOR TESTING INITIALLY
-    // Fetch all songs from backend
-    fetchSongs: async () => {
-        const { getUrlBase } = get();
-        const BASE_URL = getUrlBase();
-        
-        try {
-            set({ songLoading: true })
-            const response = await fetch(`${BASE_URL}/api/songs`)
-            const data = await response.json()
-            set({ songs: data.songs })
-        } catch (error) {
-            console.error('Failed to fetch songs:', error)
-        } finally {
-            set({ songLoading: false })
-        }
-    },
-
     ///// ALBUM LOGIC //////
-
     all_albums: [],
     albumLoading: false,
     currentAlbum: null,
@@ -692,18 +670,73 @@ const useStore = create((set, get) => ({
         set((state) => ({ isPlaying: !state.isPlaying }))
     },
 
-    playNextSong: () => {
-        const { currentSong, currentPlaylistSongs } = get();
-        if (!currentSong || currentPlaylistSongs.length === 0) return;
+    lastNonQueueSong: null,
 
-        const currentIndex = currentPlaylistSongs.findIndex(
-        (s) => s.id === currentSong.id
-        );
-        if (currentIndex === -1) return;
+    playNextSong: async () => {
+        const {
+            currentSong,
+            currentPlaylistSongs,
+            queueSongs,
+            removeFromQueue,
+            currentPlaylistId,
+            lastNonQueueSong,
+            currentContext,
+        } = get();
 
-        const nextIndex = (currentIndex + 1) % currentPlaylistSongs.length; // wrap around
-        const nextSong = currentPlaylistSongs[nextIndex];
-        set({ currentSong: nextSong, isPlaying: true });
+        if (!currentSong) return;
+
+        // 1. Queue has priority
+        if (queueSongs.length > 0) {
+            const nextSong = queueSongs[0];
+
+            if (currentContext !== "queue") {
+                // Save lastNonQueueSong
+                set({ lastNonQueueSong: currentSong });
+            }
+
+            // Remove it from queue (sync with backend + local state)
+            await removeFromQueue(nextSong.id);
+
+            // Play it
+            set({
+                currentSong: nextSong,
+                isPlaying: true,
+                currentContext: "queue" // optional: track that it came from queue
+            });
+            return;
+        }
+
+        // 2. Fallback: playlist navigation
+        if (currentPlaylistSongs.length > 0) {
+            // console.log("currentPlaylistSongs", currentPlaylistSongs);
+            console.log("currentPlaylistId", currentPlaylistId);
+
+            const referenceId = (lastNonQueueSong && lastNonQueueSong.id) ? lastNonQueueSong.id : currentSong.id;
+            let currentIndex = currentPlaylistSongs.findIndex(s => s.id === referenceId);
+
+            // const currentIndex = currentPlaylistSongs.findIndex(
+            //     (s) => s.id === lastNonQueueSong.id 
+            // );
+
+            if (currentIndex === -1) {
+                currentIndex = currentPlaylistSongs.findIndex(s => s.id === currentSong.id);
+            }
+
+            if (currentIndex === -1) {
+                console.log("playNextSong: couldn't find reference song in currentPlaylistSongs, aborting");
+                return;
+            }
+
+            const nextIndex = (currentIndex + 1) % currentPlaylistSongs.length;
+            const nextSong = currentPlaylistSongs[nextIndex];
+
+            set({
+                lastNonQueueSong: nextSong,
+                currentSong: nextSong,
+                isPlaying: true,
+                currentContext: "playlist"
+            });
+        }
     },
 
     playPrevSong: () => {

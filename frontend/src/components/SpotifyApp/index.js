@@ -8,7 +8,7 @@ import { MainContentRouter } from "../Spotify/MainContent/MainContentRouter";
 import './SpotifyApp.css';
 
 export function SpotifyApp({ view }) {
-  console.log("SpotifyApp");
+  // console.log("SpotifyApp");
 
   return (
     <div className="spotify-layout">

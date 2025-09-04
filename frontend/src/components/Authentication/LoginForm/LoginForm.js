@@ -8,7 +8,7 @@ import './LoginForm.css';
 
 
 const LoginForm = () => {
-    console.log("LoginForm!");
+    // console.log("LoginForm!");
 
     // Variables that will hold input information
     const [formData, setFormData] = useState({

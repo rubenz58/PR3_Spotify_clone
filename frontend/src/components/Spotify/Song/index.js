@@ -46,10 +46,14 @@ export function Song({
   };
 
   const handlePlayClick = () => {
-    if (currentSong?.id === song.id) {
-      togglePlay();
-      return;
+    if (currentContextSong?.id === song.id && currentContext === context?.type) {
+        togglePlay();
+        return;
     }
+    // if (currentSong?.id === song.id) {
+    //   togglePlay();
+    //   return;
+    // }
 
     // Immediately play the clicked song
     playSong(song);
@@ -58,8 +62,8 @@ export function Song({
       setCurrentPlaylistId(context.id);
       setCurrentContext(context.type);
 
-      console.log("currentPlaylistId: ", context.id);
-      console.log("currentContext: ", context.type);
+      // console.log("currentPlaylistId: ", context.id);
+      // console.log("currentContext: ", context.type);
 
       let songs = [];
 

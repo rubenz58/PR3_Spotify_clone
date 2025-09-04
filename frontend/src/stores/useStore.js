@@ -403,9 +403,9 @@ const useStore = create((set, get) => ({
             set((state) => ({
                 queueSongs: state.queueSongs.filter(song => song.id !== song_id),
                 // Also update currentPlaylistSongs if we're in the queue view
-                currentPlaylistSongs: state.currentPlaylistId === "queue"
-                    ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
-                    : state.currentPlaylistSongs
+                // currentPlaylistSongs: state.currentPlaylistId === "queue"
+                //     ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
+                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };

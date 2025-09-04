@@ -15,7 +15,8 @@ export function AudioPlayer() {
     volume,
     setVolume,
     playNextSong,
-    playPrevSong
+    playPrevSong,
+    pendingSong
   } = useStore();
 
   const audioRef = useRef(null);
@@ -87,6 +88,9 @@ export function AudioPlayer() {
     const percentage = newVolume * 100;
     e.target.style.background = `linear-gradient(to right, #1db954 0%, #1db954 ${percentage}%, #535353 ${percentage}%, #535353 100%)`;
   };
+
+  if (!currentSong || pendingSong) return null;
+
 
   return (
     <div className="audio-player">

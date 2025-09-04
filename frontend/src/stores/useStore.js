@@ -785,69 +785,19 @@ const useStore = create((set, get) => ({
         }
     },
 
-
-    // playNextSong: async () => {
-    //     const {
-    //         context,
-    //         currentContextSong,
-    //         queueSongs,
-    //         removeFromQueue
-    //     } = get();
-
-    //     console.log("playNextSong");
-
-    //     // Nothing to do if no current song
-    //     if (!currentContextSong) return;
-
-    //     console.log("currentContextSong: ", currentContextSong);
-
-    //     // 1) Queue has priority
-    //     if (queueSongs.length > 0) {
-    //         console.log("Queue has priority");
-    //         const nextSong = queueSongs[0];
-
-    //         // Remove from queue (backend + local state)
-    //         await removeFromQueue(nextSong.id);
-
-    //         set({
-    //         currentSong: nextSong,
-    //         currentContextSong: nextSong,
-    //         isPlaying: true,
-    //         currentContext: "queue" // optional
-    //         });
-    //         return;
-    //     }
-
-    //     // 2) Fallback: advance within context
-    //     if (context.length > 0) {
-    //         console.log("No queue");
-    //         const currentIndex = context.findIndex((s) => s.id === currentContextSong.id);
-    //         if (currentIndex === -1) return;
-
-    //         const nextIndex = (currentIndex + 1) % context.length; // wrap around
-    //         const nextSong = context[nextIndex];
-
-    //         console.log("nextSong: ", nextSong);
-
-    //         set({
-    //             currentSong: nextSong,
-    //             currentContextSong: nextSong,
-    //             isPlaying: true,
-    //         // keep the same currentContext you set in setContextAndPlay
-    //         });
-    //     }
-    // },
-
     // Music Player Actions
     volume: 0.5, // Default 50%
     setVolume: (volume) => set({ volume }),
 
     // Play a specific song
     playSong: (song) => {
-        set({ currentSong: song, isPlaying: true });
+        // set({ currentSong: song, isPlaying: true });
+        set({ currentSong: song, isPlaying: true, pendingSong: null });
+
     },
 
-    playerLoading: false,
+    pendingSong: null, // temporarily holds the song while fetching context
+    setPendingSong: (song) => set({ pendingSong: song }),
 
     // Toggle play/pause for current song
     togglePlay: () => {

@@ -21,7 +21,11 @@ export function AlbumView({ albumId }) {
     
   }, [albumId, user]);
   
-  if (authLoading || albumLoading) return <MainContentSkeleton />;
+  if (authLoading || albumLoading) {
+    console.log("FLASHING");
+    return <MainContentSkeleton />
+  };
+  
   if (!user) return <Navigate to="/login" replace/>;
 
   return (

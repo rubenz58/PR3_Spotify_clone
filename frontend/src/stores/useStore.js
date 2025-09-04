@@ -8,7 +8,6 @@ const useStore = create((set, get) => ({
     authLoading: true,        // Login/signup/token verification
     playlistLoading: false,   // Playlist data
     searchLoading: false,     // Search operations
-    playerLoading: false,     // Audio file loading/buffering
     uploadLoading: false,     // File uploads (if you add that feature)
     oAuthLoading: false,      // Google login
     user: null,
@@ -217,31 +216,57 @@ const useStore = create((set, get) => ({
     recentlyPlayedSongs: [],
     queueSongs: [],
     playlistRefresh: false,
-
-    currentPlaylistSongs: [], // Determines prev/next
+    currentPlaylistSongs: [],
     currentPlaylistId: null,
+
     currentContext: null, // "playlist", "album", "liked", etc.
+    context: [], // Used to determine prev/next.
+    currentContextSong: null,
 
     setCurrentPlaylistId: (id) => set({ currentPlaylistId: id }),
     setCurrentContext: (context) => set({ currentContext: context }),
     setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
     setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
 
+    setPlaybackContext: (songs, song) => {
+        set({
+            contextSongs: songs,
+            currentContextSong: song
+        });
+    },
+
     fetchLikedSongs: async () => {
         const { user, makeAuthenticatedRequest } = get();
-        
-        if (!user) return;
-        
+        if (!user) return [];
+
         try {
             const data = await makeAuthenticatedRequest(`/api/user_playlists/liked-songs`);
-            set({ likedSongs: data.liked_songs });
-            set({ currentPlaylistSongs: data.liked_songs, currentPlaylistId: "liked_songs" });
-            // console.log("data.liked_songs: ", data.liked_songs);
+            const songs = data.liked_songs || [];
 
+            set({ likedSongs: songs, currentPlaylistSongs: songs, currentPlaylistId: "liked_songs" });
+
+            return songs; // ✅ return array
         } catch (error) {
-            console.error('Failed to fetch liked songs:', error);
+            console.error("Failed to fetch liked songs:", error);
+            return [];
         }
     },
+
+    // fetchLikedSongs: async () => {
+    //     const { user, makeAuthenticatedRequest } = get();
+        
+    //     if (!user) return;
+        
+    //     try {
+    //         const data = await makeAuthenticatedRequest(`/api/user_playlists/liked-songs`);
+    //         set({ likedSongs: data.liked_songs });
+    //         set({ currentPlaylistSongs: data.liked_songs, currentPlaylistId: "liked_songs" });
+    //         // console.log("data.liked_songs: ", data.liked_songs);
+
+    //     } catch (error) {
+    //         console.error('Failed to fetch liked songs:', error);
+    //     }
+    // },
 
     addLikedSong: async (song_id) => {
         console.log("addLikedSong: ", song_id);
@@ -302,21 +327,37 @@ const useStore = create((set, get) => ({
     },
 
     fetchQueueSongs: async () => {
-
         const { user, makeAuthenticatedRequest } = get();
-        
-        if (!user) return;
-        
+        if (!user) return [];
+
         try {
             const data = await makeAuthenticatedRequest(`/api/user_playlists/queue`);
-            set({ queueSongs: data.queue_songs });
-            set({ currentPlaylistSongs: data.queue_songs, currentPlaylistId: "queue" });
+            const songs = data.queue_songs || [];
 
+            set({ queueSongs: songs, currentPlaylistSongs: songs, currentPlaylistId: "queue" });
+
+            return songs; // ✅ return array
         } catch (error) {
-            console.error('Failed to fetch queue songs:', error);
+            console.error("Failed to fetch queue songs:", error);
+            return [];
         }
-
     },
+
+    // fetchQueueSongs: async () => {
+
+    //     const { user, makeAuthenticatedRequest } = get();
+        
+    //     if (!user) return;
+        
+    //     try {
+    //         const data = await makeAuthenticatedRequest(`/api/user_playlists/queue`);
+    //         set({ queueSongs: data.queue_songs });
+    //         set({ currentPlaylistSongs: data.queue_songs, currentPlaylistId: "queue" });
+
+    //     } catch (error) {
+    //         console.error('Failed to fetch queue songs:', error);
+    //     }
+    // },
 
     addToQueue: async (song_id) => {
         const { user, makeAuthenticatedRequest } = get();
@@ -441,23 +482,43 @@ const useStore = create((set, get) => ({
     },
 
     fetchPlaylistSongs: async (playlistId) => {
-        const {
-            user,
-            makeAuthenticatedRequest,
-        } = get();
-    
-        if (!user) return;
+        const { user, makeAuthenticatedRequest } = get();
+        if (!user) return [];
 
         try {
             set({ playlistLoading: true });
             const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs`);
-            set({ currentPlaylistSongs: data.songs, currentPlaylistId: playlistId });
+            const songs = data.songs || [];
+
+            set({ currentPlaylistSongs: songs, currentPlaylistId: playlistId });
+
+            return songs; // ✅ return array
         } catch (error) {
-            console.error('Failed to fetch playlist songs:', error);
+            console.error("Failed to fetch playlist songs:", error);
+            return [];
         } finally {
             set({ playlistLoading: false });
         }
     },
+
+    // fetchPlaylistSongs: async (playlistId) => {
+    //     const {
+    //         user,
+    //         makeAuthenticatedRequest,
+    //     } = get();
+    
+    //     if (!user) return;
+
+    //     try {
+    //         set({ playlistLoading: true });
+    //         const data = await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs`);
+    //         set({ currentPlaylistSongs: data.songs, currentPlaylistId: playlistId });
+    //     } catch (error) {
+    //         console.error('Failed to fetch playlist songs:', error);
+    //     } finally {
+    //         set({ playlistLoading: false });
+    //     }
+    // },
 
     createNewPlaylist: async (newPlaylistName) => {
         const { user, makeAuthenticatedRequest } = get();
@@ -629,31 +690,153 @@ const useStore = create((set, get) => ({
 
     fetchAlbumSongs: async (albumId) => {
         const { user, makeAuthenticatedRequest } = get();
-        
-        if (!user) return;
+        if (!user) return [];
 
         try {
             set({ albumLoading: true });
             const data = await makeAuthenticatedRequest(`/api/albums/${parseInt(albumId)}`);
 
-            // console.log("Setting currentAlbumSongs:", data.album.songs);
-
-            // Store the album data and its songs
+            const songs = data.album.songs || [];
             set({ 
-                currentAlbum: data.album,
-                currentAlbumSongs: data.album.songs 
+            currentAlbum: data.album,
+            currentAlbumSongs: songs,
+            currentPlaylistSongs: songs,
+            currentPlaylistId: "album"
             });
-            set({ currentPlaylistSongs: data.album.songs, currentPlaylistId: "album" });
-            
-            return { success: true, album: data.album };
-            
+
+            return songs; // ✅ return array for player
         } catch (error) {
-            console.error('Failed to fetch album songs:', error);
-            return { success: false, error: error.message };
+            console.error("Failed to fetch album songs:", error);
+            return [];
         } finally {
             set({ albumLoading: false });
         }
     },
+
+
+
+    // fetchAlbumSongs: async (albumId) => {
+    //     const { user, makeAuthenticatedRequest } = get();
+        
+    //     if (!user) return;
+
+    //     try {
+    //         set({ albumLoading: true });
+    //         const data = await makeAuthenticatedRequest(`/api/albums/${parseInt(albumId)}`);
+
+    //         // console.log("Setting currentAlbumSongs:", data.album.songs);
+
+    //         // Store the album data and its songs
+    //         set({ 
+    //             currentAlbum: data.album,
+    //             currentAlbumSongs: data.album.songs 
+    //         });
+    //         set({ currentPlaylistSongs: data.album.songs, currentPlaylistId: "album" });
+            
+    //         return { success: true, album: data.album };
+            
+    //     } catch (error) {
+    //         console.error('Failed to fetch album songs:', error);
+    //         return { success: false, error: error.message };
+    //     } finally {
+    //         set({ albumLoading: false });
+    //     }
+    // },
+
+    playNextSong: async () => {
+        const { 
+            queueSongs, 
+            removeFromQueue, 
+            contextSongs, 
+            currentContextSong 
+        } = get();
+
+        if (!currentContextSong) return;
+
+        // 1️⃣ Queue priority
+        if (queueSongs.length > 0) {
+            const nextSong = queueSongs[0];
+
+            // Remove from queue (backend + local state)
+            await removeFromQueue(nextSong.id);
+
+            // Play it, but DO NOT touch contextSongs
+            set({
+                currentSong: nextSong,
+                currentContextSong, // keep the contextSong as the last user-clicked song
+                isPlaying: true
+            });
+            return;
+        }
+
+        // 2️⃣ No queue → continue in the context
+        if (contextSongs && contextSongs.length > 0) {
+            const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
+            if (currentIndex === -1) return;
+
+            const nextIndex = (currentIndex + 1) % contextSongs.length; // wrap around
+            const nextSong = contextSongs[nextIndex];
+
+            set({
+                currentSong: nextSong,
+                currentContextSong: nextSong, // advance contextSong
+                isPlaying: true
+            });
+        }
+    },
+
+
+    // playNextSong: async () => {
+    //     const {
+    //         context,
+    //         currentContextSong,
+    //         queueSongs,
+    //         removeFromQueue
+    //     } = get();
+
+    //     console.log("playNextSong");
+
+    //     // Nothing to do if no current song
+    //     if (!currentContextSong) return;
+
+    //     console.log("currentContextSong: ", currentContextSong);
+
+    //     // 1) Queue has priority
+    //     if (queueSongs.length > 0) {
+    //         console.log("Queue has priority");
+    //         const nextSong = queueSongs[0];
+
+    //         // Remove from queue (backend + local state)
+    //         await removeFromQueue(nextSong.id);
+
+    //         set({
+    //         currentSong: nextSong,
+    //         currentContextSong: nextSong,
+    //         isPlaying: true,
+    //         currentContext: "queue" // optional
+    //         });
+    //         return;
+    //     }
+
+    //     // 2) Fallback: advance within context
+    //     if (context.length > 0) {
+    //         console.log("No queue");
+    //         const currentIndex = context.findIndex((s) => s.id === currentContextSong.id);
+    //         if (currentIndex === -1) return;
+
+    //         const nextIndex = (currentIndex + 1) % context.length; // wrap around
+    //         const nextSong = context[nextIndex];
+
+    //         console.log("nextSong: ", nextSong);
+
+    //         set({
+    //             currentSong: nextSong,
+    //             currentContextSong: nextSong,
+    //             isPlaying: true,
+    //         // keep the same currentContext you set in setContextAndPlay
+    //         });
+    //     }
+    // },
 
     // Music Player Actions
     volume: 0.5, // Default 50%
@@ -664,79 +847,12 @@ const useStore = create((set, get) => ({
         set({ currentSong: song, isPlaying: true });
     },
 
+    playerLoading: false,
+
     // Toggle play/pause for current song
     togglePlay: () => {
         console.log("toggle play");
         set((state) => ({ isPlaying: !state.isPlaying }))
-    },
-
-    lastNonQueueSong: null,
-
-    playNextSong: async () => {
-        const {
-            currentSong,
-            currentPlaylistSongs,
-            queueSongs,
-            removeFromQueue,
-            currentPlaylistId,
-            lastNonQueueSong,
-            currentContext,
-        } = get();
-
-        if (!currentSong) return;
-
-        // 1. Queue has priority
-        if (queueSongs.length > 0) {
-            const nextSong = queueSongs[0];
-
-            if (currentContext !== "queue") {
-                // Save lastNonQueueSong
-                set({ lastNonQueueSong: currentSong });
-            }
-
-            // Remove it from queue (sync with backend + local state)
-            await removeFromQueue(nextSong.id);
-
-            // Play it
-            set({
-                currentSong: nextSong,
-                isPlaying: true,
-                currentContext: "queue" // optional: track that it came from queue
-            });
-            return;
-        }
-
-        // 2. Fallback: playlist navigation
-        if (currentPlaylistSongs.length > 0) {
-            // console.log("currentPlaylistSongs", currentPlaylistSongs);
-            console.log("currentPlaylistId", currentPlaylistId);
-
-            const referenceId = (lastNonQueueSong && lastNonQueueSong.id) ? lastNonQueueSong.id : currentSong.id;
-            let currentIndex = currentPlaylistSongs.findIndex(s => s.id === referenceId);
-
-            // const currentIndex = currentPlaylistSongs.findIndex(
-            //     (s) => s.id === lastNonQueueSong.id 
-            // );
-
-            if (currentIndex === -1) {
-                currentIndex = currentPlaylistSongs.findIndex(s => s.id === currentSong.id);
-            }
-
-            if (currentIndex === -1) {
-                console.log("playNextSong: couldn't find reference song in currentPlaylistSongs, aborting");
-                return;
-            }
-
-            const nextIndex = (currentIndex + 1) % currentPlaylistSongs.length;
-            const nextSong = currentPlaylistSongs[nextIndex];
-
-            set({
-                lastNonQueueSong: nextSong,
-                currentSong: nextSong,
-                isPlaying: true,
-                currentContext: "playlist"
-            });
-        }
     },
 
     playPrevSong: () => {

@@ -31,6 +31,7 @@ export function Song({
     fetchLikedSongs,
     fetchQueueSongs,
     fetchRecentlyPlayedSongs,
+    setPlaybackContext,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
@@ -46,37 +47,78 @@ export function Song({
     }
   };
 
-  const handlePlayClick = () => {
+  const handlePlayClick = async () => {
     if (currentSong?.id === song.id) {
       togglePlay();
-    } else {
-      playSong(song);
-      
-      // Set context if provided
-      if (context) {
-        setCurrentPlaylistId(context.id);
-        setCurrentContext(context.type);
+      return;
+    }
 
-        console.log("currentPlaylistId: ", context.id);
-        console.log("currentContext: ", context.type);
-        
-        // Only fetch songs if we're switching to a different context
-        if (currentPlaylistId !== context.id) {
-          if (context.type === "playlist") {
-            fetchPlaylistSongs(context.id);
-          } else if (context.type === "album") {
-            fetchAlbumSongs(context.id);
-          } else if (context.type === "liked_songs") {
-            fetchLikedSongs();
-          } else if (context.type === "queue") {
-            fetchQueueSongs();
-          } else if (context.type === "recently_played") {
-            fetchRecentlyPlayedSongs();
-          }
+    // Always play the clicked song
+    playSong(song);
+
+    if (context) {
+      setCurrentPlaylistId(context.id);
+      setCurrentContext(context.type);
+
+      console.log("currentPlaylistId: ", context.id);
+      console.log("currentContext: ", context.type);
+
+      let songs = [];
+
+      // Only fetch if switching context
+      if (currentPlaylistId !== context.id) {
+        if (context.type === "playlist") {
+          songs = await fetchPlaylistSongs(context.id);
+        } else if (context.type === "album") {
+          songs = await fetchAlbumSongs(context.id);
+        } else if (context.type === "liked_songs") {
+          songs = await fetchLikedSongs();
+        } else if (context.type === "queue") {
+          songs = await fetchQueueSongs();
+        } else if (context.type === "recently_played") {
+          songs = await fetchRecentlyPlayedSongs();
         }
+      } else {
+        // Already in this context → grab current state
+        songs = useStore.getState().currentPlaylistSongs;
       }
+
+      // ✅ Now always set the explicit playback context
+      setPlaybackContext(songs, song);
     }
   };
+
+  // const handlePlayClick = () => {
+  //   if (currentSong?.id === song.id) {
+  //     togglePlay();
+  //   } else {
+  //     playSong(song);
+      
+  //     // Set context if provided
+  //     if (context) {
+  //       setCurrentPlaylistId(context.id);
+  //       setCurrentContext(context.type);
+
+  //       console.log("currentPlaylistId: ", context.id);
+  //       console.log("currentContext: ", context.type);
+        
+  //       // Only fetch songs if we're switching to a different context
+  //       if (currentPlaylistId !== context.id) {
+  //         if (context.type === "playlist") {
+  //           fetchPlaylistSongs(context.id);
+  //         } else if (context.type === "album") {
+  //           fetchAlbumSongs(context.id);
+  //         } else if (context.type === "liked_songs") {
+  //           fetchLikedSongs();
+  //         } else if (context.type === "queue") {
+  //           fetchQueueSongs();
+  //         } else if (context.type === "recently_played") {
+  //           fetchRecentlyPlayedSongs();
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   const handleAddClick = (e) => {
     e.stopPropagation();

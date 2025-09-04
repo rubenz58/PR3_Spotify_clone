@@ -94,10 +94,9 @@ export function AudioPlayer() {
       <audio
         ref={audioRef}
         src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
-        // onEnded={() => useStore.getState().togglePlay()}
-        onEnded={playNextSong} 
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={ playNextSong } // KEY LINE
+        onTimeUpdate={ handleTimeUpdate }
+        onLoadedMetadata={ handleLoadedMetadata }
       />
       
       {/* Left side - Song info */}

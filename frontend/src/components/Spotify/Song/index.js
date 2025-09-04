@@ -34,8 +34,8 @@ export function Song({
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
-
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
+  const isCurrentSong = currentSong?.id === song.id;
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -45,14 +45,6 @@ export function Song({
       await addLikedSong(song.id);
     }
   };
-
-  // const handlePlayClick = () => {
-  //   if (currentSong?.id === song.id) {
-  //     togglePlay();
-  //   } else {
-  //     playSong(song);
-  //   }
-  // };
 
   const handlePlayClick = () => {
     if (currentSong?.id === song.id) {
@@ -98,16 +90,16 @@ export function Song({
     }
   };
 
-  const isCurrentSong = currentSong?.id === song.id;
-
   return (
-    <div className="song-row">
+    <div className={`song-row ${isCurrentSong ? 'current-song' : ''}`}>
       <button className="song-play-button" onClick={handlePlayClick}>
         {isCurrentSong && isPlaying ? '⏸️' : '▶️'}
       </button>
 
       <div className="song-info">
-        <div className="song-title">{song.title}</div>
+        <div className={`song-title ${isCurrentSong ? 'playing' : ''}`}>
+          {song.title}
+        </div>
         <div className="song-artist">{song.artist}</div>
       </div>
       

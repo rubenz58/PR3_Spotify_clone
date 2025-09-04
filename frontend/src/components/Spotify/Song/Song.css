@@ -48,6 +48,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.song-title.playing {
+  color: #1db954; /* Spotify green color for playing song */
 }
 
 .song-artist {

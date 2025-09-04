@@ -26,11 +26,15 @@ export function Song({
     setCurrentPlaylistId,
     setCurrentContext,
     setPlaybackContext,
+    currentContextSong,
+    currentContext,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
+  const isCurrentSongInContext = 
+    currentContextSong?.id === song.id && currentContext === context?.type;
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -100,11 +104,11 @@ export function Song({
   return (
     <div className={`song-row ${isCurrentSong ? 'current-song' : ''}`}>
       <button className="song-play-button" onClick={handlePlayClick}>
-        {isCurrentSong && isPlaying ? '⏸️' : '▶️'}
+        { isCurrentSong && isPlaying ? '⏸️' : '▶️'}
       </button>
 
       <div className="song-info">
-        <div className={`song-title ${isCurrentSong ? 'playing' : ''}`}>
+        <div className={`song-title ${isCurrentSongInContext ? 'playing' : ''}`}>
           {song.title}
         </div>
         <div className="song-artist">{song.artist}</div>

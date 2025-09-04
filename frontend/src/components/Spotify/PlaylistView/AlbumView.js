@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Song } from '../Song';
 import useStore from '../../../stores/useStore';
@@ -25,7 +25,7 @@ export function AlbumView({ albumId }) {
     console.log("FLASHING");
     return <MainContentSkeleton />
   };
-  
+
   if (!user) return <Navigate to="/login" replace/>;
 
   return (

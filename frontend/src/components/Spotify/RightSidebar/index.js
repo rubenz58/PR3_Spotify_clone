@@ -41,6 +41,9 @@ export function RightSidebar() {
   // Check if current song is liked
   const isCurrentSongLiked = currentSong && likedSongs?.some(likedSong => likedSong.id === currentSong.id);
 
+  // Check if the currentSong is playing from the queue - Use to highlight green
+  // const isCurrentSongPlayingInQueue = 
+
   const handleClearQueue = async () => {
     if (!user) return;
     await clearQueue();
@@ -62,14 +65,6 @@ export function RightSidebar() {
 
     setPlaybackContext(remainingQueue, song);
   };
-
-  // const handlePlayFromQueue = (song) => {
-  //   if (!user) return;
-  //   playSong(song);
-
-  //   setCurrentPlaylistId("queue");
-  //   setCurrentContext("queue");
-  // };
 
   const handleRemoveFromQueue = (songId) => {
     if (!user) return;

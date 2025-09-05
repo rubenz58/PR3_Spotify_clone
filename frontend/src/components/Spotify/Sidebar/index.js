@@ -126,14 +126,14 @@ export function Sidebar() {
           <span className="quick-item-text">Liked Songs</span>
         </div>
         
-        <div 
+        {/* <div 
           className="quick-item queue"
           style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-          onClick={handleQueueClick}
+          onClick={ handleQueueClick }
         >
           <div className="quick-item-icon queue-icon">📋</div>
           <span className="quick-item-text">Queue</span>
-        </div>
+        </div> */}
         
         <div 
           className="quick-item recently-played"

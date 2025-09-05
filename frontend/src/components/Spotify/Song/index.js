@@ -28,13 +28,14 @@ export function Song({
     setPlaybackContext,
     currentContextSong,
     currentContext,
+    queuePlaying,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
   const isCurrentSongInContext = 
-    currentContextSong?.id === song.id && currentContext === context?.type;
+    currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -50,10 +51,6 @@ export function Song({
         togglePlay();
         return;
     }
-    // if (currentSong?.id === song.id) {
-    //   togglePlay();
-    //   return;
-    // }
 
     // Immediately play the clicked song
     playSong(song);

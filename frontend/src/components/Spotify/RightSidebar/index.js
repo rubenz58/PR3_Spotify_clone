@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useStore from '../../../stores/useStore';
 import { AddToPlaylistDropdown } from '../Song/AddToPlaylistDropdown';
+import { RightSidebarSong } from './RightSidebarSong'; // Import the new component
 import './RightSidebar.css';
 
 export function RightSidebar() {
@@ -35,14 +36,10 @@ export function RightSidebar() {
   }, [user]);
   
   const [activeTab, setActiveTab] = useState('queue');
-  const [playlistDropdownSongId, setPlaylistDropdownSongId] = useState(null);
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
 
   // Check if current song is liked
   const isCurrentSongLiked = currentSong && likedSongs?.some(likedSong => likedSong.id === currentSong.id);
-
-  // Check if the currentSong is playing from the queue - Use to highlight green
-  // const isCurrentSongPlayingInQueue = 
 
   const handleClearQueue = async () => {
     if (!user) return;
@@ -72,19 +69,13 @@ export function RightSidebar() {
   };
 
   const handleLikeClick = async (song) => {
-    console.log("handleLikeClick: ", song);
-    // if (!user || !currentSong) return;
     if (!user) return;
 
     const isSongLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
     
     if (isSongLiked) {
-      // await removeLikedSong(currentSong.id);
-      console.log("handleLikeClick: removing");
       await removeLikedSong(song.id);
     } else {
-      console.log("handleLikeClick: adding");
-      // await addLikedSong(currentSong.id);
       await addLikedSong(song.id);
     }
   };
@@ -100,30 +91,8 @@ export function RightSidebar() {
   };
 
   const handlePlaylistClickNowPlaying = () => {
-    console.log("handlePlaylistClick");
     if (!user || !currentSong) return;
     setShowPlaylistDropdown(!showPlaylistDropdown);
-  };
-
-  const handlePlaylistClick = (songId) => {
-    console.log("handlePlaylistClick", songId);
-    if (!user) return;
-    
-    if (songId) {
-      // For queue items - toggle specific song's dropdown
-      setPlaylistDropdownSongId(playlistDropdownSongId === songId ? null : songId);
-    } else {
-      // For "Now Playing" section - toggle general dropdown
-      console.log("now playing");
-      setShowPlaylistDropdown(!showPlaylistDropdown);
-    }
-  };
-
-  const formatDuration = (seconds) => {
-    if (!seconds) return '--:--';
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -165,7 +134,7 @@ export function RightSidebar() {
               <button 
                 className="action-btn like-btn" 
                 disabled={!user}
-                onClick={ handleLikeClickCurrentSong }
+                onClick={handleLikeClickCurrentSong}
                 title={isCurrentSongLiked ? "Remove from liked songs" : "Add to liked songs"}
               >
                 {isCurrentSongLiked ? '💚' : '♡'}
@@ -175,15 +144,15 @@ export function RightSidebar() {
                 <button 
                   className="action-btn playlist-btn" 
                   disabled={!user}
-                  onClick={ handlePlaylistClickNowPlaying }
+                  onClick={handlePlaylistClickNowPlaying}
                   title="Add to playlist"
                 >
                   +
                 </button>
                 {showPlaylistDropdown && currentSong && (
                   <AddToPlaylistDropdown
-                    showQueue={ false }
-                    song={ currentSong }
+                    showQueue={false}
+                    song={currentSong}
                     onClose={() => setShowPlaylistDropdown(false)}
                   />
                 )}
@@ -221,7 +190,7 @@ export function RightSidebar() {
                 <button 
                   className="clear-queue-btn" 
                   disabled={!user}
-                  onClick={ handleClearQueue }
+                  onClick={handleClearQueue}
                 >
                   Clear queue
                 </button>
@@ -230,70 +199,21 @@ export function RightSidebar() {
             
             <div className="queue-list">
               {queueSongs && queueSongs.length > 0 ? (
-                queueSongs.map((song, index) => {
+                queueSongs.map((song) => {
                   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
                   
+                  // Use the new RightSidebarSong component
                   return (
-                    <div key={song.id} className="queue-item">
-                      <div 
-                        className="queue-song-info" 
-                        onClick={() => handlePlayFromQueue(song)}
-                        style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-                      >
-                        <div className="queue-album-art">🎵</div>
-                        <div className="queue-details">
-                          <div className="queue-title">{song.title}</div>
-                          <div className="queue-artist">{song.artist}</div>
-                        </div>
-                      </div>
-                      <div className="queue-actions">
-                        <span className="queue-duration">{formatDuration(song.duration)}</span>
-                        
-                        <button 
-                          className="queue-action-btn like-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLikeClick(song);
-                          }}
-                          disabled={!user}
-                          title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
-                        >
-                          {isLiked ? '💚' : '♡'}
-                        </button>
-
-                        <div className="playlist-dropdown-container">
-                          <button 
-                            className="queue-action-btn playlist-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlaylistClick(song.id);
-                            }}
-                            disabled={!user}
-                            title="Add to playlist"
-                          >
-                            +
-                          </button>
-                          { playlistDropdownSongId === song.id && (
-                            <AddToPlaylistDropdown
-                              song={ song }
-                              onClose={() => setPlaylistDropdownSongId(null)}
-                              showQueue={ false }
-                            />
-                          )}
-                        </div>
-                        
-                        <button 
-                          className="remove-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveFromQueue(song.id);
-                          }}
-                          disabled={!user}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
+                    <RightSidebarSong
+                      key={song.id}
+                      song={song}
+                      currentSong={currentSong}
+                      isLiked={isLiked}
+                      onPlay={handlePlayFromQueue}
+                      onRemove={handleRemoveFromQueue}
+                      onLike={handleLikeClick}
+                      user={user}
+                    />
                   );
                 })
               ) : (

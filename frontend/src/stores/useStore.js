@@ -741,7 +741,12 @@ const useStore = create((set, get) => ({
         (currentIndex - 1 + currentPlaylistSongs.length) %
         currentPlaylistSongs.length; // wrap around
         const prevSong = currentPlaylistSongs[prevIndex];
-        set({ currentSong: prevSong, isPlaying: true });
+        set({
+            currentSong: prevSong,
+            isPlaying: true,
+            currentContextSong: prevSong,
+            queuePlaying: false,
+        });
     },
 }))
 

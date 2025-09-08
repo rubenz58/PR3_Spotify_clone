@@ -307,11 +307,6 @@ const useStore = create((set, get) => ({
             await makeAuthenticatedRequest(`/api/user_playlists/liked-songs/${song_id}`, {
                 method: 'DELETE'
             });
-            
-            // Update local state after successful API call
-            // set((state) => ({
-            //     likedSongs: state.likedSongs.filter(song => song.id !== song_id),
-            // }));
 
             // Update local state after successful API call
             set((state) => {
@@ -773,7 +768,17 @@ const useStore = create((set, get) => ({
             currentContextSong,
             currentQueueSongId,
             setCurrentQueueSongId,
+            repeatMode,
+            restartCurrentSong,
+            queuePlaying,
         } = get();
+
+        if (repeatMode && !queuePlaying && currentSong) {
+            console.log("Repeating current song");
+            restartCurrentSong();
+            return;
+        }
+
 
         // Special case.
         // queueSongs.length === 1 && currentSong = the only song in the queue
@@ -970,13 +975,18 @@ const useStore = create((set, get) => ({
             });
         }
     },
+    repeatMode: false, // true = repeat current song
+    setRepeatMode: (mode) => set({ repeatMode: mode }),
+
+    restartTrigger: 0,
+    restartCurrentSong: () => set((state) => ({ restartTrigger: state.restartTrigger + 1 })),
 
     pendingSong: null, // temporarily holds the song while fetching context
     setPendingSong: (song) => set({ pendingSong: song }),
 
     // Toggle play/pause for current song
     togglePlay: () => {
-        console.log("toggle play");
+        // console.log("toggle play");
         set((state) => ({ isPlaying: !state.isPlaying }))
     },
 }))

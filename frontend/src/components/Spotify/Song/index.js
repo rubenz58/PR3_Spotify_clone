@@ -63,6 +63,78 @@ export function Song({
   };
 
   const handlePlayClick = () => {
+    // Check if same song is already playing
+    if (currentSong?.id === song.id) {
+        // Always toggle play/pause first for immediate feedback
+        togglePlay();
+        
+        // Then check if we need to update context (same song, different playlist/context)
+        if (context && (currentContext !== context.type || String(currentPlaylistId) !== String(context.id))) {
+            // Same song, but different context - update context for highlighting
+            setCurrentContextAndPlaylist(context.type, context.id);
+            
+            // Get songs and set playback context for new context
+            let songs = [];
+            switch (context.type) {
+                case "playlist":
+                    songs = useStore.getState().currentPlaylistSongs;
+                    break;
+                case "album":
+                    songs = useStore.getState().currentAlbumSongs;
+                    break;
+                case "liked_songs":
+                    songs = useStore.getState().likedSongs;
+                    break;
+                case "recently_played":
+                    songs = useStore.getState().recentlyPlayedSongs;
+                    break;
+                default:
+                    songs = [];
+            }
+            
+            // Set playback context for player
+            setPlaybackContext(songs, song);
+        }
+        return;
+    }
+
+    // Different song - set up new context and play
+    if (context) {
+        setCurrentContextAndPlaylist(context.type, context.id);
+        
+        // Get songs and set playback context IMMEDIATELY after setting context
+        let songs = [];
+        switch (context.type) {
+            case "playlist":
+                songs = useStore.getState().currentPlaylistSongs;
+                break;
+            case "album":
+                songs = useStore.getState().currentAlbumSongs;
+                break;
+            case "liked_songs":
+                songs = useStore.getState().likedSongs;
+                break;
+            case "recently_played":
+                songs = useStore.getState().recentlyPlayedSongs;
+                break;
+            default:
+                songs = [];
+        }
+        
+        // Set playback context for player
+        setPlaybackContext(songs, song);
+    }
+
+    // Play song AFTER context is set
+    playSong(song);
+
+    // Reset queue state since we're playing from a different context
+    setCurrentQueueSongId(null);
+    useStore.setState({ queuePlaying: false });
+  };
+
+  /* const handlePlayClick = () => {
+    
     // Toggle if same song is already playing
     if (currentSong?.id === song.id) {
         togglePlay();
@@ -102,7 +174,7 @@ export function Song({
     // Reset queue state since we're playing from a different context
     setCurrentQueueSongId(null);
     useStore.setState({ queuePlaying: false });
-  };
+  }; */
 
 
   const handleAddClick = (e) => {

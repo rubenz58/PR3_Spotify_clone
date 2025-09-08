@@ -89,6 +89,15 @@ export function AudioPlayer() {
     e.target.style.background = `linear-gradient(to right, #1db954 0%, #1db954 ${percentage}%, #535353 ${percentage}%, #535353 100%)`;
   };
 
+  const handlePrevClick = () => {
+    if (audioRef.current && currentTime < 3) {
+      playPrevSong();
+    } else {
+      audioRef.current.currentTime = 0;
+      setCurrentTime(0);
+    }
+  };
+
   if (!currentSong || pendingSong) return null;
 
 
@@ -114,7 +123,7 @@ export function AudioPlayer() {
       {/* Center - Player controls */}
       <div className="player-controls">
         <div className="control-buttons">
-          <button className="control-btn" title="Previous" onClick={ playPrevSong }>
+          <button className="control-btn" title="Previous" onClick={ handlePrevClick }>
             ⏮️
           </button>
           <button className="play-pause-btn" onClick={handlePlayPause}>

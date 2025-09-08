@@ -772,26 +772,100 @@ const useStore = create((set, get) => ({
         const {
             currentSong,
             contextSongs,
+            currentContextSong,
+            queueSongs,
+            currentQueueSongId,
+            setCurrentQueueSongId,
         } = get();
 
-        if (!currentSong || contextSongs.length === 0) return;
+        if (!currentSong) return;
 
-        const currentIndex = contextSongs.findIndex(
-            (s) => s.id === currentSong.id
-        );
-        if (currentIndex === -1) return;
+        // 1️⃣ If we're currently playing from queue, try to go to previous song in queue
+        if (currentQueueSongId && queueSongs.length > 0) {
+            console.log("Currently playing from queue, looking for prev in queue");
+            
+            const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
+        
+            if (currentQueueIndex !== -1) {
+                // Get previous song in queue (wrap around to end if at beginning)
+                const prevIndex = currentQueueIndex > 0 
+                    ? currentQueueIndex - 1 
+                    : queueSongs.length - 1;
+                const prevSong = queueSongs[prevIndex];
+                setCurrentQueueSongId(prevSong.id);
+                
+                set({
+                    currentSong: prevSong,
+                    isPlaying: true,
+                    queuePlaying: true,
+                });
+                return;
+            }
+            
+            // No previous song in queue, fall back to context if available
+            if (contextSongs.length > 0 && currentContextSong) {
+                console.log("No prev in queue, falling back to context");
+                
+                const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
+                if (currentIndex !== -1) {
+                    const prevIndex = (currentIndex - 1 + contextSongs.length) % contextSongs.length;
+                    const prevSong = contextSongs[prevIndex];
+                    
+                    // Clear queue tracking since we're going back to context
+                    setCurrentQueueSongId(null);
+                    
+                    set({
+                        currentSong: prevSong,
+                        isPlaying: true,
+                        currentContextSong: prevSong,
+                        queuePlaying: false,
+                    });
+                }
+            }
+            return;
+        }
 
-        const prevIndex =
-        (currentIndex - 1 + contextSongs.length) %
-        contextSongs.length; // wrap around
-        const prevSong = contextSongs[prevIndex];
-        set({
-            currentSong: prevSong,
-            isPlaying: true,
-            currentContextSong: prevSong,
-            queuePlaying: false,
-        });
+        // 2️⃣ Normal case: we're playing from context, go to previous in context
+        if (contextSongs.length > 0) {
+            const currentIndex = contextSongs.findIndex(s => s.id === currentSong.id);
+            if (currentIndex === -1) return;
+
+            const prevIndex = (currentIndex - 1 + contextSongs.length) % contextSongs.length;
+            const prevSong = contextSongs[prevIndex];
+            
+            set({
+                currentSong: prevSong,
+                isPlaying: true,
+                currentContextSong: prevSong,
+                queuePlaying: false,
+            });
+        }
     },
+
+    // playPrevSong: () => {
+    //     const {
+    //         currentSong,
+    //         contextSongs,
+    //     } = get();
+
+    //     if (!currentSong || contextSongs.length === 0) return;
+
+    //     const currentIndex = contextSongs.findIndex(
+    //         (s) => s.id === currentSong.id
+    //     );
+    //     if (currentIndex === -1) return;
+
+    //     const prevIndex =
+    //     (currentIndex - 1 + contextSongs.length) %
+    //     contextSongs.length; // wrap around
+    //     const prevSong = contextSongs[prevIndex];
+    //     set({
+    //         currentSong: prevSong,
+    //         isPlaying: true,
+    //         currentContextSong: prevSong,
+    //         queuePlaying: false,
+    //     });
+    // },
 
     // Music Player Actions
     volume: 0.5, // Default 50%

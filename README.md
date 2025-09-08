@@ -1,15 +1,12 @@
 PR3 – Spotify Clone - v.1.0
 
-NOW: FR loading states for components while not logged in
-NEXT: Playlists
-
 Core Music Features (Must-Have)
 
 ✅ Play/pause functionality
 ✅ Song library with artist/title display
-Skip next/previous (queue management)
-Seek bar (scrub through song timeline)
-Volume control
+✅ Skip next/previous (queue management)
+✅ Seek bar (scrub through song timeline)
+✅ Volume control
 Shuffle and repeat modes
 
 Search & Discovery
@@ -32,7 +29,7 @@ User Experience
 Responsive design (mobile-friendly)
 ✅ Persistent player bar (stays while navigating)
 ✅ Loading states for all async operations
-Current song highlighting in lists
+✅ Current song highlighting in lists
 
 Nice-to-Have Portfolio Enhancers
 

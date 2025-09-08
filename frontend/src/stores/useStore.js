@@ -423,6 +423,34 @@ const useStore = create((set, get) => ({
 
     },
 
+    addToRecentlyPlayed: async (song_id) => {
+        const {
+            user,
+            makeAuthenticatedRequest
+        } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest(`/api/user_playlists/recently-played/${song_id}`, {
+                method: 'POST'
+            });
+            
+            // Optionally refresh the recently played list if it's currently loaded
+            // This ensures the UI updates immediately
+            const { recentlyPlayedSongs } = get();
+            if (recentlyPlayedSongs.length > 0) {
+                // Re-fetch to get the updated order
+                get().fetchRecentlyPlayedSongs();
+            }
+            
+            return { success: true, action: data.action };
+        } catch (error) {
+            console.error('Failed to add to recently played:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
     // Fetch all playlists for a specific user
     fetchUserPlaylists: async () => {
         // console.log("Fetching Playlists");
@@ -854,6 +882,14 @@ const useStore = create((set, get) => ({
             currentSong: song,
             isPlaying: true,
             pendingSong: null // ??? 
+        });
+
+        // Add to recently played (fire and forget - don't await)
+        // This ensures song playback isn't delayed by the API call
+        const { addToRecentlyPlayed } = get();
+        addToRecentlyPlayed(song.id).catch(error => {
+            console.error('Failed to track recently played:', error);
+            // Don't stop playback if recently played tracking fails
         });
     },
 

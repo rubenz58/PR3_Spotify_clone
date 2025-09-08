@@ -331,3 +331,52 @@ def get_recently_played_songs():  # Fixed function name
         'recently_played_songs': result,
         'count': len(result)
     })
+
+
+@user_playlists_bp.route('/recently-played/<int:song_id>', methods=['POST'])
+@jwt_required
+def add_recently_played_song(song_id):
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print(f"/api/user_playlists/recently-played/{song_id} - POST")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Check if song exists
+    song = Song.query.get(song_id)
+    if not song:
+        return jsonify({'error': 'Song not found'}), 404
+    
+    # Check if already in recently played
+    existing_entry = RecentlyPlayedSong.query.filter_by(
+        user_id=user_id, 
+        song_id=song_id
+    ).first()
+    
+    if existing_entry:
+        # Update the played_at timestamp to move it to the front
+        existing_entry.played_at = db.func.now()
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Recently played song updated',
+            'song_id': song_id,
+            'action': 'updated'
+        }), 200
+    else:
+        # Add new entry
+        recently_played = RecentlyPlayedSong(
+            user_id=user_id, 
+            song_id=song_id
+        )
+        db.session.add(recently_played)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Song added to recently played',
+            'song_id': song_id,
+            'action': 'added'
+        }), 201

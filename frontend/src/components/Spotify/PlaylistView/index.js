@@ -21,7 +21,6 @@ export function PlaylistView({ playlistId }) {
     fetchPlaylistSongs(playlistId);
   }, [playlistId, playlistRefresh]);
   
-  // const playlist = playlists.find(p => p.id === parseInt(playlistId));
   const playlist = userPlaylists?.find(p => p.id === parseInt(playlistId));
 
   if (!user) return <Navigate to="/login" replace/>;

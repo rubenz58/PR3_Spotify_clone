@@ -29,16 +29,17 @@ export function Song({
     currentContextSong,
     currentContext,
     queuePlaying,
+    setCurrentQueueSongId,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
 
-  console.log("XXX1XXX");
-  console.log("currentContextSong?.id === song.id: ", currentContextSong?.id === song.id);
-  console.log("currentContext === context?.type: ", currentContext === context?.type);
-  console.log("!queuePlaying: ", !queuePlaying);
+  // console.log("XXX1XXX");
+  // console.log("currentContextSong?.id === song.id: ", currentContextSong?.id === song.id);
+  // console.log("currentContext === context?.type: ", currentContext === context?.type);
+  // console.log("!queuePlaying: ", !queuePlaying);
 
   const isCurrentSongInContext = 
     currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
@@ -61,6 +62,10 @@ export function Song({
     // Immediately play the clicked song
     playSong(song);
 
+    // We are click play outside of queue.
+    // Reset so that it would play the first song in queue.
+    setCurrentQueueSongId(null);
+
     if (context) {
       setCurrentPlaylistId(context.id);
       setCurrentContext(context.type);
@@ -81,15 +86,17 @@ export function Song({
         case "liked_songs":
           songs = useStore.getState().likedSongs;
           break;
-        case "queue":
-          songs = useStore.getState().queueSongs;
-          break;
+        // case "queue":
+        //   songs = useStore.getState().queueSongs;
+        //   break;
         case "recently_played":
           songs = useStore.getState().recentlyPlayedSongs;
           break;
         default:
           songs = [];
       }
+
+      // It shouldn't add the QUEUE SONGS TO THE CONTEXT.
 
       // Set playback context for player
       setPlaybackContext(songs, song);

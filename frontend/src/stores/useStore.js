@@ -211,7 +211,6 @@ const useStore = create((set, get) => ({
     currentSong: null, // { id: 1, title: "Song Name", artist: "Artist", file_path: "..." }
     isPlaying: false,
 
-    // songs: [], // DEFINE
     userPlaylists: [],
     songLoading: false,
     likedSongs: [],
@@ -226,15 +225,17 @@ const useStore = create((set, get) => ({
     currentQueueSongId: null,
 
     currentContext: null, // "playlist", "album", "liked", etc.
-    // context: [], // Used to determine prev/next.
-    contextSongs: [],
+    contextSongs: [], // Determines prev/next
     currentContextSong: null,
 
     setCurrentPlaylistId: (id) => set({ currentPlaylistId: id }),
     setCurrentContext: (context) => set({ currentContext: context }),
     setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
     setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
+    setCurrentQueueSongId: (songId) => set({ currentQueueSongId: songId }),
 
+
+    // Function adds songs to the playback context.
     setPlaybackContext: (songs, song) => {
         set({
             contextSongs: songs,
@@ -252,7 +253,6 @@ const useStore = create((set, get) => ({
 
             set({
                 likedSongs: songs,
-                // currentPlaylistSongs: songs,
                 currentPlaylistId: "liked_songs"
             });
 
@@ -281,10 +281,6 @@ const useStore = create((set, get) => ({
             set((state) => ({
                 // Add to beginning of liked songs array (most recently liked first)
                 likedSongs: [newLikedSong, ...state.likedSongs],
-                // Also update currentPlaylistSongs if we're in the liked songs view  
-                // currentPlaylistSongs: state.currentPlaylistId === "liked_songs"
-                //     ? [newLikedSong, ...state.currentPlaylistSongs]
-                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };
@@ -308,10 +304,6 @@ const useStore = create((set, get) => ({
             // Update local state after successful API call
             set((state) => ({
                 likedSongs: state.likedSongs.filter(song => song.id !== song_id),
-                // Also update currentPlaylistSongs if we're in the liked songs view
-                // currentPlaylistSongs: state.currentPlaylistId === "liked_songs" 
-                //     ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
-                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };
@@ -331,7 +323,6 @@ const useStore = create((set, get) => ({
 
             set({
                 queueSongs: songs,
-                // currentPlaylistSongs: songs,
                 currentPlaylistId: "queue"
             });
 
@@ -359,10 +350,6 @@ const useStore = create((set, get) => ({
             set((state) => ({
                 // Add to end of queue array (last in queue)
                 queueSongs: [...state.queueSongs, newQueueSong],
-                // Also update currentPlaylistSongs if we're in the queue view
-                // currentPlaylistSongs: state.currentPlaylistId === "queue"
-                //     ? [...state.currentPlaylistSongs, newQueueSong]
-                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };
@@ -385,10 +372,6 @@ const useStore = create((set, get) => ({
             // Update local state after successful API call
             set((state) => ({
                 queueSongs: state.queueSongs.filter(song => song.id !== song_id),
-                // Also update currentPlaylistSongs if we're in the queue view
-                // currentPlaylistSongs: state.currentPlaylistId === "queue"
-                //     ? state.currentPlaylistSongs.filter(song => song.id !== song_id)
-                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };
@@ -411,10 +394,6 @@ const useStore = create((set, get) => ({
             // Clear local state after successful API call
             set((state) => ({
                 queueSongs: [],
-                // Also update currentPlaylistSongs if we're in the queue view
-                // currentPlaylistSongs: state.currentPlaylistId === "queue"
-                //     ? []
-                //     : state.currentPlaylistSongs
             }));
             
             return { success: true };
@@ -683,28 +662,89 @@ const useStore = create((set, get) => ({
     },
 
     playNextSong: async () => {
+        console.log("playNextSong");
         const { 
             queueSongs, 
-            removeFromQueue, 
+            removeFromQueue,
+            currentSong, 
             contextSongs, 
             currentContextSong,
+            currentQueueSongId,
+            setCurrentQueueSongId,
         } = get();
 
-        if (!currentContextSong) return;
+        // Special case.
+        // queueSongs.length === 1 && currentSong = the only song in the queue
+        // nextSong should be the song in contextSongs AFTER currentContextSong.
+        if (queueSongs.length === 1 && currentQueueSongId && 
+            currentSong && queueSongs[0].id === currentSong.id) {
+            
+            console.log("Special case: Last song in queue, moving to context");
+            
+            // Remove the current song from queue
+            await removeFromQueue(currentSong.id);
+            
+            // Clear queue tracking
+            setCurrentQueueSongId(null);
+            
+            // Find next song in context after currentContextSong
+            if (contextSongs && contextSongs.length > 0 && currentContextSong) {
+                const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
+                if (currentIndex !== -1) {
+                    const nextIndex = (currentIndex + 1) % contextSongs.length; // wrap around
+                    const nextSong = contextSongs[nextIndex];
+
+                    set({
+                        queuePlaying: false,
+                        currentSong: nextSong,
+                        currentContextSong: nextSong, // advance contextSong
+                        isPlaying: true
+                    });
+                    return;
+                }
+            }
+            
+            // If no context available, just stop playing
+            set({ isPlaying: false });
+            return;
+        }
 
         // 1️⃣ Queue priority
         if (queueSongs.length > 0) {
 
-            const nextSong = queueSongs[0];
+            console.log("Queue has priority");
 
-            // Remove from queue (backend + local state)
-            await removeFromQueue(nextSong.id);
+            let nextSong;
 
-            // Play it, but DO NOT touch contextSongs
+            // If we have a currentQueueSongId, find the next song in queue
+            if (currentQueueSongId) {
+                const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
+                
+                if (currentQueueIndex !== -1 && currentQueueIndex < queueSongs.length - 1) {
+                    // Get the next song in the queue
+                    nextSong = queueSongs[currentQueueIndex + 1];
+                } else {
+                    // Current song is last in queue or not found, take first song
+                    nextSong = queueSongs[0];
+                }
+            } else {
+                // No currentQueueSongId set, take first song in queue
+                nextSong = queueSongs[0];
+            }
+
+            setCurrentQueueSongId(nextSong.id);
+
+            if (currentQueueSongId) {
+                const currentSongStillInQueue = queueSongs.find(s => s.id === currentQueueSongId);
+                if (currentSongStillInQueue) {
+                    await removeFromQueue(currentQueueSongId);
+                }
+            }
+
+            // Play the next song, but DO NOT touch contextSongs
             set({
                 queuePlaying: true,
                 currentSong: nextSong,
-                currentContextSong, // keep the contextSong as the last user-clicked song
                 isPlaying: true
             });
             return;
@@ -722,7 +762,8 @@ const useStore = create((set, get) => ({
                 queuePlaying: false,
                 currentSong: nextSong,
                 currentContextSong: nextSong, // advance contextSong
-                isPlaying: true
+                isPlaying: true,
+                currentQueueSongId: null,
             });
         }
     },

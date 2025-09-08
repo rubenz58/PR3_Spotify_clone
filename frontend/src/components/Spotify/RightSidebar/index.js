@@ -21,6 +21,7 @@ export function RightSidebar() {
     setCurrentPlaylistId,
     setCurrentContext,
     setPlaybackContext,
+    setCurrentQueueSongId,
   } = useStore();
 
   useEffect(() => {
@@ -52,15 +53,19 @@ export function RightSidebar() {
     // Immediately play the clicked song
     playSong(song);
 
-    // Set context to queue
+    // Assign currentQueueSongId to song.id
+    setCurrentQueueSongId(song.id);
+
+    // Set context to queue // NOOOO NOOOO
     setCurrentPlaylistId("queue");
-    setCurrentContext("queue");
+    // setCurrentContext("queue");
 
     // Set playback context: all remaining queue songs starting from clicked song
-    const startIndex = queueSongs.findIndex(s => s.id === song.id);
-    const remainingQueue = startIndex >= 0 ? queueSongs.slice(startIndex) : [song];
+    // const startIndex = queueSongs.findIndex(s => s.id === song.id);
+    // const remainingQueue = startIndex >= 0 ? queueSongs.slice(startIndex) : [song];
 
-    setPlaybackContext(remainingQueue, song);
+    // NO. SHOULDN'T ADD QUEUE SONGS TO THE CONTEXT
+    // setPlaybackContext(remainingQueue, song);
   };
 
   const handleRemoveFromQueue = (songId) => {

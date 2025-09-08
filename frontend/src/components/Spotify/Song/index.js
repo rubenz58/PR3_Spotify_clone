@@ -45,10 +45,10 @@ export function Song({
   //   currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
 
   const isCurrentSongInContext = 
-  currentSong?.id === song.id && 
-  currentContextSong?.id === song.id && 
-  currentContext === context?.type && 
-  !queuePlaying;
+    currentSong?.id === song.id && 
+    currentContextSong?.id === song.id && 
+    currentContext === context?.type && 
+    !queuePlaying;
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -65,6 +65,10 @@ export function Song({
         return;
     }
 
+    if (context) {
+      setCurrentPlaylistId(context.id);
+      setCurrentContext(context.type);
+    }
     // Immediately play the clicked song
     playSong(song);
 
@@ -75,8 +79,8 @@ export function Song({
     useStore.setState({ queuePlaying: false });
 
     if (context) {
-      setCurrentPlaylistId(context.id);
-      setCurrentContext(context.type);
+      // setCurrentPlaylistId(context.id);
+      // setCurrentContext(context.type);
 
       // console.log("currentPlaylistId: ", context.id);
       // console.log("currentContext: ", context.type);

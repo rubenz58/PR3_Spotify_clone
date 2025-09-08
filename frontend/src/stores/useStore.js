@@ -906,13 +906,14 @@ const useStore = create((set, get) => ({
             pendingSong: null // ??? 
         });
 
-        // Add to recently played (fire and forget - don't await)
-        // This ensures song playback isn't delayed by the API call
-        const { addToRecentlyPlayed } = get();
-        addToRecentlyPlayed(song.id).catch(error => {
-            console.error('Failed to track recently played:', error);
-            // Don't stop playback if recently played tracking fails
-        });
+        const { addToRecentlyPlayed, currentContext } = get();
+    
+        if (currentContext !== "recently_played") {
+            addToRecentlyPlayed(song.id).catch(error => {
+                console.error('Failed to track recently played:', error);
+                // Don't stop playback if recently played tracking fails
+            });
+        }
     },
 
     pendingSong: null, // temporarily holds the song while fetching context

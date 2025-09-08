@@ -14,8 +14,7 @@ export function LikedSongsView() {
         fetchLikedSongs,
         likedSongs,
         authLoading,
-        playlistLoading, // Fixed typo: was userPlaylistLoading
-        removeSongFromLikedSongs,
+        playlistLoading,
     } = useStore();
 
     useEffect(() => {
@@ -27,15 +26,6 @@ export function LikedSongsView() {
     if (!user) return <Navigate to="/login" replace/>;
     
     if (authLoading || playlistLoading) return <MainContentSkeleton />;
-
-    const removeSongFromCurrentPlaylist = async (song) => {
-        if (removeSongFromLikedSongs) {
-        const result = await removeSongFromLikedSongs(song.id);
-        if (!result?.success) {
-            console.error('Failed to remove song:', result?.error);
-        }
-        }
-    };
 
     return (
         <div className="playlist-view">

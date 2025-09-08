@@ -34,6 +34,12 @@ export function Song({
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
+
+  console.log("XXX1XXX");
+  console.log("currentContextSong?.id === song.id: ", currentContextSong?.id === song.id);
+  console.log("currentContext === context?.type: ", currentContext === context?.type);
+  console.log("!queuePlaying: ", !queuePlaying);
+
   const isCurrentSongInContext = 
     currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
 

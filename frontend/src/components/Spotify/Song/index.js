@@ -41,8 +41,14 @@ export function Song({
   // console.log("currentContext === context?.type: ", currentContext === context?.type);
   // console.log("!queuePlaying: ", !queuePlaying);
 
+  // const isCurrentSongInContext = 
+  //   currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
+
   const isCurrentSongInContext = 
-    currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
+  currentSong?.id === song.id && 
+  currentContextSong?.id === song.id && 
+  currentContext === context?.type && 
+  !queuePlaying;
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -54,7 +60,7 @@ export function Song({
   };
 
   const handlePlayClick = () => {
-    if (currentContextSong?.id === song.id && currentContext === context?.type) {
+    if (currentSong?.id === song.id) {
         togglePlay();
         return;
     }
@@ -62,9 +68,11 @@ export function Song({
     // Immediately play the clicked song
     playSong(song);
 
-    // We are click play outside of queue.
+    // We are clicking play outside of queue.
     // Reset so that it would play the first song in queue.
     setCurrentQueueSongId(null);
+
+    useStore.setState({ queuePlaying: false });
 
     if (context) {
       setCurrentPlaylistId(context.id);
@@ -96,8 +104,6 @@ export function Song({
           songs = [];
       }
 
-      // It shouldn't add the QUEUE SONGS TO THE CONTEXT.
-
       // Set playback context for player
       setPlaybackContext(songs, song);
     }
@@ -117,7 +123,7 @@ export function Song({
 
   return (
     <div className={`song-row ${isCurrentSong ? 'current-song' : ''}`}>
-      <button className="song-play-button" onClick={handlePlayClick}>
+      <button className="song-play-button" onClick={ handlePlayClick }>
         { isCurrentSong && isPlaying ? '⏸️' : '▶️'}
       </button>
 
@@ -136,7 +142,7 @@ export function Song({
         {showRemoveButton && (
           <button 
             className="action-button remove-button" 
-            onClick={handleRemoveClick}
+            onClick={ handleRemoveClick }
             title="Remove from playlist"
           >
             −
@@ -146,7 +152,7 @@ export function Song({
         <div className="add-button-container">
           <button 
             className="action-button add-button" 
-            onClick={handleAddClick}
+            onClick={ handleAddClick }
             title="Add to playlist"
           >
             +

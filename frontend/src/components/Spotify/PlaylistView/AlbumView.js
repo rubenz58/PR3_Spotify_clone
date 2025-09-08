@@ -22,7 +22,7 @@ export function AlbumView({ albumId }) {
   }, [albumId, user]);
   
   if (authLoading || albumLoading) {
-    console.log("FLASHING");
+    // console.log("FLASHING");
     return <MainContentSkeleton />
   };
 

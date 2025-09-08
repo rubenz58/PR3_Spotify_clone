@@ -10,18 +10,37 @@ export function RightSidebarSong({
     onPlay, 
     onRemove, 
     onLike, 
-    user 
+    user,
+    queuePlaying,
+    currentQueueSongId,
+    togglePlay,
 }) {
     const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
     
     // Check if this song is currently playing
-    const isCurrentSong = currentSong && currentSong.id === song.id;
+    // const isCurrentSong = currentSong && currentSong.id === song.id;
+
+    const isCurrentlyPlayingFromQueue = 
+        currentSong?.id === song.id && 
+        queuePlaying && 
+        currentQueueSongId === song.id;
     
     const formatDuration = (seconds) => {
         if (!seconds) return '--:--';
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handlePlayClick = () => {
+        // Only toggle if this exact queue song is currently playing from queue
+        if (isCurrentlyPlayingFromQueue) {
+            togglePlay();
+            return;
+        }
+
+        // Otherwise, always restart from queue context
+        onPlay(song);
     };
     
     const handlePlaylistClick = (e) => {
@@ -40,59 +59,60 @@ export function RightSidebarSong({
     };
     
     return (
-        <div className={`queue-item ${isCurrentSong ? 'current-playing' : ''}`}>
-        <div 
-            className="queue-song-info" 
-            onClick={() => onPlay(song)}
-            style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
-        >
-            <div className="queue-album-art">🎵</div>
-            <div className="queue-details">
-            {/* Apply 'playing' class to title when it's the current song */}
-            <div className={`queue-title ${isCurrentSong ? 'playing' : ''}`}>
-                {song.title}
-            </div>
-            <div className="queue-artist">{song.artist}</div>
-            </div>
-        </div>
-        <div className="queue-actions">
-            <span className="queue-duration">{formatDuration(song.duration)}</span>
-            
-            <button 
-            className="queue-action-btn like-btn"
-            onClick={handleLikeClick}
-            disabled={!user}
-            title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
+        <div className={`queue-item ${isCurrentlyPlayingFromQueue ? 'current-playing' : ''}`}>
+            <div 
+                className="queue-song-info" 
+                onClick={ handlePlayClick }
+                // onClick={() => onPlay(song)}
+                style={{ cursor: !user ? 'not-allowed' : 'pointer' }}
             >
-            {isLiked ? '💚' : '♡'}
-            </button>
-
-            <div className="playlist-dropdown-container">
-            <button 
-                className="queue-action-btn playlist-btn"
-                onClick={handlePlaylistClick}
+                <div className="queue-album-art">🎵</div>
+                <div className="queue-details">
+                {/* Apply 'playing' class to title when it's the current song */}
+                <div className={`queue-title ${isCurrentlyPlayingFromQueue ? 'playing' : ''}`}>
+                    {song.title}
+                </div>
+                <div className="queue-artist">{song.artist}</div>
+                </div>
+            </div>
+            <div className="queue-actions">
+                <span className="queue-duration">{formatDuration(song.duration)}</span>
+                
+                <button 
+                className="queue-action-btn like-btn"
+                onClick={handleLikeClick}
                 disabled={!user}
-                title="Add to playlist"
-            >
-                +
-            </button>
-            {showPlaylistDropdown && (
-                <AddToPlaylistDropdown
-                song={song}
-                onClose={() => setShowPlaylistDropdown(false)}
-                showQueue={false}
-                />
-            )}
+                title={isLiked ? "Remove from liked songs" : "Add to liked songs"}
+                >
+                {isLiked ? '💚' : '♡'}
+                </button>
+
+                <div className="playlist-dropdown-container">
+                <button 
+                    className="queue-action-btn playlist-btn"
+                    onClick={handlePlaylistClick}
+                    disabled={!user}
+                    title="Add to playlist"
+                >
+                    +
+                </button>
+                {showPlaylistDropdown && (
+                    <AddToPlaylistDropdown
+                    song={song}
+                    onClose={() => setShowPlaylistDropdown(false)}
+                    showQueue={false}
+                    />
+                )}
+                </div>
+                
+                <button 
+                    className="remove-btn"
+                    onClick={handleRemoveClick}
+                    disabled={!user}
+                >
+                ✕
+                </button>
             </div>
-            
-            <button 
-            className="remove-btn"
-            onClick={handleRemoveClick}
-            disabled={!user}
-            >
-            ✕
-            </button>
-        </div>
         </div>
     );
 }

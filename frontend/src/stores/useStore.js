@@ -233,6 +233,7 @@ const useStore = create((set, get) => ({
     setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
     setCurrentPlaylistSongs: (currentPlaylistSongs) => set({ currentPlaylistSongs }),
     setCurrentQueueSongId: (songId) => set({ currentQueueSongId: songId }),
+    setQueuePlaying: (bool) => set({ queuePlaying: bool }),
 
 
     // Function adds songs to the playback context.
@@ -661,6 +662,7 @@ const useStore = create((set, get) => ({
         }
     },
 
+    // Only deletes Queue Song, when you hit forward. NOT BACK.
     playNextSong: async () => {
         console.log("playNextSong");
         const { 
@@ -841,31 +843,6 @@ const useStore = create((set, get) => ({
             });
         }
     },
-
-    // playPrevSong: () => {
-    //     const {
-    //         currentSong,
-    //         contextSongs,
-    //     } = get();
-
-    //     if (!currentSong || contextSongs.length === 0) return;
-
-    //     const currentIndex = contextSongs.findIndex(
-    //         (s) => s.id === currentSong.id
-    //     );
-    //     if (currentIndex === -1) return;
-
-    //     const prevIndex =
-    //     (currentIndex - 1 + contextSongs.length) %
-    //     contextSongs.length; // wrap around
-    //     const prevSong = contextSongs[prevIndex];
-    //     set({
-    //         currentSong: prevSong,
-    //         isPlaying: true,
-    //         currentContextSong: prevSong,
-    //         queuePlaying: false,
-    //     });
-    // },
 
     // Music Player Actions
     volume: 0.5, // Default 50%

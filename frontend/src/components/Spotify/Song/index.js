@@ -23,32 +23,35 @@ export function Song({
     likedSongs,
     removeLikedSong,
     addLikedSong,
-    setCurrentPlaylistId,
-    setCurrentContext,
+    currentPlaylistId,
     setPlaybackContext,
     currentContextSong,
     currentContext,
     queuePlaying,
     setCurrentQueueSongId,
+    setCurrentContextAndPlaylist,
   } = useStore();
 
   const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false);
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
 
-  // console.log("XXX1XXX");
-  // console.log("currentContextSong?.id === song.id: ", currentContextSong?.id === song.id);
-  // console.log("currentContext === context?.type: ", currentContext === context?.type);
-  // console.log("!queuePlaying: ", !queuePlaying);
-
-  // const isCurrentSongInContext = 
-  //   currentContextSong?.id === song.id && currentContext === context?.type && !queuePlaying;
-
+  // if (currentSong?.id === song.id && currentContext === "playlist") {
+  //   console.log(`Song ${song.title} in playlist ${context?.id}:`);
+  //   console.log("  currentPlaylistId:", currentPlaylistId, typeof currentPlaylistId);
+  //   console.log("  context.id:", context?.id, typeof context?.id);
+  //   console.log("  String comparison:", String(currentPlaylistId) === String(context?.id));
+  // }
+  
   const isCurrentSongInContext = 
     currentSong?.id === song.id && 
     currentContextSong?.id === song.id && 
     currentContext === context?.type && 
-    !queuePlaying;
+    !queuePlaying &&
+    // For playlists, also check the specific playlist ID matches
+    (currentContext === "playlist" 
+      ? String(currentPlaylistId) === String(context?.id)
+      : true); // For non-playlist contexts, don't do additional ID checking
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -60,58 +63,47 @@ export function Song({
   };
 
   const handlePlayClick = () => {
+    // Toggle if same song is already playing
     if (currentSong?.id === song.id) {
         togglePlay();
         return;
     }
 
+    // Set context BEFORE playing song to ensure state is updated
     if (context) {
-      setCurrentPlaylistId(context.id);
-      setCurrentContext(context.type);
+        setCurrentContextAndPlaylist(context.type, context.id);
+        
+        // Get songs and set playback context IMMEDIATELY after setting context
+        let songs = [];
+        switch (context.type) {
+            case "playlist":
+                songs = useStore.getState().currentPlaylistSongs;
+                break;
+            case "album":
+                songs = useStore.getState().currentAlbumSongs;
+                break;
+            case "liked_songs":
+                songs = useStore.getState().likedSongs;
+                break;
+            case "recently_played":
+                songs = useStore.getState().recentlyPlayedSongs;
+                break;
+            default:
+                songs = [];
+        }
+        
+        // Set playback context for player
+        setPlaybackContext(songs, song);
     }
-    // Immediately play the clicked song
+
+    // Play song AFTER context is set
     playSong(song);
 
-    // We are clicking play outside of queue.
-    // Reset so that it would play the first song in queue.
+    // Reset queue state since we're playing from a different context
     setCurrentQueueSongId(null);
-
     useStore.setState({ queuePlaying: false });
-
-    if (context) {
-      // setCurrentPlaylistId(context.id);
-      // setCurrentContext(context.type);
-
-      // console.log("currentPlaylistId: ", context.id);
-      // console.log("currentContext: ", context.type);
-
-      let songs = [];
-
-      // Use already loaded songs instead of fetching
-      switch (context.type) {
-        case "playlist":
-          songs = useStore.getState().currentPlaylistSongs;
-          break;
-        case "album":
-          songs = useStore.getState().currentAlbumSongs;
-          break;
-        case "liked_songs":
-          songs = useStore.getState().likedSongs;
-          break;
-        // case "queue":
-        //   songs = useStore.getState().queueSongs;
-        //   break;
-        case "recently_played":
-          songs = useStore.getState().recentlyPlayedSongs;
-          break;
-        default:
-          songs = [];
-      }
-
-      // Set playback context for player
-      setPlaybackContext(songs, song);
-    }
   };
+
 
   const handleAddClick = (e) => {
     e.stopPropagation();

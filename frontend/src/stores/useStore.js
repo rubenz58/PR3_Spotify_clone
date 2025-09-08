@@ -235,6 +235,12 @@ const useStore = create((set, get) => ({
     setCurrentQueueSongId: (songId) => set({ currentQueueSongId: songId }),
     setQueuePlaying: (bool) => set({ queuePlaying: bool }),
 
+    setCurrentContextAndPlaylist: (contextType, playlistId) => {
+        set({ 
+            currentContext: contextType, 
+            currentPlaylistId: playlistId 
+        });
+    },
 
     // Function adds songs to the playback context.
     setPlaybackContext: (songs, song) => {
@@ -303,9 +309,26 @@ const useStore = create((set, get) => ({
             });
             
             // Update local state after successful API call
-            set((state) => ({
-                likedSongs: state.likedSongs.filter(song => song.id !== song_id),
-            }));
+            // set((state) => ({
+            //     likedSongs: state.likedSongs.filter(song => song.id !== song_id),
+            // }));
+
+            // Update local state after successful API call
+            set((state) => {
+                const updatedState = {
+                    likedSongs: state.likedSongs.filter(song => song.id !== song_id)
+                };
+                
+                // If the currently playing song is being removed from its current context, stop playback
+                if (state.currentSong?.id === song_id && state.currentContext === "liked_songs") {
+                    updatedState.currentSong = null;
+                    updatedState.isPlaying = false;
+                    updatedState.currentContextSong = null;
+                    updatedState.contextSongs = [];
+                }
+                
+                return updatedState;
+            });
             
             return { success: true };
         } catch (error) {
@@ -507,7 +530,7 @@ const useStore = create((set, get) => ({
 
             set({
                 currentPlaylistSongs: songs,
-                currentPlaylistId: playlistId
+                // currentPlaylistId: playlistId
             });
 
             return songs; // ✅ return array
@@ -607,30 +630,57 @@ const useStore = create((set, get) => ({
     },
 
     removeSongFromPlaylist: async (playlistId, songId) => {
-
-        const { makeAuthenticatedRequest } = get();
-
+        const {
+            makeAuthenticatedRequest,
+        } = get();
+        
         try {
             await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs/${songId}`, {
-            method: 'DELETE'
+                method: 'DELETE'
             });
             
             // Update local state after successful API call
-            set((state) => ({
-                currentPlaylistSongs: state.currentPlaylistSongs.filter(s => s.id !== songId),
-                userPlaylists: state.userPlaylists.map(p => 
-                    p.id === parseInt(playlistId) 
-                    ? { ...p, song_count: p.song_count - 1 }
-                    : p
-                )
-            }));
-            
+            set((state) => {
+                console.log("=== REMOVE DEBUG ===");
+                console.log("songId parameter:", songId, typeof songId);
+                console.log("playlistId parameter:", playlistId, typeof playlistId);
+                console.log("parseInt(playlistId):", parseInt(playlistId), typeof parseInt(playlistId));
+                console.log("state.currentSong?.id:", state.currentSong?.id, typeof state.currentSong?.id);
+                console.log("state.currentPlaylistId:", state.currentPlaylistId, typeof state.currentPlaylistId);
+                
+                const updatedState = {
+                    currentPlaylistSongs: state.currentPlaylistSongs.filter(s => s.id !== songId),
+                    userPlaylists: state.userPlaylists.map(p => 
+                        p.id === parseInt(playlistId) 
+                            ? { ...p, song_count: p.song_count - 1 }
+                            : p
+                    )
+                };
+                
+                // Check each condition separately
+                console.log("Song ID match:", state.currentSong?.id === songId);
+                console.log("Context match:", state.currentContext === "playlist");
+                console.log("Playlist ID match:", state.currentPlaylistId === parseInt(playlistId));
+                
+                if (state.currentSong?.id === songId &&
+                    state.currentContext === "playlist" &&
+                    state.currentPlaylistId === playlistId) { // This is the trouble line.
+                    console.log("🎵 STOPPING PLAYBACK");
+                    updatedState.currentSong = null;
+                    updatedState.isPlaying = false;
+                    updatedState.currentContextSong = null;
+                    updatedState.contextSongs = [];
+                }
+                
+                return updatedState;
+            });            
             return { success: true };
         } catch (error) {
             console.error('Failed to remove song from playlist:', error);
             return { success: false, error: error.message };
         }
     },
+
 
     addSongToPlaylist: async (playlist_id, song_id) => {
         const { makeAuthenticatedRequest } = get();
@@ -906,9 +956,14 @@ const useStore = create((set, get) => ({
             pendingSong: null // ??? 
         });
 
-        const { addToRecentlyPlayed, currentContext } = get();
+        const {
+            addToRecentlyPlayed,
+            currentContext
+        } = get();
     
+        console.log("playSong: ");
         if (currentContext !== "recently_played") {
+            console.log("currentContext: ", currentContext);
             addToRecentlyPlayed(song.id).catch(error => {
                 console.error('Failed to track recently played:', error);
                 // Don't stop playback if recently played tracking fails

@@ -380,3 +380,24 @@ def add_recently_played_song(song_id):
             'song_id': song_id,
             'action': 'added'
         }), 201
+    
+@user_playlists_bp.route('/recently-played', methods=['DELETE'])
+@jwt_required
+def clear_recently_played():
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print("/api/user_playlists/recently-played - DELETE (clear all)")
+    user_id = g.current_user_id
+    
+    if not user_id:
+        return jsonify({'error': 'Invalid token'}), 401
+    
+    # Delete all recently played songs for the user
+    deleted_count = RecentlyPlayedSong.query.filter_by(user_id=user_id).delete()
+    db.session.commit()
+    
+    return jsonify({
+        'message': f'Recently played history cleared - {deleted_count} songs removed',
+        'deleted_count': deleted_count
+    }), 200

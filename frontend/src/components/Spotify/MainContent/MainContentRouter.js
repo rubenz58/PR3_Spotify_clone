@@ -12,8 +12,6 @@ import { AlbumView } from "../PlaylistView/AlbumView";
 
 export const MainContentRouter = ({ view }) => {
 
-    // console.log("MainContentRouter");
-
     // Handling the different cases for routing here.
     const location = useLocation();
 

@@ -451,6 +451,28 @@ const useStore = create((set, get) => ({
         }
     },
 
+    clearRecentlyPlayed: async () => {
+        const { user, makeAuthenticatedRequest } = get();
+        
+        if (!user) return;
+        
+        try {
+            const data = await makeAuthenticatedRequest('/api/user_playlists/recently-played', {
+                method: 'DELETE'
+            });
+            
+            // Clear local state after successful API call
+            set({
+                recentlyPlayedSongs: []
+            });
+            
+            return { success: true, deletedCount: data.deleted_count };
+        } catch (error) {
+            console.error('Failed to clear recently played:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
     // Fetch all playlists for a specific user
     fetchUserPlaylists: async () => {
         // console.log("Fetching Playlists");

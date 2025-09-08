@@ -20,6 +20,8 @@ export function AudioPlayer() {
     repeatMode,
     restartTrigger,
     setRepeatMode,
+    shuffleMode,
+    toggleShuffle,
   } = useStore();
 
   const audioRef = useRef(null);
@@ -31,6 +33,10 @@ export function AudioPlayer() {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
     }
+  };
+
+  const handleShuffleToggle = () => {
+    toggleShuffle();
   };
 
   const handleLoadedMetadata = () => {
@@ -141,27 +147,38 @@ export function AudioPlayer() {
         {/* Center - Player controls */}
         <div className="player-controls">
             <div className="control-buttons">
-                <button className="control-btn" title="Previous" onClick={handlePrevClick}>
-                    ⏮️
-                </button>
-                <button className="play-pause-btn" onClick={handlePlayPause}>
-                    {isPlaying ? '⏸️' : '▶️'}
-                </button>
-                <button className="control-btn" title="Next" onClick={playNextSong}>
-                    ⏭️
-                </button>
-                <button 
-                    className={`control-btn ${repeatMode ? 'active' : ''}`} 
-                    title={repeatMode ? "Repeat: On" : "Repeat: Off"} 
-                    onClick={handleRepeatToggle}
-                    style={{
-                        color: repeatMode ? '#1db954' : 'inherit',
-                        opacity: repeatMode ? 1 : 0.7
-                    }}
-                >
-                    🔁
-                </button>
-            </div>
+              <button 
+                  className={`control-btn ${shuffleMode ? 'active' : ''}`} 
+                  title={shuffleMode ? "Shuffle: On" : "Shuffle: Off"} 
+                  onClick={handleShuffleToggle}
+                  style={{
+                      color: shuffleMode ? '#1db954' : 'inherit',
+                      opacity: shuffleMode ? 1 : 0.7
+                  }}
+              >
+                  🔀
+              </button>
+              <button className="control-btn" title="Previous" onClick={handlePrevClick}>
+                  ⏮️
+              </button>
+              <button className="play-pause-btn" onClick={handlePlayPause}>
+                  {isPlaying ? '⏸️' : '▶️'}
+              </button>
+              <button className="control-btn" title="Next" onClick={playNextSong}>
+                  ⏭️
+              </button>
+              <button 
+                  className={`control-btn ${repeatMode ? 'active' : ''}`} 
+                  title={repeatMode ? "Repeat: On" : "Repeat: Off"} 
+                  onClick={handleRepeatToggle}
+                  style={{
+                      color: repeatMode ? '#1db954' : 'inherit',
+                      opacity: repeatMode ? 1 : 0.7
+                  }}
+              >
+                  🔁
+              </button>
+          </div>
             
             <div className="progress-section">
                 <span className="time-display">{formatTime(currentTime)}</span>

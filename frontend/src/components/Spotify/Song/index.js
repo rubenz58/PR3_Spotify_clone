@@ -36,13 +36,6 @@ export function Song({
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
 
-  // if (currentSong?.id === song.id && currentContext === "playlist") {
-  //   console.log(`Song ${song.title} in playlist ${context?.id}:`);
-  //   console.log("  currentPlaylistId:", currentPlaylistId, typeof currentPlaylistId);
-  //   console.log("  context.id:", context?.id, typeof context?.id);
-  //   console.log("  String comparison:", String(currentPlaylistId) === String(context?.id));
-  // }
-  
   const isCurrentSongInContext = 
     currentSong?.id === song.id && 
     currentContextSong?.id === song.id && 
@@ -68,7 +61,7 @@ export function Song({
         // Always toggle play/pause first for immediate feedback
         togglePlay();
         
-        // Then check if we need to update context (same song, different playlist/context)
+        // Check if context needs to be updated (same song, different playlist/context)
         if (context && (currentContext !== context.type || String(currentPlaylistId) !== String(context.id))) {
             // Same song, but different context - update context for highlighting
             setCurrentContextAndPlaylist(context.type, context.id);
@@ -123,6 +116,24 @@ export function Song({
         
         // Set playback context for player
         setPlaybackContext(songs, song);
+        
+        // Check if shuffle is on and regenerate if needed
+        const { shuffleMode, shuffledContextSongs } = useStore.getState();
+        if (shuffleMode && songs.length > 0) {
+            if (shuffledContextSongs.length === 0 || 
+                shuffledContextSongs.length !== songs.length ||
+                !shuffledContextSongs.some(s => s.id === song.id)) {
+                
+                console.log("Regenerating shuffle on song click");
+                
+                // Regenerate shuffled playlist with clicked song first
+                const otherSongs = songs.filter(s => s.id !== song.id);
+                const shuffledOthers = [...otherSongs].sort(() => Math.random() - 0.5);
+                const newShuffledPlaylist = [song, ...shuffledOthers];
+                
+                useStore.setState({ shuffledContextSongs: newShuffledPlaylist });
+            }
+        }
     }
 
     // Play song AFTER context is set
@@ -132,50 +143,6 @@ export function Song({
     setCurrentQueueSongId(null);
     useStore.setState({ queuePlaying: false });
   };
-
-  /* const handlePlayClick = () => {
-    
-    // Toggle if same song is already playing
-    if (currentSong?.id === song.id) {
-        togglePlay();
-        return;
-    }
-
-    // Set context BEFORE playing song to ensure state is updated
-    if (context) {
-        setCurrentContextAndPlaylist(context.type, context.id);
-        
-        // Get songs and set playback context IMMEDIATELY after setting context
-        let songs = [];
-        switch (context.type) {
-            case "playlist":
-                songs = useStore.getState().currentPlaylistSongs;
-                break;
-            case "album":
-                songs = useStore.getState().currentAlbumSongs;
-                break;
-            case "liked_songs":
-                songs = useStore.getState().likedSongs;
-                break;
-            case "recently_played":
-                songs = useStore.getState().recentlyPlayedSongs;
-                break;
-            default:
-                songs = [];
-        }
-        
-        // Set playback context for player
-        setPlaybackContext(songs, song);
-    }
-
-    // Play song AFTER context is set
-    playSong(song);
-
-    // Reset queue state since we're playing from a different context
-    setCurrentQueueSongId(null);
-    useStore.setState({ queuePlaying: false });
-  }; */
-
 
   const handleAddClick = (e) => {
     e.stopPropagation();

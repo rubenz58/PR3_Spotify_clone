@@ -13,7 +13,7 @@ def get_liked_songs():
     if request.method == 'OPTIONS':
         return '', 200
     
-    print("/api/user_playlists/liked-songs")
+    # print("/api/user_playlists/liked-songs")
     user_id = g.current_user_id
     
     if not user_id:
@@ -55,7 +55,7 @@ def add_liked_song(song_id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    print(f"/api/user_playlists/liked-songs/{song_id} - POST")
+    # print(f"/api/user_playlists/liked-songs/{song_id} - POST")
     user_id = g.current_user_id
     
     if not user_id:
@@ -102,7 +102,7 @@ def remove_liked_song(song_id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    print(f"/api/user_playlists/liked-songs/{song_id} - DELETE")
+    # print(f"/api/user_playlists/liked-songs/{song_id} - DELETE")
     user_id = g.current_user_id
     
     if not user_id:
@@ -132,13 +132,13 @@ def get_queue_songs():
     if request.method == 'OPTIONS':
         return '', 200
     
-    print("/api/user_playlists/queue")
+    # print("/api/user_playlists/queue")
     user_id = g.current_user_id
     
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
     
-    print("/api/user_playlists/queue: valid token")
+    # print("/api/user_playlists/queue: valid token")
     
     # Query queue songs for the user, joined with song details
     # Order by position (queue order), then by added_at
@@ -178,7 +178,7 @@ def add_to_queue(song_id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    print(f"/api/user_playlists/queue/{song_id} - POST")
+    # print(f"/api/user_playlists/queue/{song_id} - POST")
     user_id = g.current_user_id
     
     if not user_id:
@@ -235,7 +235,7 @@ def remove_from_queue(song_id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    print(f"/api/user_playlists/queue/{song_id} - DELETE")
+    # print(f"/api/user_playlists/queue/{song_id} - DELETE")
     user_id = g.current_user_id
     
     if not user_id:
@@ -275,7 +275,7 @@ def clear_queue():
     if request.method == 'OPTIONS':
         return '', 200
     
-    print("/api/user_playlists/queue - DELETE (clear all)")
+    # print("/api/user_playlists/queue - DELETE (clear all)")
     user_id = g.current_user_id
     
     if not user_id:
@@ -296,7 +296,7 @@ def get_recently_played_songs():  # Fixed function name
     if request.method == 'OPTIONS':
         return '', 200
     
-    print("/api/user_playlists/recently-played")
+    # print("/api/user_playlists/recently-played")
     user_id = g.current_user_id
     
     if not user_id:
@@ -339,7 +339,7 @@ def add_recently_played_song(song_id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    print(f"/api/user_playlists/recently-played/{song_id} - POST")
+    # print(f"/api/user_playlists/recently-played/{song_id} - POST")
     user_id = g.current_user_id
     
     if not user_id:
@@ -387,7 +387,7 @@ def clear_recently_played():
     if request.method == 'OPTIONS':
         return '', 200
     
-    print("/api/user_playlists/recently-played - DELETE (clear all)")
+    # print("/api/user_playlists/recently-played - DELETE (clear all)")
     user_id = g.current_user_id
     
     if not user_id:

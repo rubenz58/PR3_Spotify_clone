@@ -624,59 +624,6 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // removeSongFromPlaylist: async (playlistId, songId) => {
-    //     const {
-    //         makeAuthenticatedRequest,
-    //     } = get();
-        
-    //     try {
-    //         await makeAuthenticatedRequest(`/api/playlists/${playlistId}/songs/${songId}`, {
-    //             method: 'DELETE'
-    //         });
-            
-    //         // Update local state after successful API call
-    //         set((state) => {
-    //             // console.log("=== REMOVE DEBUG ===");
-    //             // console.log("songId parameter:", songId, typeof songId);
-    //             // console.log("playlistId parameter:", playlistId, typeof playlistId);
-    //             // console.log("parseInt(playlistId):", parseInt(playlistId), typeof parseInt(playlistId));
-    //             // console.log("state.currentSong?.id:", state.currentSong?.id, typeof state.currentSong?.id);
-    //             // console.log("state.currentPlaylistId:", state.currentPlaylistId, typeof state.currentPlaylistId);
-                
-    //             const updatedState = {
-    //                 currentPlaylistSongs: state.currentPlaylistSongs.filter(s => s.id !== songId),
-    //                 userPlaylists: state.userPlaylists.map(p => 
-    //                     p.id === parseInt(playlistId) 
-    //                         ? { ...p, song_count: p.song_count - 1 }
-    //                         : p
-    //                 )
-    //             };
-                
-    //             // Check each condition separately
-    //             // console.log("Song ID match:", state.currentSong?.id === songId);
-    //             // console.log("Context match:", state.currentContext === "playlist");
-    //             // console.log("Playlist ID match:", state.currentPlaylistId === parseInt(playlistId));
-                
-    //             if (state.currentSong?.id === songId &&
-    //                 state.currentContext === "playlist" &&
-    //                 state.currentPlaylistId === playlistId) { // This is the trouble line.
-    //                     console.log("🎵 STOPPING PLAYBACK");
-    //                     updatedState.currentSong = null;
-    //                     updatedState.isPlaying = false;
-    //                     updatedState.currentContextSong = null;
-    //                     updatedState.contextSongs = [];
-    //             }
-                
-    //             return updatedState;
-    //         });
-
-    //         return { success: true };
-    //     } catch (error) {
-    //         console.error('Failed to remove song from playlist:', error);
-    //         return { success: false, error: error.message };
-    //     }
-    // },
-
     removeSongFromPlaylist: async (playlistId, songId) => {
         const { makeAuthenticatedRequest } = get();
         
@@ -838,125 +785,31 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // Only deletes Queue Song, when you hit forward. NOT BACK.
-    // playNextSong: async () => {
-    //     console.log("playNextSong");
-    //     const { 
-    //         queueSongs, 
-    //         removeFromQueue,
-    //         currentSong, 
-    //         contextSongs, 
-    //         currentContextSong,
-    //         currentQueueSongId,
-    //         setCurrentQueueSongId,
-    //         repeatMode,
-    //         restartCurrentSong,
-    //         queuePlaying,
-    //         shuffleMode,
-    //         shuffledContextSongs,
-    //     } = get();
+    currentArtist: null,
+    currentArtistAlbums: [],
+    artistLoading: false,
 
-    //     if (repeatMode && !queuePlaying && currentSong) {
-    //         console.log("Repeating current song");
-    //         restartCurrentSong();
-    //         return;
-    //     }
-
-
-    //     // Special case.
-    //     // queueSongs.length === 1 && currentSong = the only song in the queue
-    //     // nextSong should be the song in contextSongs AFTER currentContextSong.
-    //     if (queueSongs.length === 1 && currentQueueSongId && 
-    //         currentSong && queueSongs[0].id === currentSong.id) {
+    fetchArtistInfo: async (artistId) => {
+        const { user, makeAuthenticatedRequest } = get();
+        if (!user) return null;
+        
+        try {
+            set({ artistLoading: true });
+            const data = await makeAuthenticatedRequest(`/api/artists/${parseInt(artistId)}`);
             
-    //         console.log("Special case: Last song in queue, moving to context");
+            set({
+            currentArtist: data,
+            currentArtistAlbums: data.albums || []
+            });
             
-    //         // Remove the current song from queue
-    //         await removeFromQueue(currentSong.id);
-            
-    //         // Clear queue tracking
-    //         setCurrentQueueSongId(null);
-            
-    //         // Find next song in context after currentContextSong
-    //         if (contextSongs && contextSongs.length > 0 && currentContextSong) {
-    //             const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
-    //             if (currentIndex !== -1) {
-    //                 const nextIndex = (currentIndex + 1) % contextSongs.length; // wrap around
-    //                 const nextSong = contextSongs[nextIndex];
-
-    //                 set({
-    //                     queuePlaying: false,
-    //                     currentSong: nextSong,
-    //                     currentContextSong: nextSong, // advance contextSong
-    //                     isPlaying: true
-    //                 });
-    //                 return;
-    //             }
-    //         }
-            
-    //         // If no context available, just stop playing
-    //         set({ isPlaying: false });
-    //         return;
-    //     }
-
-    //     // 1️⃣ Queue priority
-    //     if (queueSongs.length > 0) {
-
-    //         console.log("Queue has priority");
-
-    //         let nextSong;
-
-    //         // If we have a currentQueueSongId, find the next song in queue
-    //         if (currentQueueSongId) {
-    //             const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
-                
-    //             if (currentQueueIndex !== -1 && currentQueueIndex < queueSongs.length - 1) {
-    //                 // Get the next song in the queue
-    //                 nextSong = queueSongs[currentQueueIndex + 1];
-    //             } else {
-    //                 // Current song is last in queue or not found, take first song
-    //                 nextSong = queueSongs[0];
-    //             }
-    //         } else {
-    //             // No currentQueueSongId set, take first song in queue
-    //             nextSong = queueSongs[0];
-    //         }
-
-    //         setCurrentQueueSongId(nextSong.id);
-
-    //         if (currentQueueSongId) {
-    //             const currentSongStillInQueue = queueSongs.find(s => s.id === currentQueueSongId);
-    //             if (currentSongStillInQueue) {
-    //                 await removeFromQueue(currentQueueSongId);
-    //             }
-    //         }
-
-    //         // Play the next song, but DO NOT touch contextSongs
-    //         set({
-    //             queuePlaying: true,
-    //             currentSong: nextSong,
-    //             isPlaying: true
-    //         });
-    //         return;
-    //     }
-
-    //     // 2️⃣ No queue → continue in the context
-    //     if (contextSongs && contextSongs.length > 0) {
-    //         const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
-    //         if (currentIndex === -1) return;
-
-    //         const nextIndex = (currentIndex + 1) % contextSongs.length; // wrap around
-    //         const nextSong = contextSongs[nextIndex];
-
-    //         set({
-    //             queuePlaying: false,
-    //             currentSong: nextSong,
-    //             currentContextSong: nextSong, // advance contextSong
-    //             isPlaying: true,
-    //             currentQueueSongId: null,
-    //         });
-    //     }
-    // },
+            return data; // ✅ return artist data
+        } catch (error) {
+            console.error("Failed to fetch artist info:", error);
+            return null;
+        } finally {
+            set({ artistLoading: false });
+        }
+        },
 
     playNextSong: async () => {
         console.log("playNextSong");
@@ -1084,80 +937,6 @@ const useStore = create((set, get) => ({
             });
         }
     },
-
-    // playPrevSong: () => {
-    //     const {
-    //         currentSong,
-    //         contextSongs,
-    //         currentContextSong,
-    //         queueSongs,
-    //         currentQueueSongId,
-    //         setCurrentQueueSongId,
-    //     } = get();
-
-    //     if (!currentSong) return;
-
-    //     // 1️⃣ If we're currently playing from queue, try to go to previous song in queue
-    //     if (currentQueueSongId && queueSongs.length > 0) {
-    //         console.log("Currently playing from queue, looking for prev in queue");
-            
-    //         const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
-        
-    //         if (currentQueueIndex !== -1) {
-    //             // Get previous song in queue (wrap around to end if at beginning)
-    //             const prevIndex = currentQueueIndex > 0 
-    //                 ? currentQueueIndex - 1 
-    //                 : queueSongs.length - 1;
-    //             const prevSong = queueSongs[prevIndex];
-    //             setCurrentQueueSongId(prevSong.id);
-                
-    //             set({
-    //                 currentSong: prevSong,
-    //                 isPlaying: true,
-    //                 queuePlaying: true,
-    //             });
-    //             return;
-    //         }
-            
-    //         // No previous song in queue, fall back to context if available
-    //         if (contextSongs.length > 0 && currentContextSong) {
-    //             console.log("No prev in queue, falling back to context");
-                
-    //             const currentIndex = contextSongs.findIndex(s => s.id === currentContextSong.id);
-    //             if (currentIndex !== -1) {
-    //                 const prevIndex = (currentIndex - 1 + contextSongs.length) % contextSongs.length;
-    //                 const prevSong = contextSongs[prevIndex];
-                    
-    //                 // Clear queue tracking since we're going back to context
-    //                 setCurrentQueueSongId(null);
-                    
-    //                 set({
-    //                     currentSong: prevSong,
-    //                     isPlaying: true,
-    //                     currentContextSong: prevSong,
-    //                     queuePlaying: false,
-    //                 });
-    //             }
-    //         }
-    //         return;
-    //     }
-
-    //     // 2️⃣ Normal case: we're playing from context, go to previous in context
-    //     if (contextSongs.length > 0) {
-    //         const currentIndex = contextSongs.findIndex(s => s.id === currentSong.id);
-    //         if (currentIndex === -1) return;
-
-    //         const prevIndex = (currentIndex - 1 + contextSongs.length) % contextSongs.length;
-    //         const prevSong = contextSongs[prevIndex];
-            
-    //         set({
-    //             currentSong: prevSong,
-    //             isPlaying: true,
-    //             currentContextSong: prevSong,
-    //             queuePlaying: false,
-    //         });
-    //     }
-    // },
 
     playPrevSong: () => {
         const {

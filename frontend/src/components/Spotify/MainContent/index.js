@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 
 import useStore from '../../../stores/useStore';
-import { LoadingSpinner } from '../../Utils/Utils';
 import { MainContentSkeleton } from '../../Utils/MainContentSkeleton';
 import './MainContent.css';
 
@@ -17,6 +16,13 @@ export function MainContent() {
     fetchAllAlbums,
     all_albums,
   } = useStore();
+
+  const quickAccessItems = [
+    { title: 'Discover Weekly', emoji: '🔥', route: '/playlist/14' },
+    { title: 'Daily Mix 1', emoji: '🌅', route: '/playlist/15' },
+    { title: 'Spotify Driving', emoji: '🚗', route: '/playlist/16' },
+    { title: 'Spotify Summer Recs', emoji: '☀️', route: '/playlist/18' }
+  ];
 
   useEffect(() => {
     if (user) {
@@ -40,22 +46,17 @@ export function MainContent() {
         {/* Quick Access Cards - Recently Played */}
         <section className="quick-access-section">
           <div className="quick-access-grid">
-            <div className="quick-card">
-              <div className="quick-card-image">🔥</div>
-              <span className="quick-card-title">Discover Weekly</span>
-            </div>
-            <div className="quick-card">
-              <div className="quick-card-image">🌅</div>
-              <span className="quick-card-title">Daily Mix 1</span>
-            </div>
-            <div className="quick-card">
-              <div className="quick-card-image">🚗</div>
-              <span className="quick-card-title">Spotify Driving</span>
-            </div>
-            <div className="quick-card">
-              <div className="quick-card-image">☀️</div>
-              <span className="quick-card-title">Spotify Summer Recs</span>
-            </div>
+            {quickAccessItems.map((item, index) => (
+              <div 
+                key={index}
+                className="quick-card"
+                onClick={() => navigate(item.route)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="quick-card-image">{item.emoji}</div>
+                <span className="quick-card-title">{item.title}</span>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -70,7 +71,7 @@ export function MainContent() {
                 <div 
                   key={album.id} 
                   className="album-card"
-                  onClick={() => navigate(`/albums/${album.id}`)}
+                  onClick={() => navigate(`/albums/${album.id}?autoplay=true`)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="album-cover">

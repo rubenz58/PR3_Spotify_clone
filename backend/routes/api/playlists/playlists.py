@@ -38,6 +38,25 @@ def get_all_playlists_of_user():
     
     return jsonify({'playlists': result})
 
+
+@playlists_bp.route('/hardcoded', methods=['GET'])
+@jwt_required
+def get_hardcoded_playlists():
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    print("/api/playlists/hardcoded")
+    
+    # Define your hardcoded playlists
+    hardcoded_playlists = [
+        {'id': 14, 'name': 'Discover Weekly'},
+        {'id': 15, 'name': 'Daily Mix 1'},
+        {'id': 16, 'name': 'Spotify Driving'},
+        {'id': 18, 'name': 'Spotify Summer Recs'}
+    ]
+    
+    return jsonify({'playlists': hardcoded_playlists})
+
 # Create New Playlist
 @playlists_bp.route('/', methods=['POST'])
 @jwt_required

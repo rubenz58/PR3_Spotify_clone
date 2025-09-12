@@ -16,6 +16,8 @@ export function PlaylistView({ playlistId }) {
     removeSongFromPlaylist,
     playlistRefresh,
     currentContext,
+    fetchHardcodedPlaylists,
+    hardcodedPlaylists,
   } = useStore();
 
   useEffect(() => {
@@ -23,20 +25,29 @@ export function PlaylistView({ playlistId }) {
   }, [playlistId, playlistRefresh]);
 
   useEffect(() => {
+    fetchHardcodedPlaylists();
+  }, [user]);
+
+  useEffect(() => {
     if (playlistId && user) {
       // Update currentPlaylistId when viewing a different playlist
-      const { currentPlaylistId, setCurrentContextAndPlaylist } = useStore.getState();
+      const {
+        currentPlaylistId,
+        setCurrentContextAndPlaylist
+      } = useStore.getState();
+      
       if (String(currentPlaylistId) !== String(playlistId) && currentContext === "playlist") {
         setCurrentContextAndPlaylist("playlist", playlistId);
       }
       
-      // Your existing fetchPlaylistSongs call
       fetchPlaylistSongs(playlistId);
     }
   }, [playlistId, user]);
-  
-  const playlist = userPlaylists?.find(p => p.id === parseInt(playlistId));
 
+  const hardcodedPlaylist = hardcodedPlaylists?.find(p => p.id === parseInt(playlistId));
+  const userPlaylist = userPlaylists?.find(p => p.id === parseInt(playlistId));
+  const playlist = hardcodedPlaylist || userPlaylist;
+  
   if (!user) return <Navigate to="/login" replace/>;
   if (authLoading || playlistLoading) return <MainContentSkeleton />;
 

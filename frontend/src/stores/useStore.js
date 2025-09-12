@@ -514,6 +514,32 @@ const useStore = create((set, get) => ({
         }
     },
 
+    hardcodedPlaylists: [],
+    hardcodedPlaylistsLoading: false,
+
+    fetchHardcodedPlaylists: async () => {
+        const {
+            user,
+            makeAuthenticatedRequest
+        } = get();
+
+        if (!user) {
+            console.error('No user logged in');
+            return;
+        }
+        
+        try {
+            set({ hardcodedPlaylistsLoading: true });
+            const data = await makeAuthenticatedRequest(`/api/playlists/hardcoded`);
+            set({ hardcodedPlaylists: data.playlists });
+            return data.playlists; // Return the playlists for immediate use
+        } catch (error) {
+            console.error('Failed to fetch hardcoded playlists:', error);
+        } finally {
+            set({ hardcodedPlaylistsLoading: false });
+        }
+    },
+
     fetchPlaylistSongs: async (playlistId) => {
         const { user, makeAuthenticatedRequest } = get();
         if (!user) return [];
@@ -944,133 +970,6 @@ const useStore = create((set, get) => ({
         }
     },
 
-    // playNextSong: async () => {
-    //     console.log("playNextSong");
-    //     const { 
-    //         queueSongs, 
-    //         removeFromQueue, 
-    //         contextSongs, 
-    //         currentContextSong,
-    //         currentQueueSongId,
-    //         setCurrentQueueSongId,
-    //         currentSong,
-    //         repeatMode,
-    //         queuePlaying,
-    //         restartCurrentSong,
-    //         shuffleMode,
-    //         shuffledContextSongs,
-    //     } = get();
-
-    //     // If repeat is on and we're NOT playing from queue, repeat current song
-    //     if (repeatMode && !queuePlaying && currentSong) {
-    //         console.log("Repeating current song");
-    //         restartCurrentSong();
-    //         return;
-    //     }
-
-    //     // Special case: queueSongs.length === 1 && currentSong = the only song in the queue
-    //     // nextSong should be the song in contextSongs AFTER currentContextSong.
-    //     if (queueSongs.length === 1 && currentQueueSongId && 
-    //         currentSong && queueSongs[0].id === currentSong.id) {
-            
-    //         console.log("Special case: Last song in queue, moving to context");
-            
-    //         // Remove the current song from queue
-    //         await removeFromQueue(currentSong.id);
-            
-    //         // Clear queue tracking
-    //         setCurrentQueueSongId(null);
-            
-    //         // Use shuffled or normal context songs
-    //         const songsToUse = shuffleMode ? shuffledContextSongs : contextSongs;
-            
-    //         // Find next song in context after currentContextSong
-    //         if (songsToUse && songsToUse.length > 0 && currentContextSong) {
-    //             const currentIndex = songsToUse.findIndex(s => s.id === currentContextSong.id);
-    //             if (currentIndex !== -1) {
-    //                 const nextIndex = (currentIndex + 1) % songsToUse.length; // wrap around
-    //                 const nextSong = songsToUse[nextIndex];
-
-    //                 set({
-    //                     queuePlaying: false,
-    //                     currentSong: nextSong,
-    //                     currentContextSong: nextSong, // advance contextSong
-    //                     isPlaying: true
-    //                 });
-    //                 return;
-    //             }
-    //         }
-            
-    //         // If no context available, just stop playing
-    //         set({ isPlaying: false });
-    //         return;
-    //     }
-
-    //     // 1️⃣ Queue priority (normal case with multiple songs)
-    //     if (queueSongs.length > 0) {
-    //         console.log("Queue has priority");
-
-    //         let nextSong;
-
-    //         // If we have a currentQueueSongId, find the next song in queue
-    //         if (currentQueueSongId) {
-    //             const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
-                
-    //             if (currentQueueIndex !== -1 && currentQueueIndex < queueSongs.length - 1) {
-    //                 // Get the next song in the queue
-    //                 nextSong = queueSongs[currentQueueIndex + 1];
-    //             } else {
-    //                 // Current song is last in queue or not found, take first song
-    //                 nextSong = queueSongs[0];
-    //             }
-    //         } else {
-    //             // No currentQueueSongId set, take first song in queue
-    //             nextSong = queueSongs[0];
-    //         }
-
-    //         // Update currentQueueSongId to the next song
-    //         setCurrentQueueSongId(nextSong.id);
-
-    //         // Remove the song that just finished playing from queue (if it exists)
-    //         if (currentQueueSongId) {
-    //             const currentSongStillInQueue = queueSongs.find(s => s.id === currentQueueSongId);
-    //             if (currentSongStillInQueue) {
-    //                 await removeFromQueue(currentQueueSongId);
-    //             }
-    //         }
-
-    //         // Play the next song, but DO NOT touch contextSongs
-    //         set({
-    //             queuePlaying: true,
-    //             currentSong: nextSong,
-    //             isPlaying: true
-    //         });
-    //         return;
-    //     }
-
-    //     // 2️⃣ No queue → continue in the context (with shuffle support)
-    //     if (contextSongs && contextSongs.length > 0) {
-    //         // Use shuffled order if shuffle is on, otherwise use normal order
-    //         const songsToUse = shuffleMode ? shuffledContextSongs : contextSongs;
-            
-    //         console.log(`Playing from context - ${shuffleMode ? 'shuffled' : 'normal'} order`);
-            
-    //         const currentIndex = songsToUse.findIndex(s => s.id === currentContextSong.id);
-    //         if (currentIndex === -1) return;
-
-    //         const nextIndex = (currentIndex + 1) % songsToUse.length; // wrap around
-    //         const nextSong = songsToUse[nextIndex];
-
-    //         set({
-    //             queuePlaying: false,
-    //             currentSong: nextSong,
-    //             currentContextSong: nextSong, // advance contextSong
-    //             isPlaying: true,
-    //             currentQueueSongId: null, // Clear queue song ID when playing from context
-    //         });
-    //     }
-    // },
-
     playPrevSong: () => {
         const {
             currentSong,
@@ -1167,86 +1066,6 @@ const useStore = create((set, get) => ({
             }
         }
     },
-
-    // playPrevSong: () => {
-    //     const {
-    //         currentSong,
-    //         contextSongs,
-    //         queueSongs,
-    //         currentQueueSongId,
-    //         setCurrentQueueSongId,
-    //         shuffleMode,
-    //         shuffledContextSongs,
-    //         currentContextSong,
-    //     } = get();
-
-    //     if (!currentSong) return;
-
-    //     // 1️⃣ If we're currently playing from queue, try to go to previous song in queue
-    //     if (currentQueueSongId && queueSongs.length > 0) {
-    //         console.log("Currently playing from queue, looking for prev in queue");
-            
-    //         const currentQueueIndex = queueSongs.findIndex(s => s.id === currentQueueSongId);
-            
-    //         if (currentQueueIndex !== -1) {
-    //             // Get previous song in queue (wrap around to end if at beginning)
-    //             const prevIndex = currentQueueIndex > 0 
-    //                 ? currentQueueIndex - 1 
-    //                 : queueSongs.length - 1;
-    //             const prevSong = queueSongs[prevIndex];
-    //             setCurrentQueueSongId(prevSong.id);
-                
-    //             set({
-    //                 currentSong: prevSong,
-    //                 isPlaying: true,
-    //                 queuePlaying: true,
-    //             });
-    //             return;
-    //         }
-            
-    //         // No previous song in queue, fall back to context if available
-    //         const songsToUse = shuffleMode ? shuffledContextSongs : contextSongs;
-    //         if (songsToUse.length > 0 && currentContextSong) {
-    //             console.log("No prev in queue, falling back to context");
-                
-    //             const currentIndex = songsToUse.findIndex(s => s.id === currentContextSong.id);
-    //             if (currentIndex !== -1) {
-    //                 const prevIndex = (currentIndex - 1 + songsToUse.length) % songsToUse.length;
-    //                 const prevSong = songsToUse[prevIndex];
-                    
-    //                 // Clear queue tracking since we're going back to context
-    //                 setCurrentQueueSongId(null);
-                    
-    //                 set({
-    //                     currentSong: prevSong,
-    //                     isPlaying: true,
-    //                     currentContextSong: prevSong,
-    //                     queuePlaying: false,
-    //                 });
-    //             }
-    //         }
-    //         return;
-    //     }
-
-    //     // 2️⃣ Normal case: we're playing from context, go to previous in context (with shuffle support)
-    //     if (contextSongs.length > 0) {
-    //         // Use shuffled order if shuffle is on, otherwise use normal order
-    //         const songsToUse = shuffleMode ? shuffledContextSongs : contextSongs;
-            
-    //         const currentIndex = songsToUse.findIndex(s => s.id === currentSong.id);
-    //         if (currentIndex === -1) return;
-
-    //         const prevIndex = (currentIndex - 1 + songsToUse.length) % songsToUse.length;
-    //         const prevSong = songsToUse[prevIndex];
-            
-    //         set({
-    //             currentSong: prevSong,
-    //             isPlaying: true,
-    //             currentContextSong: prevSong,
-    //             queuePlaying: false,
-    //         });
-    //     }
-    // },
 
     // Music Player Actions
     volume: 0.5, // Default 50%

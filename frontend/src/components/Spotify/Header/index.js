@@ -1,22 +1,48 @@
 // components/Header/Header.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import useStore from '../../../stores/useStore';
+import { SearchResults } from './SearchResults';
 import './Header.css';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { user, logout } = useStore();
+  const { 
+    user, 
+    logout, 
+    performSearch, 
+    searchResults, 
+    searchLoading,
+    clearSearchResults 
+  } = useStore();
+
   const navigate = useNavigate();
+
+  // Debounced search - wait 300ms after user stops typing
+  useEffect(() => {
+    if (!user) return;
+    
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim()) {
+        performSearch(searchQuery);
+      } else {
+        clearSearchResults();
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, user]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!user) return; // Prevent search if not logged in
-    console.log('Searching for:', searchQuery);
+    if (!user || !searchQuery.trim()) return;
+    // Search is already triggered by useEffect, but we can force it here if needed
+    performSearch(searchQuery);
   };
 
   const handleSearchChange = (e) => {
-    if (!user) return; // Prevent typing if not logged in
+    if (!user) return;
     setSearchQuery(e.target.value);
   };
 
@@ -24,12 +50,13 @@ export function Header() {
     navigate('/');
   };
 
+
   return (
     <header className={`header ${!user ? 'header-disabled' : ''}`}>
       <div className="header-left">
-        <button 
-          className="home-button" 
-          onClick={handleHomeClick}
+        <button
+          className="home-button"
+          onClick={ handleHomeClick }
           disabled={!user}
           title="Home"
         >
@@ -58,6 +85,18 @@ export function Header() {
             >
               🔍
             </button>
+
+            {/* Search Results Dropdown */}
+            {user && searchQuery && (
+              <SearchResults
+                searchResults={searchResults}
+                searchLoading={searchLoading}
+                onResultClick={() => {
+                  setSearchQuery('');
+                  clearSearchResults();
+                }}
+              />
+            )}
           </div>
         </form>
       </div>

@@ -7,7 +7,6 @@ const useStore = create((set, get) => ({
     /////// AUTHENTICATION STATE ///////
     authLoading: true,        // Login/signup/token verification
     playlistLoading: false,   // Playlist data
-    searchLoading: false,     // Search operations
     uploadLoading: false,     // File uploads (if you add that feature)
     oAuthLoading: false,      // Google login
     user: null,
@@ -1170,7 +1169,44 @@ const useStore = create((set, get) => ({
                 set({ shuffledContextSongs: newShuffledPlaylist });
             }
         }
-},
+    },
+
+    searchResults: { songs: [], albums: [], artists: [] },
+    searchLoading: false,
+    searchQuery: '',
+
+    setSearchQuery: (query) => set({ searchQuery: query }),
+
+    clearSearchResults: () => set({ 
+        searchResults: { songs: [], albums: [], artists: [] },
+        searchQuery: '' 
+    }),
+
+    performSearch: async (query) => {
+        const { user, makeAuthenticatedRequest } = get();
+        if (!user || !query.trim()) {
+            set({ searchResults: { songs: [], albums: [], artists: [] } });
+            return;
+        }
+
+        try {
+            set({ searchLoading: true });
+            const data = await makeAuthenticatedRequest(`/api/search/?q=${encodeURIComponent(query)}`);
+            
+            set({ 
+            searchResults: {
+                songs: data.songs || [],
+                albums: data.albums || [],
+                artists: data.artists || []
+            }
+            });
+        } catch (error) {
+            console.error('Search failed:', error);
+            set({ searchResults: { songs: [], albums: [], artists: [] } });
+        } finally {
+            set({ searchLoading: false });
+        }
+    },
 }))
 
 export default useStore

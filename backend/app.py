@@ -10,6 +10,7 @@ from routes.api.playlists.playlists import playlists_bp
 from routes.api.playlists.user_playlists import user_playlists_bp
 from routes.api.albums.albums import albums_bp
 from routes.api.artists.artists import artists_bp
+from routes.api.search.search import search_bp
 from routes.stream.streaming import streaming_bp
 
  
@@ -49,6 +50,7 @@ def create_app():
     app.register_blueprint(user_playlists_bp, url_prefix='/api/user_playlists')
     app.register_blueprint(albums_bp, url_prefix='/api/albums')
     app.register_blueprint(artists_bp, url_prefix='/api/artists')
+    app.register_blueprint(search_bp, url_prefix='/api/search')
 
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 

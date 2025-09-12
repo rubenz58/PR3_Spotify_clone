@@ -15,11 +15,25 @@ export function PlaylistView({ playlistId }) {
     playlistLoading,
     removeSongFromPlaylist,
     playlistRefresh,
+    currentContext,
   } = useStore();
 
   useEffect(() => {
     fetchPlaylistSongs(playlistId);
   }, [playlistId, playlistRefresh]);
+
+  useEffect(() => {
+    if (playlistId && user) {
+      // Update currentPlaylistId when viewing a different playlist
+      const { currentPlaylistId, setCurrentContextAndPlaylist } = useStore.getState();
+      if (String(currentPlaylistId) !== String(playlistId) && currentContext === "playlist") {
+        setCurrentContextAndPlaylist("playlist", playlistId);
+      }
+      
+      // Your existing fetchPlaylistSongs call
+      fetchPlaylistSongs(playlistId);
+    }
+  }, [playlistId, user]);
   
   const playlist = userPlaylists?.find(p => p.id === parseInt(playlistId));
 

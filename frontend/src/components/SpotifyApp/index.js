@@ -1,4 +1,3 @@
-// components/Layout/Layout.js
 import { AudioPlayer } from '../Spotify/AudioPlayer';
 import { Header } from '../Spotify/Header';
 import { Sidebar } from '../Spotify/Sidebar';

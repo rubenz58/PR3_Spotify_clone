@@ -36,15 +36,47 @@ export function Song({
   const isLiked = likedSongs?.some(likedSong => likedSong.id === song.id);
   const isCurrentSong = currentSong?.id === song.id;
 
-  const isCurrentSongInContext = 
-    currentSong?.id === song.id && 
-    currentContextSong?.id === song.id && 
-    currentContext === context?.type && 
-    !queuePlaying &&
-    // For playlists, also check the specific playlist ID matches
-    (currentContext === "playlist" 
-      ? String(currentPlaylistId) === String(context?.id)
-      : true); // For non-playlist contexts, don't do additional ID checking
+  const isCurrentSongInContext = (() => {
+    // Only debug if this is the currently playing song
+    // if (currentSong?.id === song.id) {
+    //   console.log("=== Condition 5 Debug ===");
+    //   console.log("currentPlaylistId:", currentPlaylistId, "type:", typeof currentPlaylistId);
+    //   console.log("context?.id:", context?.id, "type:", typeof context?.id);
+    //   console.log("String(currentPlaylistId):", String(currentPlaylistId));
+    //   console.log("String(context?.id):", String(context?.id));
+    //   console.log("Are they equal?", String(currentPlaylistId) === String(context?.id));
+    //   console.log("=== End Condition 5 Debug ===");
+      
+    //   const condition1 = currentSong?.id === song.id;
+    //   const condition2 = currentContextSong?.id === song.id;
+    //   const condition3 = currentContext === context?.type;
+    //   const condition4 = !queuePlaying;
+    //   const condition5 = currentContext === "playlist" 
+    //     ? String(currentPlaylistId) === String(context?.id)
+    //     : true;
+      
+    //   console.log("condition1 (currentSong?.id === song.id):", condition1);
+    //   console.log("condition2 (currentContextSong?.id === song.id):", condition2);
+    //   console.log("condition3 (currentContext === context?.type):", condition3);
+    //   console.log("condition4 (!queuePlaying):", condition4);
+    //   console.log("condition5 (playlist ID check):", condition5);
+      
+    //   const result = condition1 && condition2 && condition3 && condition4 && condition5;
+    //   console.log("Final result:", result);
+    //   console.log("=== End Debug ===");
+      
+    //   return result;
+    // }
+    
+    // Regular calculation for non-current songs (no logging)
+    return currentSong?.id === song.id &&
+      currentContextSong?.id === song.id &&
+      currentContext === context?.type &&
+      !queuePlaying &&
+      (currentContext === "playlist"
+        ? String(currentPlaylistId) === String(context?.id)
+        : true);
+  })();
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();

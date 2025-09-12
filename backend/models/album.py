@@ -6,6 +6,7 @@ class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     artist = db.Column(db.String(255), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
     release_date = db.Column(db.Date)
     genre = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -16,3 +17,4 @@ class Album(db.Model):
     track_count = db.Column(db.Integer, default=0)
 
     songs = db.relationship('Song', back_populates='album')
+    artist_rel = db.relationship('Artist', back_populates='albums')  # NEW

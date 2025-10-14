@@ -5,6 +5,8 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "dev_secret_key"
+    print(f"SECRET_KEY from env: {SECRET_KEY}")
+
 
     database_url = os.environ.get("DATABASE_URL")
     

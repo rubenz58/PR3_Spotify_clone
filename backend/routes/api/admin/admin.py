@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 
 from ..authentification.middleware import jwt_required, admin_required
 
-from ....scripts.seed_songs.seed_iron_maiden import seed_iron_maiden
+# from ....scripts.seed_songs.seed_iron_maiden import seed_iron_maiden
 
 admin_bp = Blueprint('admin', __name__)
 

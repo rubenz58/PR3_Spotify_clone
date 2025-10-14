@@ -78,9 +78,11 @@ def create_app():
     return app
 
 
-if __name__ == '__main__':
-    print("Creating Flask app...")
-    app = create_app()
-    print("Flask app created successfully")
-    
-    app.run(host='0.0.0.0', port=5002, debug=True)
+# if __name__ == '__main__':
+#     print("Creating Flask app...")
+#     app = create_app()
+#     print("Flask app created successfully")
+
+#     app.run(host='0.0.0.0', port=5002, debug=True)
+
+app = create_app()

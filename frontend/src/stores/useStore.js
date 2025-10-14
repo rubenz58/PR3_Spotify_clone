@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 const useStore = create((set, get) => ({
 
-    getUrlBase: () => process.env.REACT_APP_BASE_URL,
+    getUrlBase: () => process.env.REACT_APP_BASE_URL || '',
 
     /////// AUTHENTICATION STATE ///////
     authLoading: true,        // Login/signup/token verification

@@ -11,7 +11,6 @@ def admin_home():
     
     return jsonify({'admin': "true"})
 
-
 # @admin_bp.route('/seed-iron-maiden', methods=['POST'])
 # def seed_iron_maiden():
 #     try:

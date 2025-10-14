@@ -25,7 +25,7 @@ def seed_iron_maiden_route():
         if not artist:
             artist = Artist(
                 name="Iron Maiden",
-                genre="Heavy Metal"
+                # genre="Heavy Metal"
             )
             db.session.add(artist)
             db.session.flush()

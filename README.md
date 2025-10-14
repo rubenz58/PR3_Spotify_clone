@@ -7,14 +7,14 @@ Core Music Features (Must-Have)
 ✅ Skip next/previous (queue management)
 ✅ Seek bar (scrub through song timeline)
 ✅ Volume control
-Shuffle and repeat modes
+✅ Shuffle and repeat modes
 
 Search & Discovery
 
 ✅ Search bar (songs, artists, albums)
-Filter by artist or album
-Recently played section
-Featured/recommended songs (even if just hardcoded)
+✅ Filter by artist or album
+✅ Recently played section
+✅ Featured/recommended songs (even if just hardcoded)
 
 User Library Management
 
@@ -26,7 +26,7 @@ User Library Management
 
 User Experience
 
-Responsive design (mobile-friendly)
+✅ Responsive design (mobile-friendly)
 ✅ Persistent player bar (stays while navigating)
 ✅ Loading states for all async operations
 ✅ Current song highlighting in lists

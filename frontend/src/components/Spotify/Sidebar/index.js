@@ -15,6 +15,7 @@ export function Sidebar() {
     createNewPlaylist,
     deletePlaylist,
     renamePlaylist,
+    setMobileActiveTab,
   } = useStore();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -66,12 +67,14 @@ export function Sidebar() {
   const handlePlaylistClick = (playlist) => {
     if (!user) return; // Prevent action if not logged in
     // console.log('Opening playlist:', playlist.name);
+    setMobileActiveTab('playlist');
     navigate(`/playlist/${playlist.id}`);
   };
 
   const handleLikedSongsClick = () => {
     if (!user) return; // Prevent action if not logged in
     console.log('Opening liked songs');
+    setMobileActiveTab('playlist');
     navigate('/liked-songs');
   };
 
@@ -84,6 +87,7 @@ export function Sidebar() {
   const handleRecentlyPlayedClick = () => {
     if (!user) return; // Prevent action if not logged in
     console.log('Opening recently played');
+    setMobileActiveTab('playlist');
     navigate('/recently-played');
   };
 

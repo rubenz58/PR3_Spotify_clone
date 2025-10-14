@@ -1,5 +1,4 @@
 /* components/Header/Header.css */
-
 .header {
   display: flex;
   align-items: center;
@@ -18,6 +17,8 @@
 .header-left {
   flex: 0 0 auto;
   min-width: 200px;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
@@ -128,30 +129,6 @@
   border-color: white;
 }
 
-/* Disabled header state */
-.header-disabled {
-    background-color: rgba(0, 0, 0, 0.8); /* Darker background */
-    opacity: 0.7;
-}
-
-/* Disabled search input */
-.search-input-disabled {
-    background-color: #333 !important;
-    color: #666 !important;
-    cursor: not-allowed;
-}
-
-.search-input-disabled::placeholder {
-    color: #666 !important;
-}
-
-/* Disabled search button */
-.search-button-disabled {
-    background-color: #333 !important;
-    color: #666 !important;
-    cursor: not-allowed;
-}
-
 .home-button {
   background: none;
   border: none;
@@ -173,9 +150,28 @@
   cursor: not-allowed;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
+/* Disabled header state */
+.header-disabled {
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0.7;
+}
+
+/* Disabled search input */
+.search-input-disabled {
+  background-color: #333 !important;
+  color: #666 !important;
+  cursor: not-allowed;
+}
+
+.search-input-disabled::placeholder {
+  color: #666 !important;
+}
+
+/* Disabled search button */
+.search-button-disabled {
+  background-color: #333 !important;
+  color: #666 !important;
+  cursor: not-allowed;
 }
 
 /* Responsive Design */
@@ -183,21 +179,93 @@
   .header {
     padding: 12px 16px;
     height: 56px;
+    gap: 8px; /* Add gap between sections */
   }
-  
+
+  /* Make left section much smaller on mobile */
+  .header-left {
+    flex: 0 0 auto;
+    min-width: auto; /* Remove fixed min-width */
+    width: auto; /* Let it size naturally */
+  }
+
+  /* Give search more space */
   .header-center {
-    margin: 0 16px;
+    flex: 1; /* Take up available space */
+    margin: 0 8px; /* Reduce margins */
+    min-width: 0; /* Allow shrinking */
   }
-  
+
+  /* Make right section smaller */
+  .header-right {
+    flex: 0 0 auto;
+    min-width: auto; /* Remove fixed min-width */
+    width: auto; /* Let it size naturally */
+  }
+
+  /* Hide text elements to save space */
   .logo-text {
     display: none;
   }
-  
+
   .user-name {
     display: none;
   }
-  
+
+  /* Optimize search input for mobile */
   .search-input {
     font-size: 16px; /* Prevents zoom on mobile */
+    padding: 10px 45px 10px 14px; /* Slightly smaller padding */
+  }
+
+  /* Make home button smaller */
+  .home-button {
+    font-size: 1rem;
+    padding: 0.4rem;
+    margin-right: 0.5rem;
+  }
+
+  /* Make logout button smaller */
+  .logout-button {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  /* Adjust search button */
+  .search-button {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+
+  .header-center {
+    margin: 0 6px;
+  }
+
+  .search-input {
+    padding: 8px 40px 8px 12px;
+    font-size: 16px;
+  }
+
+  .home-button {
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    margin-right: 0.3rem;
+  }
+
+  .logout-button {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  .search-button {
+    padding: 5px 8px;
+    font-size: 13px;
   }
 }

@@ -1,0 +1,553 @@
+.spotify-layout {
+  /* display: grid; */
+  grid-template-rows: auto auto 1fr auto; /* Header, Mobile Tabs, Main, Player */
+  height: 100vh;
+  background-color: #121212;
+  color: white;
+  overflow: hidden;
+}
+
+/* Header takes full width at top */
+.spotify-layout > header {
+  grid-column: 1 / -1;
+  background-color: #121212;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+  min-height: 60px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+  position: relative;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #2a2a2a;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.search-bar::placeholder {
+  color: #b3b3b3;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logout-btn {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Mobile Tabs - Hidden on desktop */
+.mobile-tabs {
+  display: none;
+  background-color: #121212;
+  border-bottom: 1px solid #333;
+  grid-column: 1 / -1;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 15px 8px;
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  min-width: 0; /* Allows flex items to shrink below content size */
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-btn.active {
+  color: #1db954;
+  border-bottom-color: #1db954;
+}
+
+/* Main container with 3-column layout */
+.main-container {
+  display: grid;
+  grid-template-columns: 280px 1fr 416px; /* Left sidebar, Main content, Right sidebar (increased 30% from 320px to 416px) */
+  height: 100%;
+  overflow: hidden;
+  background-color: #121212;
+}
+
+/* Left Sidebar - Your Library */
+.left-sidebar {
+  background-color: #000;
+  border-right: 1px solid #282828;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Main Content Area */
+.content-area {
+  background: linear-gradient(180deg, #1e3264 0%, #121212 40%);
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+/* Custom scrollbar for content area */
+.content-area::-webkit-scrollbar {
+  width: 12px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background-color: #535353;
+  border-radius: 6px;
+  border: 2px solid #121212;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover {
+  background-color: #727272;
+}
+
+/* Right Sidebar - Song Info & Queue */
+.right-sidebar {
+  background-color: #000;
+  border-left: 1px solid #282828;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Player takes full width at bottom */
+.spotify-layout > .player {
+  grid-column: 1 / -1;
+  border-top: 1px solid #282828;
+}
+
+/* Content panel management for mobile tabs */
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-container {
+    grid-template-columns: 280px 1fr; /* Hide right sidebar */
+  }
+  .right-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Show mobile tabs */
+  .mobile-tabs {
+    display: block;
+  }
+
+  /* Single column layout for mobile */
+  .main-container {
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+
+  /* Hide all panels by default on mobile */
+  .left-sidebar,
+  .right-sidebar,
+  .content-area {
+    display: none;
+  }
+
+  /* Show active panel */
+  .content-panel.active {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  /* Adjust content area padding for mobile */
+  .content-area {
+    padding: 16px;
+  }
+
+  /* Center search bar on mobile */
+  .search-container {
+    margin: 0 10px;
+  }
+
+  .spotify-layout > header {
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  /* Adjust content titles for mobile */
+  .content-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: 12px;
+  }
+
+  .tab-btn {
+    padding: 12px 4px;
+    font-size: 12px;
+  }
+
+  .search-container {
+    margin: 0 5px;
+  }
+
+  .spotify-layout > header {
+    padding: 0 10px;
+  }
+
+  .content-title {
+    font-size: 20px;
+  }
+}
+
+/* Utility classes for content area */
+.content-header {
+  margin-bottom: 32px;
+}
+
+.content-title {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.content-subtitle {
+  font-size: 14px;
+  color: #a7a7a7;
+  margin-bottom: 24px;
+}
+
+/* Additional mobile-specific styles */
+@media (max-width: 768px) {
+  .content-header {
+    margin-bottom: 24px;
+  }
+
+  .content-subtitle {
+    margin-bottom: 16px;
+  }
+}
+
+/* Playlist and track styles for mobile optimization */
+.playlist-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.playlist-item:hover {
+  background-color: #2a2a2a;
+}
+
+.playlist-item.active {
+  background-color: #1a5f3f;
+}
+
+.playlist-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  min-width: 40px;
+}
+
+.playlist-info h4 {
+  font-size: 14px;
+  margin-bottom: 2px;
+  color: white;
+}
+
+.playlist-info p {
+  font-size: 12px;
+  color: #b3b3b3;
+}
+
+/* Track list styles */
+.track-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.track-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+}
+
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1db954;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  min-width: 40px;
+}
+
+.track-info {
+  flex: 1;
+  min-width: 0; /* Allows text to truncate */
+}
+
+.track-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 14px;
+  color: #b3b3b3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-duration {
+  margin-right: 16px;
+  font-size: 14px;
+  color: #b3b3b3;
+  min-width: 40px;
+}
+
+.track-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 4px;
+}
+
+.action-btn:hover {
+  color: #1db954;
+}
+
+.action-btn.liked {
+  color: #1db954;
+}
+
+/* Mobile track optimizations */
+@media (max-width: 768px) {
+  .track-item {
+    padding: 8px 0;
+  }
+
+  .track-title {
+    font-size: 14px;
+  }
+
+  .track-artist {
+    font-size: 12px;
+  }
+
+  .track-actions {
+    gap: 8px;
+  }
+
+  .action-btn {
+    font-size: 16px;
+  }
+
+  .play-btn {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Right sidebar specific styles */
+.now-playing {
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.now-playing h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #b3b3b3;
+}
+
+.current-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.album-art {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ff6b6b, #feca57);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  min-width: 60px;
+}
+
+.current-info h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.current-info p {
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.queue-section {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.queue-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.queue-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+}
+
+.queue-tab.active {
+  color: #1db954;
+  border-bottom-color: #1db954;
+}
+
+.empty-queue {
+  text-align: center;
+  color: #b3b3b3;
+  margin-top: 40px;
+}
+
+.empty-queue h3 {
+  color: white;
+  margin-bottom: 8px;
+}
+
+/* Enhanced mobile styles for right sidebar */
+@media (max-width: 768px) {
+  .right-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .now-playing {
+    padding: 16px;
+  }
+
+  .queue-section {
+    padding: 16px;
+  }
+
+  .album-art {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .current-info h4 {
+    font-size: 14px;
+  }
+
+  .current-info p {
+    font-size: 12px;
+  }
+}

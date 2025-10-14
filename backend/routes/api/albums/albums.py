@@ -1,9 +1,10 @@
-from flask import Blueprint, jsonify, request, g
+from flask import Blueprint, jsonify, request, g, send_from_directory
 from database import db
 from models.album import Album
 from models.playlist import Playlist, PlaylistSong
 from models.song import Song
 from ..authentification.middleware import jwt_required
+import os
 
 albums_bp = Blueprint('albums', __name__)
 
@@ -93,3 +94,17 @@ def get_album_by_id(album_id):
         'album': album_data,
         'songs_count': len(songs_data)
     })
+
+
+@albums_bp.route('/images/<path:filename>')
+def serve_album_image(filename):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.abspath(os.path.join(current_dir, '..', '..', '..'))
+    album_images_dir = os.path.join(backend_dir, 'album_images')
+
+    # album_images_dir = os.path.join(os.path.dirname(__file__), 'album_images')
+
+    print(f"Serving album image: {filename}")
+    print(f"From directory: {album_images_dir}")
+    
+    return send_from_directory(album_images_dir, filename)

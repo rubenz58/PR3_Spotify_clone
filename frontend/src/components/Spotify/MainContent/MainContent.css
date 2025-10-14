@@ -275,6 +275,8 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
   position: relative;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box;
 }
 
 .album-card:hover {
@@ -285,11 +287,21 @@
 .album-cover {
   position: relative;
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 1/1;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 16px;
   background: linear-gradient(135deg, #1db954, #1ed760);
+}
+
+.album-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .album-placeholder {
@@ -401,7 +413,7 @@
   }
   
   .album-card {
-    padding: 8px;
+    padding: 0px;
   }
   
   .album-title {

@@ -14,7 +14,9 @@ export function Header() {
     performSearch, 
     searchResults, 
     searchLoading,
-    clearSearchResults 
+    clearSearchResults,
+    setMobileActiveTab,
+ 
   } = useStore();
 
   const navigate = useNavigate();
@@ -47,6 +49,7 @@ export function Header() {
   };
 
   const handleHomeClick = () => {
+    setMobileActiveTab('playlist');
     navigate('/');
   };
 
@@ -62,9 +65,9 @@ export function Header() {
         >
           🏠
         </button>
-        <div className="logo">
+        {/* <div className="logo">
           🎵 <span className="logo-text">Spotify Clone</span>
-        </div>
+        </div> */}
       </div>
 
       <div className="header-center">
@@ -74,9 +77,9 @@ export function Header() {
               type="text"
               className={`search-input ${!user ? 'search-input-disabled' : ''}`}
               placeholder={user ? "Search for songs, artists, or albums..." : "Log in to search"}
-              value={searchQuery}
-              onChange={handleSearchChange}
-              disabled={!user}
+              value= { searchQuery }
+              onChange= { handleSearchChange }
+              disabled= { !user }
             />
             <button
               type="submit"

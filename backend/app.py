@@ -1,7 +1,9 @@
-from flask import Flask
+from flask import Flask, send_file
 from flask_cors import CORS
 from config import Config
 from flask_migrate import Migrate
+
+import os
 
 from routes.api.authentification.authentification import auth_bp
 from routes.api.songs.songs import songs_bp
@@ -13,7 +15,6 @@ from routes.api.artists.artists import artists_bp
 from routes.api.search.search import search_bp
 from routes.stream.streaming import streaming_bp
 
- 
 from database import db
 
 # Creates the tables in the DB automatically if imported
@@ -26,7 +27,9 @@ from models.artist import Artist
 
 
 def create_app():
-    app = Flask(__name__)
+    # app = Flask(__name__)
+    app = Flask(__name__, static_folder='build', static_url_path='')
+
     app.config.from_object(Config)
 
     # Initialize CORS
@@ -53,6 +56,19 @@ def create_app():
     app.register_blueprint(search_bp, url_prefix='/api/search')
 
     app.register_blueprint(streaming_bp, url_prefix='/stream')
+
+    def serve_react_app():
+        try:
+            return send_file(os.path.join(app.static_folder, 'index.html'))
+        except FileNotFoundError:
+            return "<h1>React App Not Built</h1>", 404
+        
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def catch_all(path):
+        if path.startswith('api/'):
+            return {'error': 'API endpoint not found'}, 404
+        return serve_react_app()
 
     # Create database tables
     with app.app_context():

@@ -1,5 +1,4 @@
 /* AudioPlayer.css */
-
 .audio-player {
   position: fixed;
   bottom: 0;
@@ -200,48 +199,134 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .audio-player {
-    padding: 12px;
-    gap: 8px;
+    padding: 12px 8px; /* Reduce horizontal padding */
+    gap: 6px; /* Smaller gap between sections */
   }
-  
+
+  /* Make song info section much smaller and flexible */
   .song-info-section {
-    min-width: 150px;
+    min-width: 0; /* Remove fixed min-width */
+    flex: 0 1 30%; /* Take 30% of space, can shrink */
+    max-width: 120px; /* Limit maximum width */
   }
-  
+
+  /* Ensure text truncates properly */
+  .now-playing-text {
+    min-width: 0; /* Allow shrinking */
+  }
+
   .song-title {
     font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  
+
   .song-artist {
     font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  
+
+  /* Player controls take center space */
   .player-controls {
-    max-width: 300px;
+    flex: 1; /* Take available space */
+    max-width: none; /* Remove max-width restriction */
+    min-width: 0; /* Allow shrinking */
   }
-  
+
+  .control-buttons {
+    gap: 8px; /* Reduce gap between buttons */
+  }
+
   .control-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
-  
+
   .play-pause-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
-  
+
+  .progress-section {
+    gap: 8px; /* Smaller gap */
+  }
+
   .time-display {
     font-size: 10px;
     min-width: 30px;
   }
-  
+
+  /* Volume control - ensure it's always visible */
   .volume-control {
-    min-width: 80px;
+    flex: 0 0 auto; /* Don't grow or shrink, fixed size */
+    min-width: 70px; /* Smaller but sufficient for volume slider */
+    max-width: 70px; /* Prevent it from taking too much space */
   }
-  
+
+  .volume-icon {
+    font-size: 14px;
+  }
+
   .volume-slider {
-    width: 60px;
+    width: 50px; /* Smaller slider */
+  }
+}
+
+@media (max-width: 480px) {
+  .audio-player {
+    padding: 10px 6px;
+    gap: 4px;
+  }
+
+  .song-info-section {
+    flex: 0 1 25%; /* Even smaller on tiny screens */
+    max-width: 100px;
+  }
+
+  .song-title {
+    font-size: 11px;
+  }
+
+  .song-artist {
+    font-size: 9px;
+  }
+
+  .control-buttons {
+    gap: 6px;
+  }
+
+  .control-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .play-pause-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .progress-section {
+    gap: 6px;
+  }
+
+  .time-display {
+    font-size: 9px;
+    min-width: 28px;
+  }
+
+  .volume-control {
+    min-width: 60px;
+    max-width: 60px;
+  }
+
+  .volume-slider {
+    width: 40px;
   }
 }

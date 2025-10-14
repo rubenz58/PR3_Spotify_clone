@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from "../../../stores/useStore";
 import { AddToPlaylistDropdown } from './AddToPlaylistDropdown';
 import './Song.css';
@@ -7,7 +7,8 @@ export function Song({
   song,
   showRemoveButton = false,
   onRemove,
-  context = null
+  context = null,
+  autoplaySpecific = false
 }) {
   
   // Playlist or Album or whoever renders the Songs
@@ -187,6 +188,12 @@ export function Song({
       onRemove(song);
     }
   };
+
+  useEffect(() => {
+    if (autoplaySpecific) {
+      handlePlayClick();
+    }
+  }, [autoplaySpecific]);
 
   return (
     <div className={`song-row ${isCurrentSong ? 'current-song' : ''}`}>

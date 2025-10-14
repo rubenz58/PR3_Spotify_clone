@@ -1207,6 +1207,14 @@ const useStore = create((set, get) => ({
             set({ searchLoading: false });
         }
     },
+
+    // Is Mobile.
+    isMobile: false,
+    setIsMobile: (bool) => set({ isMobile: bool }),
+
+
+    mobileActiveTab: "playlist",
+    setMobileActiveTab: (newTab) => set({ mobileActiveTab: newTab }),
 }))
 
 export default useStore

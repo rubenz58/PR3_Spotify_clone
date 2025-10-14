@@ -5,6 +5,8 @@ import useStore from '../../../stores/useStore';
 import { MainContentSkeleton } from '../../Utils/MainContentSkeleton';
 import './MainContent.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5002';
+
 export function MainContent() {
   // console.log("MainContent");
 
@@ -76,8 +78,9 @@ export function MainContent() {
                 >
                   <div className="album-cover">
                     {album.cover_image_url ? (
-                      <img 
-                        src={album.cover_image_url} 
+                      <img
+                        src={`${BACKEND_URL}/api/albums/images/${album.cover_image_url}`}
+                        // src={album.cover_image_url} 
                         alt={`${album.title} cover`}
                         className="album-image"
                       />

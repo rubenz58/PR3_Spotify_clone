@@ -21,15 +21,15 @@ FROM python:3.9-slim
 # Set working directory inside container
 WORKDIR /app
 
-# Copy Python requirements
-COPY Pipfile Pipfile.lock ./
+# Copy Python requirements from backend folder
+COPY backend/Pipfile backend/Pipfile.lock ./
 
 # Install pipenv and Python dependencies
 RUN pip install pipenv && \
     pipenv install --system --deploy
 
 # Copy the backend application code
-COPY . .
+COPY backend/ .
 
 # Copy the built frontend from the frontend-build stage
 COPY --from=frontend-build /app/frontend/build ./build

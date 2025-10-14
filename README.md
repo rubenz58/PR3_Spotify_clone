@@ -67,4 +67,4 @@ db.session.commit()
 
 > python -m scripts.seed_iron_maiden
 
-Redeploy
+Redeploy 2

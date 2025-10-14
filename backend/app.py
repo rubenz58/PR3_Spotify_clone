@@ -27,6 +27,7 @@ from models.artist import Artist
 
 
 def create_app():
+    print("\n########## CREATING APP ##########")
     # app = Flask(__name__)
     app = Flask(__name__, static_folder='build', static_url_path='')
 

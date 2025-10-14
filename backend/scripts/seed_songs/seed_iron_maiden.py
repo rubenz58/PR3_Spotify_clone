@@ -1,11 +1,13 @@
 from app import create_app
-from database import db
-from models.song import Song
 
 # Create the Flask app and push application context
 app = create_app()
 
-with app.app_context():
+# with app.app_context():
+
+def seed_iron_maiden():
+    from database import db
+    from models.song import Song
     
     iron_1 = Song(
         title="Wasted Years",

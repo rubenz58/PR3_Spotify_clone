@@ -12,6 +12,9 @@ RUN npm install
 # Copy all frontend source code
 COPY frontend/ ./
 
+# Set API URL for production (same domain since backend serves frontend)
+ENV REACT_APP_API_URL=""
+
 # Build the React app (creates build/ folder)
 RUN npm run build
 
@@ -26,7 +29,7 @@ COPY backend/Pipfile backend/Pipfile.lock ./
 
 # Install pipenv and Python dependencies
 RUN pip install pipenv && \
-    pipenv install --system --deploy
+    pipenv install --system
 
 # Copy the backend application code
 COPY backend/ .
@@ -41,6 +44,5 @@ ENV FLASK_ENV=production
 # Railway uses port 8080
 EXPOSE 8080
 
-# Command to run the application
-# CMD ["python", "app.py"]
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "app:app"]
+# Command to run the application with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info", "app:app"]

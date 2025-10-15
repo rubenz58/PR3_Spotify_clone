@@ -49,10 +49,10 @@ def get_hardcoded_playlists():
     
     # Define your hardcoded playlists
     hardcoded_playlists = [
-        {'id': 14, 'name': 'Discover Weekly'},
-        {'id': 15, 'name': 'Daily Mix 1'},
-        {'id': 16, 'name': 'Spotify Driving'},
-        {'id': 18, 'name': 'Spotify Summer Recs'}
+        {'id': 5, 'name': 'Discover Weekly'},
+        {'id': 4, 'name': 'Daily Mix 1'},
+        {'id': 6, 'name': 'Spotify Driving'},
+        {'id': 7, 'name': 'Spotify Summer Recs'}
     ]
     
     return jsonify({'playlists': hardcoded_playlists})

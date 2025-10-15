@@ -28,6 +28,8 @@ from models.artist import Artist
 
 def create_app():
     print("\n########## CREATING APP ##########")
+
+    # TO SWITCH FOR PRODUCTION
     # app = Flask(__name__)
     app = Flask(__name__, static_folder='build', static_url_path='')
 
@@ -77,7 +79,7 @@ def create_app():
     
     return app
 
-
+#TO SWITCH FOR PRODUCTION
 # if __name__ == '__main__':
 #     print("Creating Flask app...")
 #     app = create_app()

@@ -124,6 +124,8 @@ export function AudioPlayer() {
 
   if (!currentSong || pendingSong) return null;
 
+  console.log(`REACT_APP_BASE_URL: ${process.env.REACT_APP_BASE_URL}`);
+
 
   return (
     <div className="audio-player">
@@ -131,7 +133,7 @@ export function AudioPlayer() {
         <audio
             ref={audioRef}
             src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
-            onEnded={playNextSong} // KEY LINE
+            onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
         />

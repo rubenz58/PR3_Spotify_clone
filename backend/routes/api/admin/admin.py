@@ -567,3 +567,143 @@ def seed_daily1():
     except Exception as e:
         db.session.rollback()
         return {'error': str(e)}, 500
+    
+
+@admin_bp.route('/seed-discover', methods=['POST'])
+def seed_discover():
+    try:
+        print("Trying to Seed Discover")
+        from models.playlist import Playlist, PlaylistSong, PlaylistType
+        from database import db
+
+        playlist = Playlist(
+            user_id=None,  # System-owned curated playlist
+            name="Discover Weekly",
+            song_count=5,
+            playlist_type=PlaylistType.CURATED_PLAYLIST,  # or SPOTIFY_CREATIONS
+            is_editable=False,
+            # description="Your weekly mix of fresh finds and deep cuts",
+            # creator_name="Spotify",
+            # is_public=True
+        )
+        
+        db.session.add(playlist)
+        db.session.flush()
+        
+        song_ids = [
+            17,
+            18,
+            4,
+            10,
+            20,
+        ]
+
+        for position, song_id in enumerate(song_ids, 1):
+            playlist_song = PlaylistSong(
+                playlist_id=playlist.id,
+                song_id=song_id,
+                position=position
+            )
+            db.session.add(playlist_song)
+    
+        db.session.commit()
+        print(f"Successfully created '{playlist.name}' curated playlist with {len(song_ids)} songs")
+        
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500
+    
+
+@admin_bp.route('/seed-spotify-driving', methods=['POST'])
+def seed_spotify_driving():
+    try:
+        print("Trying to Seed Spotify Driving")
+        from models.playlist import Playlist, PlaylistSong, PlaylistType
+        from database import db
+
+        playlist = Playlist(
+            user_id=None,  # System-owned curated playlist
+            name="Spotify Driving",
+            song_count=10,
+            playlist_type=PlaylistType.CURATED_PLAYLIST,  # or SPOTIFY_CREATIONS
+            is_editable=False,
+            # description="Your weekly mix of fresh finds and deep cuts",
+            # creator_name="Spotify",
+            # is_public=True
+        )
+        
+        db.session.add(playlist)
+        db.session.flush()
+        
+        song_ids = [
+            1,
+            7,
+            3,
+            12,
+            22,
+            4,
+            2,
+            16,
+            13,
+            23,
+        ]
+
+        for position, song_id in enumerate(song_ids, 1):
+            playlist_song = PlaylistSong(
+                playlist_id=playlist.id,
+                song_id=song_id,
+                position=position
+            )
+            db.session.add(playlist_song)
+    
+        db.session.commit()
+        print(f"Successfully created '{playlist.name}' curated playlist with {len(song_ids)} songs")
+        
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500
+    
+
+@admin_bp.route('/seed-spotify-summer', methods=['POST'])
+def seed_spotify_summer_recs():
+    try:
+        print("Trying to Seed Spotify Summer Recs")
+        from models.playlist import Playlist, PlaylistSong, PlaylistType
+        from database import db
+
+        playlist = Playlist(
+            user_id=None,  # System-owned curated playlist
+            name="Spotify Driving",
+            song_count=5,
+            playlist_type=PlaylistType.CURATED_PLAYLIST,  # or SPOTIFY_CREATIONS
+            is_editable=False,
+            # description="Your weekly mix of fresh finds and deep cuts",
+            # creator_name="Spotify",
+            # is_public=True
+        )
+        
+        db.session.add(playlist)
+        db.session.flush()
+        
+        song_ids = [
+            24,
+            12,
+            17,
+            19,
+            14,
+        ]
+
+        for position, song_id in enumerate(song_ids, 1):
+            playlist_song = PlaylistSong(
+                playlist_id=playlist.id,
+                song_id=song_id,
+                position=position
+            )
+            db.session.add(playlist_song)
+    
+        db.session.commit()
+        print(f"Successfully created '{playlist.name}' curated playlist with {len(song_ids)} songs")
+        
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500

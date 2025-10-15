@@ -520,3 +520,49 @@ def seed_neil():
     except Exception as e:
         db.session.rollback()
         return {'error': str(e)}, 500
+    
+
+@admin_bp.route('/seed-daily1', methods=['POST'])
+def seed_daily1():
+    try:
+        from models.playlist import Playlist, PlaylistSong, PlaylistType
+        from database import db
+
+        playlist = Playlist(
+            user_id=None,  # System-owned curated playlist
+            name="Daily Mix 1",
+            song_count=7,
+            playlist_type=PlaylistType.CURATED_PLAYLIST,  # or SPOTIFY_CREATIONS
+            is_editable=False,
+            # description="Your weekly mix of fresh finds and deep cuts",
+            # creator_name="Spotify",
+            # is_public=True
+        )
+        
+        db.session.add(playlist)
+        db.session.flush()
+        
+        song_ids = [
+            23,
+            2,
+            16,
+            5,
+            6,
+            22,
+            12 
+        ]
+
+        for position, song_id in enumerate(song_ids, 1):
+            playlist_song = PlaylistSong(
+                playlist_id=playlist.id,
+                song_id=song_id,
+                position=position
+            )
+        db.session.add(playlist_song)
+    
+        db.session.commit()
+        print(f"Successfully created '{playlist.name}' curated playlist with {len(song_ids)} songs")
+        
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500

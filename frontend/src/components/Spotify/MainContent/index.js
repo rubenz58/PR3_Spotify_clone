@@ -20,10 +20,10 @@ export function MainContent() {
   } = useStore();
 
   const quickAccessItems = [
-    { title: 'Discover Weekly', emoji: '🔥', route: '/playlist/14' },
-    { title: 'Daily Mix 1', emoji: '🌅', route: '/playlist/15' },
-    { title: 'Spotify Driving', emoji: '🚗', route: '/playlist/16' },
-    { title: 'Spotify Summer Recs', emoji: '☀️', route: '/playlist/18' }
+    { title: 'Discover Weekly', emoji: '🔥', route: '/playlist/5' },
+    { title: 'Daily Mix 1', emoji: '🌅', route: '/playlist/4' },
+    { title: 'Spotify Driving', emoji: '🚗', route: '/playlist/6' },
+    { title: 'Spotify Summer Recs', emoji: '☀️', route: '/playlist/7' }
   ];
 
   useEffect(() => {

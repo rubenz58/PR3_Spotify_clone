@@ -673,7 +673,7 @@ def seed_spotify_summer_recs():
 
         playlist = Playlist(
             user_id=None,  # System-owned curated playlist
-            name="Spotify Driving",
+            name="Spotify Summer Recs",
             song_count=5,
             playlist_type=PlaylistType.CURATED_PLAYLIST,  # or SPOTIFY_CREATIONS
             is_editable=False,

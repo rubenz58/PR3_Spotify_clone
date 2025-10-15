@@ -125,7 +125,7 @@ export function AudioPlayer() {
 
   if (!currentSong || pendingSong) return null;
 
-  console.log(`src: ${process.env.R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`)
+  console.log(`src: ${process.env.REACT_APP_R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`)
 
 
   return (
@@ -135,7 +135,7 @@ export function AudioPlayer() {
             ref={audioRef}
             // src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
             // src={`/stream/songs/${currentSong.id}`}
-            src={`${process.env.R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`}
+            src={`${process.env.REACT_APP_R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

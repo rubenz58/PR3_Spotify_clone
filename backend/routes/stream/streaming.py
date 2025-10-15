@@ -10,7 +10,13 @@ def stream_song(song_id):
     song = Song.query.get_or_404(song_id)
     
     # Build path to audio file
-    file_path = os.path.join('audio_files', song.file_path)
+    # To Modify for Local DEV
+    # file_path = os.path.join('audio_files', song.file_path)
+    r2_public_url = os.environ.get('R2_PUBLIC_URL')
+    partial_path = os.path.join('audio_files', song.file_path)
+    file_path = os.path.join(r2_public_url, partial_path)
+
+    print(f"file_path: {file_path}")
     
     # Check if file exists
     if not os.path.exists(file_path):

@@ -525,6 +525,7 @@ def seed_neil():
 @admin_bp.route('/seed-daily1', methods=['POST'])
 def seed_daily1():
     try:
+        print("Trying to Seed Daily Mix 1")
         from models.playlist import Playlist, PlaylistSong, PlaylistType
         from database import db
 
@@ -558,7 +559,7 @@ def seed_daily1():
                 song_id=song_id,
                 position=position
             )
-        db.session.add(playlist_song)
+            db.session.add(playlist_song)
     
         db.session.commit()
         print(f"Successfully created '{playlist.name}' curated playlist with {len(song_ids)} songs")

@@ -125,7 +125,7 @@ export function AudioPlayer() {
 
   if (!currentSong || pendingSong) return null;
 
-  console.log(`REACT_APP_BASE_URL: ${process.env.REACT_APP_BASE_URL}`);
+  console.log(`src: ${process.env.R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`)
 
 
   return (

@@ -15,7 +15,6 @@ def stream_song(song_id):
     # To Modify for Local DEV
     # file_path = os.path.join('audio_files', song.file_path)
     r2_public_url = os.environ.get('R2_PUBLIC_URL')
-
     partial_path = os.path.join('audio_files', song.file_path)
     file_path = os.path.join(r2_public_url, partial_path)
 

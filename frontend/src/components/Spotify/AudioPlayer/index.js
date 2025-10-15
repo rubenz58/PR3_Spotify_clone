@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import useStore from '../../../stores/useStore';
 import './AudioPlayer.css';
 
@@ -133,7 +134,8 @@ export function AudioPlayer() {
         <audio
             ref={audioRef}
             // src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
-            src={`/stream/songs/${currentSong.id}`}
+            // src={`/stream/songs/${currentSong.id}`}
+            src={`${process.env.R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

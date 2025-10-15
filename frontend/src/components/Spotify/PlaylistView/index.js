@@ -67,7 +67,7 @@ export function PlaylistView({ playlistId }) {
           <Song 
             key={song.id} 
             song={song} 
-            showRemoveButton={true}
+            showRemoveButton={!hardcodedPlaylist}
             onRemove={(song) => removeSongFromCurrentPlaylist(song)}
             context={{ id: playlistId, type: "playlist" }}
           />

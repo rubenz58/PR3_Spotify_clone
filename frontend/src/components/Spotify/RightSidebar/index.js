@@ -175,13 +175,13 @@ export function RightSidebar() {
         >
           Queue
         </button>
-        <button 
+        {/* <button 
           className={`tab-btn ${activeTab === 'lyrics' ? 'active' : ''}`}
           onClick={() => user && setActiveTab('lyrics')}
           disabled={!user}
         >
           Lyrics
-        </button>
+        </button> */}
       </div>
 
       {/* Tab Content */}

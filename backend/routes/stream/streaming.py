@@ -1,4 +1,4 @@
-from flask import Blueprint, send_file
+from flask import Blueprint, send_file, current_app
 from models.song import Song
 import os
 
@@ -6,6 +6,8 @@ streaming_bp = Blueprint('streaming', __name__)
 
 @streaming_bp.route('/songs/<int:song_id>')
 def stream_song(song_id):
+
+    current_app.logger.info(f"/songs/{song_id}")
     # Look up song in database
     song = Song.query.get_or_404(song_id)
     

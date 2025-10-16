@@ -123,6 +123,14 @@ export function AudioPlayer() {
     }
   };
 
+  useEffect(() => {
+    if (audioRef.current && currentSong?.audio_source) {
+      console.log(`Setting src: ${currentSong.audio_source}`);
+      audioRef.current.src = currentSong.audio_source;
+      audioRef.current.load(); // Force Safari to reload
+    }
+  }, [currentSong?.audio_source]);
+
   if (!currentSong || pendingSong) return null;
 
   console.log(`src currentSong: ${currentSong.audio_source}`)
@@ -130,25 +138,14 @@ export function AudioPlayer() {
 
   return (
     <div className="audio-player">
-        {/* This is actually PLAYING THE MUSIC */}
-        {currentSong && currentSong.audio_source && (
-          <audio
+        {/* This is actually PLAYING THE MUSIC */}s
+        <audio
             ref={audioRef}
-            src={currentSong.audio_source}
+            // src={`${currentSong.audio_source}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
-          />
-        )}
-        {/* <audio
-            ref={audioRef}
-            // src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
-            // src={`/stream/songs/${currentSong.id}`}
-            src={`${currentSong.audio_source}`}
-            onEnded={playNextSong}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-        /> */}
+        />
         
         {/* Left side - Song info */}
         <div className="song-info-section">

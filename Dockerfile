@@ -15,6 +15,9 @@ COPY frontend/ ./
 # Set API URL for production (same domain since backend serves frontend)
 ENV REACT_APP_API_URL=""
 
+# ENV REACT_APP_R2_PUBLIC_URL="https://pub-048f3cd5782942418ca5bbbf3b96fd24.r2.dev"
+
+
 # Build the React app (creates build/ folder)
 RUN npm run build
 

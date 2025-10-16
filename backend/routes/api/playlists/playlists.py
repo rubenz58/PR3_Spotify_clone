@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, jsonify, request, g
 from database import db
 from models.playlist import Playlist, PlaylistSong
@@ -158,7 +160,8 @@ def get_songs_of_playlist(playlist_id):
             'duration': song.duration,
             'track_number': song.track_number,
             'position': position,
-            'file_path': song.file_path
+            'file_path': song.file_path,
+            'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
         })
 
     return jsonify({'songs': result})

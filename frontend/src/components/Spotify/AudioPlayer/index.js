@@ -135,7 +135,7 @@ export function AudioPlayer() {
             ref={audioRef}
             // src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
             // src={`/stream/songs/${currentSong.id}`}
-            src={`${process.env.REACT_APP_R2_PUBLIC_URL}/audio_files/${currentSong.file_path}`}
+            src={`${currentSong.audio_source}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

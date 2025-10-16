@@ -131,7 +131,16 @@ export function AudioPlayer() {
   return (
     <div className="audio-player">
         {/* This is actually PLAYING THE MUSIC */}
-        <audio
+        {currentSong && currentSong.audio_source && (
+          <audio
+            ref={audioRef}
+            src={currentSong.audio_source}
+            onEnded={playNextSong}
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadedMetadata}
+          />
+        )}
+        {/* <audio
             ref={audioRef}
             // src={`${process.env.REACT_APP_BASE_URL}/stream/songs/${currentSong.id}`}
             // src={`/stream/songs/${currentSong.id}`}
@@ -139,7 +148,7 @@ export function AudioPlayer() {
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
-        />
+        /> */}
         
         {/* Left side - Song info */}
         <div className="song-info-section">

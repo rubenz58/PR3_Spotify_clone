@@ -224,7 +224,7 @@ export function Sidebar() {
       </div>
 
       {/* Recently Played Section */}
-      <div className="recently-played">
+      {/* <div className="recently-played">
         <h3 className="section-title">Recently Played</h3>
         <div 
           className="recent-item"
@@ -236,7 +236,7 @@ export function Sidebar() {
             <div className="recent-type">Playlist</div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

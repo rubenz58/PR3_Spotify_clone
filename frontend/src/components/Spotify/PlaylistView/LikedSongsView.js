@@ -23,10 +23,10 @@ export function LikedSongsView() {
         }
     }, [user]);
 
-    if (!user) return <Navigate to="/login" replace/>;
-    
     if (authLoading || playlistLoading) return <MainContentSkeleton />;
 
+    if (!user) return <Navigate to="/login" replace/>;
+    
     return (
         <div className="playlist-view">
         <h1>

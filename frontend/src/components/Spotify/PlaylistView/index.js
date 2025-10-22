@@ -48,8 +48,9 @@ export function PlaylistView({ playlistId }) {
   const userPlaylist = userPlaylists?.find(p => p.id === parseInt(playlistId));
   const playlist = hardcodedPlaylist || userPlaylist;
   
-  if (!user) return <Navigate to="/login" replace/>;
   if (authLoading || playlistLoading) return <MainContentSkeleton />;
+  if (!user) return <Navigate to="/login" replace/>;
+  
 
   const removeSongFromCurrentPlaylist = async (song) => {
     const result = await removeSongFromPlaylist(playlistId, song.id);

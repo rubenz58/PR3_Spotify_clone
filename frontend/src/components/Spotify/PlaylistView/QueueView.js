@@ -26,9 +26,9 @@ export function QueueView() {
         }
     }, [user, playlistRefresh]);
 
-    if (!user) return <Navigate to="/login" replace/>;
-    
     if (authLoading || playlistLoading) return <MainContentSkeleton />;
+
+    if (!user) return <Navigate to="/login" replace/>;
 
     const removeSongFromCurrentPlaylist = async (song) => {
         if (removeSongFromLikedSongs) {

@@ -1,4 +1,4 @@
-from flask import Flask, send_file
+from flask import Flask, send_file, send_from_directory
 from flask_cors import CORS
 from config import Config
 from flask_migrate import Migrate
@@ -57,21 +57,39 @@ def create_app():
     app.register_blueprint(albums_bp, url_prefix='/api/albums')
     app.register_blueprint(artists_bp, url_prefix='/api/artists')
     app.register_blueprint(search_bp, url_prefix='/api/search')
-
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 
-    def serve_react_app():
-        try:
-            return send_file(os.path.join(app.static_folder, 'index.html'))
-        except FileNotFoundError:
-            return "<h1>React App Not Built</h1>", 404
-        
+    @app.route('/static/<path:path>')
+    def serve_static(path):
+        return send_from_directory(os.path.join(app.static_folder, 'static'), path)
+    
+    # Serve index.html for all other routes (React Router)
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
-    def catch_all(path):
-        if path.startswith('api/'):
-            return {'error': 'API endpoint not found'}, 404
-        return serve_react_app()
+    def serve_react(path):
+        # Don't serve React for API or stream routes
+        if path.startswith('api/') or path.startswith('stream/'):
+            return {'error': 'Endpoint not found'}, 404
+        
+        # Serve index.html for all React routes
+        index_path = os.path.join(app.static_folder, 'index.html')
+        if os.path.exists(index_path):
+            return send_from_directory(app.static_folder, 'index.html')
+        else:
+            return "<h1>React App Not Built</h1><p>Run 'npm run build' in frontend directory</p>", 404
+
+    # def serve_react_app():
+    #     try:
+    #         return send_file(os.path.join(app.static_folder, 'index.html'))
+    #     except FileNotFoundError:
+    #         return "<h1>React App Not Built</h1>", 404
+        
+    # @app.route('/', defaults={'path': ''})
+    # @app.route('/<path:path>')
+    # def catch_all(path):
+    #     if path.startswith('api/'):
+    #         return {'error': 'API endpoint not found'}, 404
+    #     return serve_react_app()
 
     # Create database tables
     with app.app_context():

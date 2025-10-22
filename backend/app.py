@@ -77,37 +77,23 @@ def create_app():
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def catch_all(path):
-        print(f"🔍 Catch-all received: {path}")
+        # print(f"Catch-all received: {path}")
     
         # Serve static files (JS, CSS, images)
         if path.startswith('static/'):
-            print(f"   → Serving static file: {path}")
+            # print(f"   → Serving static file: {path}")
             return send_from_directory(app.static_folder, path)
         
         # Return 404 for API/stream routes not found
         if path.startswith('api/') or path.startswith('stream/'):
-            print(f"   → API/stream 404: {path}")
+            # print(f"   → API/stream 404: {path}")
             return {'error': 'Not found'}, 404
         
         # Serve index.html for all React routes
-        print(f"   → Serving index.html for: {path}")
-        print(f"   → Static folder: {app.static_folder}")
-        print(f"   → Index exists: {os.path.exists(os.path.join(app.static_folder, 'index.html'))}")
+        # print(f"   → Serving index.html for: {path}")
+        # print(f"   → Static folder: {app.static_folder}")
+        # print(f"   → Index exists: {os.path.exists(os.path.join(app.static_folder, 'index.html'))}")
         return send_from_directory(app.static_folder, 'index.html')
-
-
-    # def serve_react_app():
-    #     try:
-    #         return send_file(os.path.join(app.static_folder, 'index.html'))
-    #     except FileNotFoundError:
-    #         return "<h1>React App Not Built</h1>", 404
-        
-    # @app.route('/', defaults={'path': ''})
-    # @app.route('/<path:path>')
-    # def catch_all(path):
-    #     if path.startswith('api/'):
-    #         return {'error': 'API endpoint not found'}, 404
-    #     return serve_react_app()
 
     # Create database tables
     with app.app_context():

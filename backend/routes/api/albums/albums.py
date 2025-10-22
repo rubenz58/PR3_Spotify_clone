@@ -32,7 +32,7 @@ def get_all_albums():
             'artist': album.artist,
             'release_date': album.release_date.isoformat() if album.release_date else None,
             'genre': album.genre,
-            'cover_image_url': album.cover_image_url,
+            'cover_image_url': f"{os.environ.get('R2_PUBLIC_URL')}/album_images/{album.cover_image_url}",
             'track_count': album.track_count,
             'created_at': album.created_at.isoformat() if album.created_at else None
         })

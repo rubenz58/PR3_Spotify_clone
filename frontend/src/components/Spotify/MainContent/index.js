@@ -79,8 +79,8 @@ export function MainContent() {
                   <div className="album-cover">
                     {album.cover_image_url ? (
                       <img
-                        src={`${BACKEND_URL}/api/albums/images/${album.cover_image_url}`}
-                        // src={album.cover_image_url} 
+                        // src={`${BACKEND_URL}/api/albums/images/${album.cover_image_url}`}
+                        src={album.cover_image_url} 
                         alt={`${album.title} cover`}
                         className="album-image"
                       />

@@ -59,6 +59,20 @@ def create_app():
     app.register_blueprint(search_bp, url_prefix='/api/search')
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 
+    # 2. Add debug route BEFORE catch-all
+    @app.route('/debug-static')
+    def debug_static():
+        import os
+        static_folder = app.static_folder
+        index_path = os.path.join(static_folder, 'index.html')
+        
+        return {
+            'static_folder': static_folder,
+            'static_folder_exists': os.path.exists(static_folder),
+            'index_exists': os.path.exists(index_path),
+            'files_in_static': os.listdir(static_folder) if os.path.exists(static_folder) else []
+        }
+
     # React Router catch-all - MUST BE LAST
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')

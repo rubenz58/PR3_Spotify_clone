@@ -45,7 +45,7 @@ def get_all_albums():
 
 @albums_bp.route('/<int:album_id>', methods=['GET'])
 @jwt_required
-def get_album_by_id(album_id):
+def get_songs_of_album(album_id):
     if request.method == 'OPTIONS':
         return '', 200
     
@@ -74,7 +74,8 @@ def get_album_by_id(album_id):
             'album': album.title,
             'duration': song.duration,
             'track_number': song.track_number if hasattr(song, 'track_number') else None,
-            'file_path': song.file_path
+            'file_path': song.file_path,
+            'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
         })
     
     # Format album response with songs

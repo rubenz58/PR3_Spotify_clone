@@ -46,6 +46,7 @@ export function AudioPlayer() {
     }
   };
 
+  // Scrubbing through Song.
   const handleProgressClick = (e) => {
     if (audioRef.current && duration) {
       const progressBar = e.currentTarget;
@@ -66,6 +67,7 @@ export function AudioPlayer() {
 
   const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
 
+  // Might not be necessary
   useEffect(() => {
     if (audioRef.current && restartTrigger > 0) {
         audioRef.current.currentTime = 0;
@@ -140,8 +142,8 @@ export function AudioPlayer() {
     <div className="audio-player">
         {/* This is actually PLAYING THE MUSIC */}s
         <audio
-            // ref={audioRef}
-            src={`${currentSong.audio_source}`}
+            ref={audioRef}
+            // src={`${currentSong.audio_source}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

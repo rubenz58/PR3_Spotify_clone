@@ -1144,34 +1144,34 @@ const useStore = create((set, get) => ({
 
 
     // Toggle play/pause for current song
-    // togglePlay: () => {
-    //     // console.log("toggle play");
-    //     set((state) => ({ isPlaying: !state.isPlaying }))
-    // },
-
     togglePlay: () => {
-        const { isPlaying, audioRef } = get();
+        // console.log("toggle play");
+        set((state) => ({ isPlaying: !state.isPlaying }))
+    },
+
+    // togglePlay: () => {
+    //     const { isPlaying, audioRef } = get();
         
-        if (!audioRef?.current) {
-            console.log('No audio ref');
-            return;
-        }
+    //     if (!audioRef?.current) {
+    //         console.log('No audio ref');
+    //         return;
+    //     }
         
-        if (isPlaying) {
-            // Pause
-            audioRef.current.pause();
-            set({ isPlaying: false });
-        } else {
-            // Play directly (Safari-friendly)
-            audioRef.current.play()
-            .then(() => {
-                set({ isPlaying: true });
-            })
-            .catch(error => {
-                console.log('Play failed:', error);
-            });
-        }
-        },
+    //     if (isPlaying) {
+    //         // Pause
+    //         audioRef.current.pause();
+    //         set({ isPlaying: false });
+    //     } else {
+    //         // Play directly (Safari-friendly)
+    //         audioRef.current.play()
+    //         .then(() => {
+    //             set({ isPlaying: true });
+    //         })
+    //         .catch(error => {
+    //             console.log('Play failed:', error);
+    //         });
+    //     }
+    // },
 
     updateShuffleForContextChange: () => {
         const {

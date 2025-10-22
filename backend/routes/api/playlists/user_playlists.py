@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, jsonify, request, g
 from database import db
 from models.playlist import Playlist, PlaylistSong, LikedSong, QueueSong, RecentlyPlayedSong
@@ -41,7 +43,8 @@ def get_liked_songs():
             'album': song.album.title,
             'duration': song.duration,
             'file_path': song.file_path,
-            'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None
+            'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None,
+            'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
         })
     
     return jsonify({
@@ -88,7 +91,8 @@ def add_liked_song(song_id):
         'album': song.album.title if song.album else None,
         'duration': song.duration,
         'file_path': song.file_path,
-        'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None
+        'liked_at': liked_song.liked_at.isoformat() if liked_song.liked_at else None,
+        'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
     }
     
     return jsonify({
@@ -164,7 +168,8 @@ def get_queue_songs():
             'duration': song.duration,
             'file_path': song.file_path,
             'position': queue_song.position,  # Fixed: Use position instead of liked_at
-            'added_at': queue_song.added_at.isoformat() if queue_song.added_at else None
+            'added_at': queue_song.added_at.isoformat() if queue_song.added_at else None,
+            'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
         })
     
     return jsonify({
@@ -221,7 +226,8 @@ def add_to_queue(song_id):
         'duration': song.duration,
         'file_path': song.file_path,
         'position': queue_song.position,
-        'added_at': queue_song.added_at.isoformat() if queue_song.added_at else None
+        'added_at': queue_song.added_at.isoformat() if queue_song.added_at else None,
+        'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
     }
     
     return jsonify({
@@ -324,7 +330,8 @@ def get_recently_played_songs():  # Fixed function name
             'album': song.album.title,
             'duration': song.duration,
             'file_path': song.file_path,
-            'played_at': recently_played_song.played_at.isoformat() if recently_played_song.played_at else None  # Fixed: Use played_at
+            'played_at': recently_played_song.played_at.isoformat() if recently_played_song.played_at else None,  # Fixed: Use played_at
+            'audio_source': f"{os.environ.get('R2_PUBLIC_URL')}/audio_files/{song.file_path}"
         })
     
     return jsonify({

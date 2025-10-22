@@ -16,6 +16,14 @@ export const MainContentRouter = ({ view }) => {
 
     // Handling the different cases for routing here.
     const location = useLocation();
+    const user = useStore(state => state.user);
+    const authLoading = useStore(state => state.authLoading);
+    
+    console.log('=== ROUTER DEBUG ===');
+    console.log('Path:', location.pathname);
+    console.log('User:', user);
+    console.log('Auth Loading:', authLoading);
+    console.log('==================');
 
     if (location.pathname === '/login') {
         return <LoginForm />;

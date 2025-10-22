@@ -140,8 +140,8 @@ export function AudioPlayer() {
     <div className="audio-player">
         {/* This is actually PLAYING THE MUSIC */}s
         <audio
-            ref={audioRef}
-            // src={`${currentSong.audio_source}`}
+            // ref={audioRef}
+            src={`${currentSong.audio_source}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

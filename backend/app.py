@@ -59,24 +59,21 @@ def create_app():
     app.register_blueprint(search_bp, url_prefix='/api/search')
     app.register_blueprint(streaming_bp, url_prefix='/stream')
 
-    @app.route('/static/<path:path>')
-    def serve_static(path):
-        return send_from_directory(os.path.join(app.static_folder, 'static'), path)
-    
-    # Serve index.html for all other routes (React Router)
+    # React Router catch-all - MUST BE LAST
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
-    def serve_react(path):
-        # Don't serve React for API or stream routes
+    def catch_all(path):
+        # Serve static files (JS, CSS, images)
+        if path.startswith('static/'):
+            return send_from_directory(app.static_folder, path)
+        
+        # Return 404 for API/stream routes not found
         if path.startswith('api/') or path.startswith('stream/'):
-            return {'error': 'Endpoint not found'}, 404
+            return {'error': 'Not found'}, 404
         
         # Serve index.html for all React routes
-        index_path = os.path.join(app.static_folder, 'index.html')
-        if os.path.exists(index_path):
-            return send_from_directory(app.static_folder, 'index.html')
-        else:
-            return "<h1>React App Not Built</h1><p>Run 'npm run build' in frontend directory</p>", 404
+        return send_from_directory(app.static_folder, 'index.html')
+
 
     # def serve_react_app():
     #     try:

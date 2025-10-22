@@ -101,13 +101,13 @@ export function AudioPlayer() {
     }
   }, [volume]);
 
-  useEffect(() => {
-    if (audioRef.current && currentSong?.audio_source) {
-      console.log(`Setting src: ${currentSong.audio_source}`);
-      audioRef.current.src = currentSong.audio_source;
-      audioRef.current.load(); // Force Safari to reload
-    }
-  }, [currentSong?.audio_source]);
+  // useEffect(() => {
+  //   if (audioRef.current && currentSong?.audio_source) {
+  //     console.log(`Setting src: ${currentSong.audio_source}`);
+  //     audioRef.current.src = currentSong.audio_source;
+  //     audioRef.current.load(); // Force Safari to reload
+  //   }
+  // }, [currentSong?.audio_source]);
 
   if (!currentSong) return null;
 
@@ -143,7 +143,7 @@ export function AudioPlayer() {
         {/* This is actually PLAYING THE MUSIC */}s
         <audio
             ref={audioRef}
-            // src={`${currentSong.audio_source}`}
+            src={`${currentSong.audio_source}`}
             onEnded={playNextSong}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}

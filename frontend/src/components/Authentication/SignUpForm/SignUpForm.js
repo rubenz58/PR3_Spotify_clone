@@ -69,7 +69,7 @@ const SignUpForm = () => {
                         {error}
                 </div>
             )}
-            <button
+            {/* <button
                 type="button"
                 onClick={handleGoogleSignup}
                 disabled={authLoading}
@@ -80,7 +80,7 @@ const SignUpForm = () => {
             </button>
             <div className="form-divider">
                 <span>or</span>
-            </div>
+            </div> */}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

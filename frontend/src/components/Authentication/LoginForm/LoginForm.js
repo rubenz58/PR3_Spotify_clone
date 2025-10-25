@@ -20,7 +20,11 @@ const LoginForm = () => {
     // If any value in a used CONTEXT CHANGES, it triggers a rerender 
     // of that component. That's why loading gets re-rendered while
     // waiting for something like login()
-    const { user, login, loginWithGoogle, authLoading } = useStore();
+    const {
+        user,
+        login,
+        loginWithGoogle,
+        authLoading } = useStore();
 
     if (authLoading) return <MainContentSkeleton/>;
     if (user) return <Navigate to="/" replace/>;
@@ -66,6 +70,22 @@ const LoginForm = () => {
         // If successful, AuthContext updates user state automatically
     }
 
+    // GUEST LOGIN
+    const handleGuestLogin = async(e) => {
+        e.preventDefault();
+  
+        const guestFormData = {
+            email: 'guest@email.com',
+            password: 'GUESTguest1!'
+        };
+        
+        const result = await login(guestFormData);
+        
+        if (!result.success) {
+            setError(result.error);
+        }
+    }
+
     return (
         <div className={`login-container ${authLoading ? 'login-container-loading' : ''}`}>
             <h2 className="login-title">Login</h2>
@@ -77,7 +97,7 @@ const LoginForm = () => {
             )}
 
             {/* Google Login button */}
-            <button
+            {/* <button
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={authLoading}
@@ -88,10 +108,21 @@ const LoginForm = () => {
             </button>
             <div className="form-divider">
                 <span>or</span>
-            </div>
+            </div> */}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
+                    <button
+                        type="button"
+                        disabled={ loading }
+                        onClick={ handleGuestLogin }
+                        className="login-submit-button"
+                    >
+                        {loading ? "Logging in..." : "Guest Login"}
+                    </button>
+                    <div className="form-divider">
+                        <span>or</span>
+                    </div>
                     <label htmlFor="email" className="form-label">
                         Email:
                     </label>

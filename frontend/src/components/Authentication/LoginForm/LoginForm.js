@@ -114,11 +114,11 @@ const LoginForm = () => {
                 <div className="form-group">
                     <button
                         type="button"
-                        disabled={ loading }
+                        disabled={ authLoading }
                         onClick={ handleGuestLogin }
                         className="login-submit-button"
                     >
-                        {loading ? "Logging in..." : "Guest Login"}
+                        {authLoading ? "Logging in..." : "Guest Login"}
                     </button>
                     <div className="form-divider">
                         <span>or</span>

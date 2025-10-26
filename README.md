@@ -1,4 +1,31 @@
-PR3 – Spotify Clone - v.1.0
+PR3 – Spotify Clone
+
+Spotify Clone - Full-Stack Music Streaming Application
+A feature-rich music streaming platform with complete playback controls, playlist management, and personalized music discovery. Users can create custom playlists, like songs, search across the music library, and enjoy seamless playback with shuffle and repeat modes.
+
+Frontend: React with Zustand Store for global state management and persistent audio player
+
+Backend: Flask REST API with PostgreSQL database
+
+Data Management: SQLAlchemy ORM with Alembic migrations
+
+Media Storage: Cloudflare R2 for file hosting
+
+Infrastructure: Docker containerization deployed on Railway
+
+User Features: Authentication system, custom playlists, liked songs library, search/filter functionality, and queue management
+
+Production Features: Responsive design for mobile/desktop, loading states, persistent player across navigation, and optimized media delivery
+
+
+![alt text](https://github.com/rubenz58/PR3_Spotify_clone/blob/main/PR3_1.png?raw=true)
+
+
+![alt text](https://github.com/rubenz58/PR3_Spotify_clone/blob/main/PR3_2.png?raw=true)
+
+
+![alt text](https://github.com/rubenz58/PR3_Spotify_clone/blob/main/PR3_3.png?raw=true)
+
 
 Core Music Features
 
@@ -32,7 +59,7 @@ User Experience
 ✅ Current song highlighting in lists
 
 
-Backend Features to Showcase Skills
+Backend Features
 
 ✅ User authentication (you have this)
 ✅ RESTful API design
